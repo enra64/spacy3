@@ -84,7 +84,6 @@ local function shoot(x, y)
     new_bullet.width = width * new_bullet.scale
     new_bullet.height = height * new_bullet.scale
 
-
     --- init pos
     new_bullet.x = x
     new_bullet.y = y
@@ -95,7 +94,6 @@ end
 
 local function create_explosion(x, y)
     explosion = {}
-    explosion.corona_texture = love.graphics.newImage("explosion_blue_ring.png")
     explosion.main_texture = love.graphics.newImage("explosion.png")
 
     --- age determines the scaling of explosions
@@ -104,8 +102,11 @@ local function create_explosion(x, y)
     explosion.y = y
 
     --- add some variation using random rotation
-    explosion.corona_rotation = math.rad(math.random(360))
     explosion.main_rotation = math.rad(math.random(360))
+
+    --- add more variation using random scale
+    explosion.x_scale = math.random() + 0.5
+    explosion.y_scale = math.random() + 0.5
 
     --- store explosion
     table.insert(explosions, explosion)
@@ -145,18 +146,30 @@ local function update_enemies(dt)
 end
 
 local function update_player(dt)
+    --- reset all movements to false
+    for i, _ in pairs(player.movement) do
+        player.movement[i] = false
+    end
+
+    --- check direction keys
     if love.keyboard.isDown("d") and player.x + player.width < love.graphics.getWidth() then
         player.x = player.x + (speed * dt)
+        player.movement.right = true
     end
     if love.keyboard.isDown("a") and player.x > 0 then
         player.x = player.x - (speed * dt)
+        player.movement.left = true
     end
     if love.keyboard.isDown("w") and player.y > 0 then
         player.y = player.y - (speed * dt)
+        player.movement.up = true
     end
     if love.keyboard.isDown("s") and player.y + player.height < love.graphics.getHeight() then
         player.y = player.y + (speed * dt)
+        player.movement.down = true
     end
+
+    --- shooting
     if love.keyboard.isDown("space") and not shot_pressed then
         shoot(player.x + player.width, player.y + player.height / 2)
         shot_pressed = true
@@ -164,6 +177,7 @@ local function update_player(dt)
         shot_pressed = false
     end
 
+    --- die on collision
     if (check_collides_with_enemy(player)) then
         print("\nYou failed your colony. Also, you made " .. score .. " points.")
         love.event.push('quit')
@@ -196,18 +210,25 @@ end
 
 local function draw_explosions()
     for _, explosion in ipairs(explosions) do
-        love.graphics.setColor(255, 255, 255, 255 - (255 * explosion.age / maximum_explosion_age))
-        local corona_scaling_factor = explosion.age * 2 / maximum_explosion_age
-        local corona_offset_x = explosion.corona_texture:getWidth() / 2
-        local corona_offset_y = explosion.corona_texture:getHeight() / 2
-        love.graphics.draw(explosion.corona_texture, explosion.x, explosion.y, explosion.corona_rotation, corona_scaling_factor, corona_scaling_factor, corona_offset_x, corona_offset_y)
-
-        love.graphics.setColor(255, 255, 255)
-        local main_scaling_factor = explosion.age / maximum_explosion_age
         local main_offset_x = explosion.main_texture:getWidth() / 2
         local main_offset_y = explosion.main_texture:getHeight() / 2
-        love.graphics.draw(explosion.main_texture, explosion.x, explosion.y, explosion.main_rotation, main_scaling_factor, main_scaling_factor, main_offset_x, main_offset_y)
+        love.graphics.draw(explosion.main_texture, explosion.x, explosion.y, explosion.main_rotation, explosion.x_scale, explosion.y_scale, main_offset_x, main_offset_y)
     end
+end
+
+local function draw_player()
+    --- the propulsion images are larger than the main ship body, so the must be drawn slightly up left from it
+    local x_prop_offset = (player.propulsion_texture.right:getWidth() - player.texture:getWidth()) / 1
+    local y_prop_offset = (player.propulsion_texture.right:getHeight() - player.texture:getHeight()) / 2
+
+    --- draw the available bodies
+    for direction, direction_enabled in pairs(player.movement) do
+        if direction_enabled then
+            love.graphics.draw(player.propulsion_texture[direction], player.x - x_prop_offset, player.y - y_prop_offset, 0, 1, 1)
+        end
+    end
+
+    love.graphics.draw(player.texture, player.x, player.y, 0, 1, 1)
 end
 
 function love.draw()
@@ -217,15 +238,29 @@ function love.draw()
     draw_all_in(enemies)
     draw_all_in(bullets)
     draw_explosions()
-    love.graphics.draw(player.texture, player.x, player.y, 0, 1, 1)
+    draw_player()
+
+    --- score
+    love.graphics.print(score .. " points", 0, 0, 3)
 end
 
 local function create_player()
     player.x = 50
     player.y = love.graphics.getHeight() / 2
-    player.texture = love.graphics.newImage("my_spaceship_with_propulsion.png")
+    player.texture = love.graphics.newImage("ship_main.png")
+
     player.width = player.texture:getWidth()
     player.height = player.texture:getHeight()
+
+    --- storage for direction
+    player.movement = {right = false, left = false, up = false, down = false }
+
+    --- store all four propulsion textures
+    player.propulsion_texture = {}
+    player.propulsion_texture.right = love.graphics.newImage("ship_flame_back.png")
+    player.propulsion_texture.left = love.graphics.newImage("ship_flame_front.png")
+    player.propulsion_texture.up = love.graphics.newImage("ship_flame_down.png")
+    player.propulsion_texture.down = love.graphics.newImage("ship_flame_up.png")
 end
 
 function love.load()
