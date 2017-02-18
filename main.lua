@@ -3,7 +3,7 @@ world = {}
 enemies = {}
 bullets = {}
 player = {}
-background = nil
+background_planets = {}
 
 bullet_speed = 1000
 enemy_speed = 200
@@ -16,6 +16,29 @@ score = 0
 maximum_explosion_age = .2
 
 shot_pressed = false
+
+local function shuffle(array)
+    -- fisher-yates
+    local output = { }
+    local random = math.random
+
+    for index = 1, #array do
+        local offset = index - 1
+        local value = array[index]
+        local randomIndex = offset*random()
+        local flooredIndex = randomIndex - randomIndex%1
+
+        if flooredIndex == offset then
+            output[#output + 1] = value
+        else
+            output[#output + 1] = output[flooredIndex + 1]
+            output[flooredIndex + 1] = value
+        end
+    end
+
+    return output
+end
+
 
 local function check_collides(a, b)
     return a.x < b.x + b.width and
@@ -184,6 +207,12 @@ local function update_player(dt)
     end
 end
 
+local function update_background(dt)
+    for i, planet in ipairs(background_planets) do
+        planet.rotation = planet.rotation + planet.rotation_speed * dt
+    end
+end
+
 local function update_explosions(dt)
     for index, explosion in ipairs(explosions) do
         explosion.age = explosion.age + dt
@@ -200,6 +229,7 @@ function love.update(dt)
     update_player(dt)
     update_enemies(dt)
     update_explosions(dt)
+    update_background(dt)
 end
 
 local function draw_all_in(collection)
@@ -231,10 +261,18 @@ local function draw_player()
     love.graphics.draw(player.texture, player.x, player.y, 0, 1, 1)
 end
 
-function love.draw()
-    --- background
-    love.graphics.draw(background, 0, 0, 0, love.graphics.getWidth() / background:getWidth(), love.graphics.getHeight() / background:getHeight())
+local function draw_background()
+    --- clear to black background
+    love.graphics.clear(0, 0, 0)
 
+    --- draw all planets
+    for _, planet in ipairs(background_planets) do
+        love.graphics.draw(planet.texture, planet.x, planet.y, math.rad(planet.rotation), planet.scale, planet.scale, planet.width / 2, planet.height / 2)
+    end
+end
+
+function love.draw()
+    draw_background()
     draw_all_in(enemies)
     draw_all_in(bullets)
     draw_explosions()
@@ -263,15 +301,62 @@ local function create_player()
     player.propulsion_texture.down = love.graphics.newImage("ship_flame_up.png")
 end
 
-function love.load()
-    --- load background texture
-    background = love.graphics.newImage("background.png")
+local function load_background_planets()
+    local planets = {"blue_planet_1.png", "blue_planet_2.png", "yellow_planet.png" }
 
-    --- set window size to background size
-    love.window.setMode(background:getWidth() * 2, background:getHeight() * 2)
+    planets = shuffle(planets)
+
+    local planet_count = #planets
+    local g_width = love.graphics.getWidth()
+    local g_height = love.graphics.getHeight()
+    local sector_width = g_width / planet_count
+    local row_count = 2
+    local sector_height = g_height / row_count
+
+    --- randomize the row in which we begin placing planets
+    local planet_row = math.random(row_count)
+
+    for index, planet_name in ipairs(planets) do
+        local planet = {}
+        planet.texture = love.graphics.newImage(planet_name)
+
+        --- begin with random rotation, scale
+        planet.rotation = math.rad(math.random(360))
+        planet.rotation_speed = (math.random() * 6) - 3
+
+        planet.scale = (math.random() * .1) + .3
+
+        --- store size
+        planet.width = planet.texture:getWidth()
+        planet.height = planet.texture:getHeight()
+
+        --- decide where to put the planet
+        planet.x = math.random(planet.width / 2 + (index - 1) * sector_width, (index + 0) * sector_width)
+        planet.y = math.random(planet.height / 2 + (planet_row - 1) * sector_height, (planet_row + 0) * sector_height)
+
+        --- put the next planet in another row
+        local old_planet_row = planet_row
+        repeat
+            planet_row = math.random(row_count)
+        until not (planet_row == old_planet_row)
+
+        --- put planet into list
+        table.insert(background_planets, planet)
+    end
+end
+
+function love.load()
+    --- load background textures
+    math.randomseed(os.time())
+    load_background_planets()
+
+    --- set some window size
+    love.window.setMode(1024, 768)
 
     --- initialise the player
     create_player()
+
+
 
     --- create some enemies to get started
     for i = 1, 3 do create_enemy() end
