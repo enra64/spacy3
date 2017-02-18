@@ -63,7 +63,7 @@ local function create_enemy()
 
     --- find free position
     repeat
-        new_enemy.x = math.random(love.graphics.getWidth(), love.graphics.getWidth()+ 100)
+        new_enemy.x = math.random(love.graphics.getWidth(), love.graphics.getWidth() + 100)
         new_enemy.y = math.random(love.graphics.getHeight() - height)
     until (not check_collides_with_enemy(new_enemy))
 
@@ -145,16 +145,16 @@ local function update_enemies(dt)
 end
 
 local function update_player(dt)
-    if love.keyboard.isDown("d") then
+    if love.keyboard.isDown("d") and player.x + player.width < love.graphics.getWidth() then
         player.x = player.x + (speed * dt)
     end
-    if love.keyboard.isDown("a") then
+    if love.keyboard.isDown("a") and player.x > 0 then
         player.x = player.x - (speed * dt)
     end
-    if love.keyboard.isDown("w") then
+    if love.keyboard.isDown("w") and player.y > 0 then
         player.y = player.y - (speed * dt)
     end
-    if love.keyboard.isDown("s") then
+    if love.keyboard.isDown("s") and player.y + player.height < love.graphics.getHeight() then
         player.y = player.y + (speed * dt)
     end
     if love.keyboard.isDown("space") and not shot_pressed then
@@ -164,7 +164,7 @@ local function update_player(dt)
         shot_pressed = false
     end
 
-    if(check_collides_with_enemy(player)) then
+    if (check_collides_with_enemy(player)) then
         print("\nYou failed your colony. Also, you made " .. score .. " points.")
         love.event.push('quit')
     end
@@ -174,7 +174,7 @@ local function update_explosions(dt)
     for index, explosion in ipairs(explosions) do
         explosion.age = explosion.age + dt
 
-        -- remove old explosions
+        --- remove old explosions
         if explosion.age > maximum_explosion_age then
             table.remove(explosions, index)
         end
