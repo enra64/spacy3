@@ -8,7 +8,7 @@
 
 local functions = {}
 
-local is_shot_pressed = false
+local key_lock = {}
 
 local collisions = require("collisions")
 local weaponry = require("weapons")
@@ -55,11 +55,25 @@ local function update_player(dt)
     end
 
     --- shooting
-    if love.keyboard.isDown("space") and not is_shot_pressed then
-        weaponry.shoot_missile(player.x + player.width, player.y + player.height / 2)
-        is_shot_pressed = true
+    if love.keyboard.isDown("q") and not key_lock["q"] then
+        weaponry.shoot_missile(player.x + player.width / 2 - 30, player.y + 2)
+        key_lock["q"] = true
+    elseif not love.keyboard.isDown("q") then
+        key_lock["q"] = false
+    end
+
+    if love.keyboard.isDown("e") and not key_lock["e"] then
+        weaponry.shoot_missile(player.x + player.width / 2 - 30, player.y + player.height - 15)
+        key_lock["e"] = true
+    elseif not love.keyboard.isDown("e") then
+        key_lock["e"] = false
+    end
+
+    if love.keyboard.isDown("space") and not key_lock["space"] then
+        weaponry.shoot_laser(player.x + player.width, player.y + player.height / 2)
+        key_lock["space"] = true
     elseif not love.keyboard.isDown("space") then
-        is_shot_pressed = false
+        key_lock["space"] = false
     end
 
     --- die on collision

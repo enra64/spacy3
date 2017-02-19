@@ -39,6 +39,35 @@ local function shoot_missile(x, y)
 end
 functions.shoot_missile = shoot_missile
 
+
+local function shoot_laser(x, y)
+    local new_bullet = {}
+
+    new_bullet.texture = love.graphics.newImage("green_laser.png")
+
+    --- store scaling factor
+    new_bullet.scale = .6
+
+    --- store width and height
+    local width = new_bullet.texture:getWidth()
+    local height = new_bullet.texture:getHeight()
+    new_bullet.width = width * new_bullet.scale
+    new_bullet.height = height * new_bullet.scale
+
+    --- init pos
+    new_bullet.x = x
+    new_bullet.y = y
+
+    --- add new bullet to list
+    table.insert(bullets, new_bullet)
+
+    --- play firing sound
+    local fire_sound = love.audio.newSource("laser.ogg", "static")
+    fire_sound:setVolume(.3)
+    fire_sound:play()
+end
+functions.shoot_laser = shoot_laser
+
 local function update_bullets(dt)
     for i, bullet in ipairs(bullets) do
         bullet.x = bullet.x + (bullet_speed * dt)

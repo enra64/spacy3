@@ -40,8 +40,8 @@ local function has_collision(object, table, collision_func)
 end
 functions.has_collision = has_collision
 
-local function has_rect_collision(a, table)
-    has_collision(a, table, has_rectangular_collision)
+local function has_rect_collision(collision_check_object, table)
+    return has_collision(collision_check_object, table, has_rectangular_collision)
 end
 functions.has_rect_collision = has_rect_collision
 
