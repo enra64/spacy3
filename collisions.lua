@@ -8,18 +8,18 @@
 
 local functions = {}
 
-local function check_collides(a, b)
+local function has_rectangular_collision(a, b)
     return a.x < b.x + b.width and
             a.x + a.width > b.x and
             a.y < b.y + b.height and
             a.height + a.y > b.y
 end
-functions.check_collides = check_collides
+functions.has_rectangular_collision = has_rectangular_collision
 
 local function remove_all_colliding(collection, colliding_object, collision_handler)
     local had_collision = false
     for index, object in ipairs(collection) do
-        if check_collides(object, colliding_object) then
+        if has_rectangular_collision(object, colliding_object) then
             collision_handler(colliding_object, object)
             table.remove(collection, index)
             had_collision = true
@@ -30,14 +30,19 @@ local function remove_all_colliding(collection, colliding_object, collision_hand
 end
 functions.remove_all_colliding = remove_all_colliding
 
-local function check_collides_with_table(a, table)
+local function has_collision(object, table, collision_func)
     for _, o in ipairs(table) do
-        if check_collides(o, a) then
+        if collision_func(o, object) then
             return true
         end
     end
     return false
 end
-functions.check_collides_with_table = check_collides_with_table
+functions.has_collision = has_collision
+
+local function has_rect_collision(a, table)
+    has_collision(a, table, has_rectangular_collision)
+end
+functions.has_rect_collision = has_rect_collision
 
 return functions

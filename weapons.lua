@@ -34,6 +34,7 @@ local function shoot_missile(x, y)
 
     --- play firing sound
     local fire_sound = love.audio.newSource("rocket_fire.ogg", "static")
+    fire_sound:setVolume(1.5)
     fire_sound:play()
 end
 functions.shoot_missile = shoot_missile

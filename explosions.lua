@@ -56,6 +56,7 @@ local function create_explosion(x, y)
     --explosion_sound:play()
 
     local fire_sound = love.audio.newSource("explosion.ogg", "static")
+    fire_sound:setVolume(.8)
     fire_sound:play()
 end
 functions.create_explosion = create_explosion

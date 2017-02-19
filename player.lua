@@ -46,7 +46,7 @@ local function update_player(dt)
         end
     end
 
-    player.thruster_sound:setVolume(.18 * thruster_count)
+    player.thruster_sound:setVolume(.25 * thruster_count)
 
     if thruster_count > 0 then
         player.thruster_sound:play()
@@ -63,7 +63,7 @@ local function update_player(dt)
     end
 
     --- die on collision
-    if (collisions.check_collides_with_table(player, enemies)) then
+    if (collisions.has_rect_collision(player, enemies)) then
         print("\nYou failed your colony. Also, you made " .. score .. " points.")
         love.event.push('quit')
     end
@@ -105,7 +105,7 @@ local function create_player()
     player.propulsion_texture.down = love.graphics.newImage("ship_flame_up.png")
 
     --- player audio
-    player.thruster_sound = love.audio.newSource("thrusters.wav")
+    player.thruster_sound = love.audio.newSource("thrusters2.ogg")
     player.thruster_sound:setLooping(true)
 end
 functions.load = create_player

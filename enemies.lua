@@ -30,7 +30,7 @@ local function create_enemy()
     repeat
         new_enemy.x = math.random(love.graphics.getWidth(), love.graphics.getWidth() + 100)
         new_enemy.y = math.random(love.graphics.getHeight() - height)
-    until (not collisions.check_collides_with_table(new_enemy, enemies))
+    until (not collisions.has_rect_collision(new_enemy, enemies))
 
     table.insert(enemies, new_enemy)
 end
