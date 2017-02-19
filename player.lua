@@ -9,7 +9,6 @@
 local functions = {}
 
 local is_shot_pressed = false
-local player = {}
 
 local collisions = require("collisions")
 
@@ -35,7 +34,7 @@ local function shoot(x, y)
     table.insert(bullets, new_bullet)
 end
 
-local function update_player(dt, enemies)
+local function update_player(dt)
     --- reset all movements to false
     for i, _ in pairs(player.movement) do
         player.movement[i] = false
