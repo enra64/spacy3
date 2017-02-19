@@ -49,6 +49,14 @@ local function create_explosion(x, y)
 
     --- store explosion
     table.insert(explosions, explosion)
+
+    --- make explosion sound
+    --local explosion_sound = love.audio.newSource("explosion.ogg", "static")
+    --explosion_sound:setVolume(.5)
+    --explosion_sound:play()
+
+    local fire_sound = love.audio.newSource("explosion.ogg", "static")
+    fire_sound:play()
 end
 functions.create_explosion = create_explosion
 

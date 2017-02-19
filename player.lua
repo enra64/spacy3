@@ -11,28 +11,8 @@ local functions = {}
 local is_shot_pressed = false
 
 local collisions = require("collisions")
+local weaponry = require("weapons")
 
-local function shoot(x, y)
-    local new_bullet = {}
-
-    new_bullet.texture = love.graphics.newImage("missile_with_propulsion.png")
-
-    --- store scaling factor
-    new_bullet.scale = .6
-
-    --- store width and height
-    local width = new_bullet.texture:getWidth()
-    local height = new_bullet.texture:getHeight()
-    new_bullet.width = width * new_bullet.scale
-    new_bullet.height = height * new_bullet.scale
-
-    --- init pos
-    new_bullet.x = x
-    new_bullet.y = y
-
-    --- add new bullet to list
-    table.insert(bullets, new_bullet)
-end
 
 local function update_player(dt)
     --- reset all movements to false
@@ -58,9 +38,25 @@ local function update_player(dt)
         player.movement.down = true
     end
 
+    --- adjust thruster volume
+    local thruster_count = 0
+    for _, thruster_activated in pairs(player.movement) do
+        if thruster_activated then
+            thruster_count = thruster_count + 1
+        end
+    end
+
+    player.thruster_sound:setVolume(.18 * thruster_count)
+
+    if thruster_count > 0 then
+        player.thruster_sound:play()
+    else
+        player.thruster_sound:pause()
+    end
+
     --- shooting
     if love.keyboard.isDown("space") and not is_shot_pressed then
-        shoot(player.x + player.width, player.y + player.height / 2)
+        weaponry.shoot_missile(player.x + player.width, player.y + player.height / 2)
         is_shot_pressed = true
     elseif not love.keyboard.isDown("space") then
         is_shot_pressed = false
@@ -107,6 +103,10 @@ local function create_player()
     player.propulsion_texture.left = love.graphics.newImage("ship_flame_front.png")
     player.propulsion_texture.up = love.graphics.newImage("ship_flame_down.png")
     player.propulsion_texture.down = love.graphics.newImage("ship_flame_up.png")
+
+    --- player audio
+    player.thruster_sound = love.audio.newSource("thrusters.wav")
+    player.thruster_sound:setLooping(true)
 end
 functions.load = create_player
 
