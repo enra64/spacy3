@@ -130,33 +130,46 @@ local function create_single_star(x, y)
 end
 
 local function create_gaussian_star_cluster()
-    --- parameters both for the line making up the center line of the stars and the normal of that line
-    local y_aa = love.graphics.getHeight() + math.random(-love.graphics.getHeight() / 4, love.graphics.getHeight() / 4)
+    --- temp storage for screen size
+    local height = love.graphics.getHeight()
+    local width = love.graphics.getWidth()
 
+    --- parameters both for the line making up the center line of the stars and the normal of that line
+    local y_aa = height / 2 + math.random(-height / 4, height / 4)
+
+    --- change slope so the cluster will be on screen
     local slope
-    if y_aa > love.graphics.getHeight() / 2 then
-        slope = math.random() - 1.01
+    if y_aa > height / 2 then
+        slope = math.random(-100, -50) / 100
     else
-        slope = math.random()
+        slope = math.random(50, 100) / 100
     end
 
     local normal_slope = -(1 / slope)
 
-    --- both functions
-    local line_of_stars = function(x) return y_aa + slope * x end
+    print("yaa" .. y_aa ..", slope " .. slope .."normal slope "..normal_slope)
 
+    --- generate me some stars
     local star_count = 500
     for i = 1, star_count do
-        --- create something useful out of box-mueller, which outputs -4 to 4
-        local x_position = ((16 + box_muller(0, 6, 1)) / 30) * love.graphics.getWidth()
-        local y_position = line_of_stars(x_position)
+        --- random position somewhere on the x axis with a normal distribution
+        local x_position = ((16 + box_muller(0, 6, 1)) / 30) * width
 
-        local normal_function = function(x) return normal_slope * x + (y_position - (normal_slope * x_position)) end
+        --- calculate the y position of that x position given our x
+        local y_position = y_aa + slope * x_position
 
-        local star_x_position = x_position + (box_muller(0, 5, 2) * 5)
-        local star_y_position = normal_function(star_x_position)
+        --- choose an x position slightly offset, so we calculate some point of the tangent that is likely on the screen
+        local x = x_position + (box_muller(0, 5, 2) * 5)
 
-        create_single_star(star_x_position, star_y_position)
+        --- calculate normal position
+        local y = normal_slope * x + (y_position - (normal_slope * x_position))
+
+        --- only add the created star if it is set within the screen
+        if x < 0 or y < 0 or x > width or y > height then
+            i = i - 1
+        else
+            create_single_star(x, y)
+        end
     end
 end
 
