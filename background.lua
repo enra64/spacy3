@@ -11,69 +11,13 @@ local functions = {}
 local planets = {}
 local stars = {}
 local star_image_paths = { "star_1.png", "star_2.png", "star_3.png", "star_4.png", "star_5.png" }
-
-
-
--- boxmuller.c           Implements the Polar form of the Box-Muller
---Transformation
-
---(c) Copyright 1994, Everett F. Carter Jr.
---Permission is granted by the author to use
---this software for any application provided this
---copyright notice is preserved.
-
-local bm_use_last = {}
-local bm_y2 = {}
-
-local function box_muller(mean, standard_derivation, bm_use_index)
-    local x1, x2, w, y1
-
-    --- use value from previous call
-    if (bm_use_last[bm_use_index]) then
-        y1 = bm_y2[bm_use_index]
-        bm_use_last[bm_use_index] = false
-    else
-        repeat
-            x1 = 2.0 * math.random() - 1.0
-            x2 = 2.0 * math.random() - 1.0
-            w = x1 * x1 + x2 * x2
-        until (w < 1)
-
-        w = math.sqrt((-2.0 * math.log(w)) / w)
-        y1 = x1 * w
-        bm_y2[bm_use_index] = x2 * w
-        bm_use_last[bm_use_index] = true
-    end
-    return mean + y1 * standard_derivation
-end
-
-local function shuffle(array)
-    -- fisher-yates
-    local output = {}
-    local random = math.random
-
-    for index = 1, #array do
-        local offset = index - 1
-        local value = array[index]
-        local randomIndex = offset * random()
-        local flooredIndex = randomIndex - randomIndex % 1
-
-        if flooredIndex == offset then
-            output[#output + 1] = value
-        else
-            output[#output + 1] = output[flooredIndex + 1]
-            output[flooredIndex + 1] = value
-        end
-    end
-
-    return output
-end
+local random = require("random")
 
 local function load_planets()
     local planet_image_paths = { "blue_planet_1.png", "blue_planet_2.png", "yellow_planet.png" }
 
     --- make the planets appear in a random order
-    planet_image_paths = shuffle(planet_image_paths)
+    planet_image_paths = random.shuffle(planet_image_paths)
 
     local planet_count = #planet_image_paths
     local g_width = love.graphics.getWidth()
@@ -147,19 +91,17 @@ local function create_gaussian_star_cluster()
 
     local normal_slope = -(1 / slope)
 
-    print("yaa" .. y_aa ..", slope " .. slope .."normal slope "..normal_slope)
-
     --- generate me some stars
     local star_count = 500
     for i = 1, star_count do
         --- random position somewhere on the x axis with a normal distribution
-        local x_position = ((16 + box_muller(0, 6, 1)) / 30) * width
+        local x_position = ((16 + random.box_muller(0, 6, 1)) / 30) * width
 
         --- calculate the y position of that x position given our x
         local y_position = y_aa + slope * x_position
 
         --- choose an x position slightly offset, so we calculate some point of the tangent that is likely on the screen
-        local x = x_position + (box_muller(0, 5, 2) * 5)
+        local x = x_position + (random.box_muller(0, 5, 2) * 5)
 
         --- calculate normal position
         local y = normal_slope * x + (y_position - (normal_slope * x_position))
