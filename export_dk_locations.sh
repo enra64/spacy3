@@ -1,3 +1,5 @@
+echo TOUCH > build_state
+
 # export all the variables
 export ANDROID_SDK=/opt/sdk-android
 export ANDROID_NDK=/home/arne/Programs/ndk-android/
@@ -16,4 +18,8 @@ mv game.love /home/arne/Programs/love-android-sdl2/assets/
 cd /home/arne/Programs/love-android-sdl2/
 
 # DEPLOY
-#ant debug
+ant debug
+
+cp /home/arne/Programs/love-android-sdl2/bin/love-android-debug.apk /home/arne/Documents/Development/spacy3/love-android-debug.apk
+
+echo NO_TOUCH > build_state
