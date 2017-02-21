@@ -3,11 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="7beaf12a-bf86-4ec9-86bf-01684f20587c" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/background.lua" afterPath="$PROJECT_DIR$/background.lua" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/enemies.lua" afterPath="$PROJECT_DIR$/enemies.lua" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/explosions.lua" afterPath="$PROJECT_DIR$/explosions.lua" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/player.lua" afterPath="$PROJECT_DIR$/player.lua" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/weapons.lua" afterPath="$PROJECT_DIR$/weapons.lua" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
