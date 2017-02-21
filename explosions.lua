@@ -32,7 +32,7 @@ functions.update = update_explosions
 
 local function create_explosion(x, y)
     local explosion = {}
-    explosion.main_texture = love.graphics.newImage("explosion.png")
+    explosion.main_texture = love.graphics.newImage("img/explosion.png")
 
     --- age determines the scaling of explosions
     explosion.age = 0
@@ -51,11 +51,11 @@ local function create_explosion(x, y)
     table.insert(explosions, explosion)
 
     --- make explosion sound
-    --local explosion_sound = love.audio.newSource("explosion.ogg", "static")
+    --local explosion_sound = love.audio.newSource("sounds/explosion.ogg", "static")
     --explosion_sound:setVolume(.5)
     --explosion_sound:play()
 
-    local fire_sound = love.audio.newSource("explosion.ogg", "static")
+    local fire_sound = love.audio.newSource("sounds/explosion.ogg", "static")
     fire_sound:setVolume(.8)
     fire_sound:play()
 end

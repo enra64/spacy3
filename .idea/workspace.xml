@@ -2,56 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7beaf12a-bf86-4ec9-86bf-01684f20587c" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/enemy_ship_2_body.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/enemy_ship_2_propulsion.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/p2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/raw_newbullt_explosions.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/star_1.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/star_2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/star_3.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/star_4.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/star_5.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/star_6.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/xcf/enemy_ship_2.xcf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/xcf/star_v2_1.xcf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/xcf/star_v2_2.xcf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/xcf/star_v2_3.xcf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/xcf/star_v2_4.xcf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/xcf/star_v2_5.xcf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/xcf/star_v2_6.xcf" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/background.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/enemy_with_propulsion.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/laser.wav" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/my_spaceship_with_propulsion.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/raw_newbullt_explosions.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/star_1.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/star_2.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/star_3.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/star_4.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/star_5.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/star_6.png" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/blue2_laser.png" afterPath="$PROJECT_DIR$/img/blue2_laser.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/blue_laser.png" afterPath="$PROJECT_DIR$/img/blue_laser.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/blue_planet_1.png" afterPath="$PROJECT_DIR$/img/blue_planet_1.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/blue_planet_2.png" afterPath="$PROJECT_DIR$/img/blue_planet_2.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/explosion.ogg" afterPath="$PROJECT_DIR$/sounds/explosion.ogg" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/explosion.png" afterPath="$PROJECT_DIR$/img/explosion.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/green_laser.png" afterPath="$PROJECT_DIR$/img/green_laser.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/laser.ogg" afterPath="$PROJECT_DIR$/sounds/laser.ogg" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/missile_with_propulsion.png" afterPath="$PROJECT_DIR$/img/missile_with_propulsion.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/rocket_fire.ogg" afterPath="$PROJECT_DIR$/sounds/rocket_fire.ogg" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/ship_flame_back.png" afterPath="$PROJECT_DIR$/img/ship_flame_back.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/ship_flame_down.png" afterPath="$PROJECT_DIR$/img/ship_flame_down.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/ship_flame_front.png" afterPath="$PROJECT_DIR$/img/ship_flame_front.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/ship_flame_up.png" afterPath="$PROJECT_DIR$/img/ship_flame_up.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/ship_main.png" afterPath="$PROJECT_DIR$/img/ship_main.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/star.png" afterPath="$PROJECT_DIR$/img/star.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/thrusters2.ogg" afterPath="$PROJECT_DIR$/sounds/thrusters2.ogg" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/yellow_laser.png" afterPath="$PROJECT_DIR$/img/yellow_laser.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/yellow_planet.png" afterPath="$PROJECT_DIR$/img/yellow_planet.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/background.lua" afterPath="$PROJECT_DIR$/background.lua" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/enemies.lua" afterPath="$PROJECT_DIR$/enemies.lua" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/explosions.lua" afterPath="$PROJECT_DIR$/explosions.lua" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/player.lua" afterPath="$PROJECT_DIR$/player.lua" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/weapons.lua" afterPath="$PROJECT_DIR$/weapons.lua" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -77,21 +33,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="enemies.lua" pinned="false" current-in-tab="true">
+      <file leaf-file-name="enemies.lua" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/enemies.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="18" column="0" lean-forward="true" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+            <state relative-caret-position="198">
+              <caret line="17" column="47" lean-forward="false" selection-start-line="17" selection-start-column="47" selection-end-line="17" selection-end-column="47" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="weapons.lua" pinned="false" current-in-tab="false">
+      <file leaf-file-name="weapons.lua" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/weapons.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+            <state relative-caret-position="342">
+              <caret line="64" column="51" lean-forward="false" selection-start-line="64" selection-start-column="51" selection-end-line="64" selection-end-column="51" />
               <folding />
             </state>
           </provider>
@@ -100,8 +56,8 @@
       <file leaf-file-name="explosions.lua" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/explosions.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="756">
-              <caret line="42" column="56" lean-forward="false" selection-start-line="42" selection-start-column="56" selection-end-line="42" selection-end-column="56" />
+            <state relative-caret-position="381">
+              <caret line="57" column="51" lean-forward="false" selection-start-line="57" selection-start-column="51" selection-end-line="57" selection-end-column="51" />
               <folding />
             </state>
           </provider>
@@ -110,11 +66,9 @@
       <file leaf-file-name="background.lua" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/background.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="900">
-              <caret line="102" column="52" lean-forward="false" selection-start-line="102" selection-start-column="52" selection-end-line="102" selection-end-column="52" />
-              <folding>
-                <element signature="n#load_planets#0" expanded="false" />
-              </folding>
+            <state relative-caret-position="306">
+              <caret line="17" column="63" lean-forward="false" selection-start-line="17" selection-start-column="63" selection-end-line="17" selection-end-column="63" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -132,8 +86,8 @@
       <file leaf-file-name="player.lua" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/player.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1044">
-              <caret line="58" column="77" lean-forward="false" selection-start-line="58" selection-start-column="77" selection-end-line="58" selection-end-column="77" />
+            <state relative-caret-position="631">
+              <caret line="121" column="56" lean-forward="false" selection-start-line="121" selection-start-column="56" selection-end-line="121" selection-end-column="56" />
               <folding />
             </state>
           </provider>
@@ -158,7 +112,17 @@
       <find>shit be</find>
       <find>background</find>
       <find>player</find>
+      <find>.png</find>
+      <find>&quot;(.*).png</find>
+      <find>&quot;(.*)\.png</find>
+      <find>&quot;(.*)\.ogg</find>
+      <find>img</find>
     </findStrings>
+    <replaceStrings>
+      <replace>&quot;img/\0.png</replace>
+      <replace>&quot;img/$1.png</replace>
+      <replace>&quot;img/$1.ogg</replace>
+    </replaceStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -172,13 +136,13 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/main.lua" />
-        <option value="$PROJECT_DIR$/explosions.lua" />
         <option value="$PROJECT_DIR$/collisions.lua" />
-        <option value="$PROJECT_DIR$/weapons.lua" />
-        <option value="$PROJECT_DIR$/player.lua" />
         <option value="$PROJECT_DIR$/random.lua" />
-        <option value="$PROJECT_DIR$/background.lua" />
         <option value="$PROJECT_DIR$/enemies.lua" />
+        <option value="$PROJECT_DIR$/background.lua" />
+        <option value="$PROJECT_DIR$/explosions.lua" />
+        <option value="$PROJECT_DIR$/player.lua" />
+        <option value="$PROJECT_DIR$/weapons.lua" />
       </list>
     </option>
   </component>
@@ -596,7 +560,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1048" y="29" width="1924" height="1053" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -608,12 +572,13 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32903227" sideWeight="0.4978678" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32903227" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3268817" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3268817" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19936034" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="LuaJ" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32903227" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -625,7 +590,6 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32903227" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -680,9 +644,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="n#load_planets#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -738,9 +700,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="n#load_planets#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -796,9 +756,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1206">
           <caret line="67" column="133" lean-forward="false" selection-start-line="67" selection-start-column="133" selection-end-line="67" selection-end-column="133" />
-          <folding>
-            <element signature="n#load_planets#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -854,9 +812,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1206">
           <caret line="67" column="133" lean-forward="false" selection-start-line="67" selection-start-column="133" selection-end-line="67" selection-end-column="133" />
-          <folding>
-            <element signature="n#load_planets#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -912,9 +868,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1206">
           <caret line="67" column="133" lean-forward="false" selection-start-line="67" selection-start-column="133" selection-end-line="67" selection-end-column="133" />
-          <folding>
-            <element signature="n#load_planets#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -998,30 +952,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/weapons.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/explosions.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="756">
-          <caret line="42" column="56" lean-forward="false" selection-start-line="42" selection-start-column="56" selection-end-line="42" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/player.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1044">
-          <caret line="58" column="77" lean-forward="false" selection-start-line="58" selection-start-column="77" selection-end-line="58" selection-end-column="77" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/random.lua">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="361">
@@ -1038,20 +968,42 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/explosions.lua">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="381">
+          <caret line="57" column="51" lean-forward="false" selection-start-line="57" selection-start-column="51" selection-end-line="57" selection-end-column="51" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/background.lua">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="900">
-          <caret line="102" column="52" lean-forward="false" selection-start-line="102" selection-start-column="52" selection-end-line="102" selection-end-column="52" />
-          <folding>
-            <element signature="n#load_planets#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="306">
+          <caret line="17" column="63" lean-forward="false" selection-start-line="17" selection-start-column="63" selection-end-line="17" selection-end-column="63" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/player.lua">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="631">
+          <caret line="121" column="56" lean-forward="false" selection-start-line="121" selection-start-column="56" selection-end-line="121" selection-end-column="56" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/enemies.lua">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="18" column="0" lean-forward="true" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+        <state relative-caret-position="198">
+          <caret line="17" column="47" lean-forward="false" selection-start-line="17" selection-start-column="47" selection-end-line="17" selection-end-column="47" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/weapons.lua">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="64" column="51" lean-forward="false" selection-start-line="64" selection-start-column="51" selection-end-line="64" selection-end-column="51" />
           <folding />
         </state>
       </provider>

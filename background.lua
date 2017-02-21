@@ -10,12 +10,12 @@ local functions = {}
 
 local planets = {}
 local stars = {}
-local star_image_paths = { "star_1.png", "star_2.png", "star_3.png", "star_4.png", "star_5.png" }
+local star_image_paths = { "img/star_1.png", "img/star_2.png", "img/star_3.png", "img/star_4.png", "img/star_5.png" }
 local random = require("random")
 local collisions = require("collisions")
 
 local function load_planets()
-    local planet_image_paths = { "blue_planet_1.png", "blue_planet_2.png", "yellow_planet.png" }
+    local planet_image_paths = { "img/blue_planet_1.png", "img/blue_planet_2.png", "img/yellow_planet.png" }
 
     --- make the planets appear in a random order
     planet_image_paths = random.shuffle(planet_image_paths)

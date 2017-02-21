@@ -103,7 +103,7 @@ functions.draw = draw_player
 local function create_player()
     player.x = 50
     player.y = love.graphics.getHeight() / 2
-    player.texture = love.graphics.newImage("ship_main.png")
+    player.texture = love.graphics.newImage("img/ship_main.png")
 
     player.width = player.texture:getWidth()
     player.height = player.texture:getHeight()
@@ -113,13 +113,13 @@ local function create_player()
 
     --- store all four propulsion textures
     player.propulsion_texture = {}
-    player.propulsion_texture.right = love.graphics.newImage("ship_flame_back.png")
-    player.propulsion_texture.left = love.graphics.newImage("ship_flame_front.png")
-    player.propulsion_texture.up = love.graphics.newImage("ship_flame_down.png")
-    player.propulsion_texture.down = love.graphics.newImage("ship_flame_up.png")
+    player.propulsion_texture.right = love.graphics.newImage("img/ship_flame_back.png")
+    player.propulsion_texture.left = love.graphics.newImage("img/ship_flame_front.png")
+    player.propulsion_texture.up = love.graphics.newImage("img/ship_flame_down.png")
+    player.propulsion_texture.down = love.graphics.newImage("img/ship_flame_up.png")
 
     --- player audio
-    player.thruster_sound = love.audio.newSource("thrusters2.ogg")
+    player.thruster_sound = love.audio.newSource("sounds/thrusters2.ogg")
     player.thruster_sound:setLooping(true)
 end
 functions.load = create_player

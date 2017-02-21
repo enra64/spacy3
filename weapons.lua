@@ -14,7 +14,7 @@ local collisions = require("collisions")
 local function shoot_missile(x, y)
     local new_bullet = {}
 
-    new_bullet.texture = love.graphics.newImage("missile_with_propulsion.png")
+    new_bullet.texture = love.graphics.newImage("img/missile_with_propulsion.png")
 
     --- store scaling factor
     new_bullet.scale = .6
@@ -33,7 +33,7 @@ local function shoot_missile(x, y)
     table.insert(bullets, new_bullet)
 
     --- play firing sound
-    local fire_sound = love.audio.newSource("rocket_fire.ogg", "static")
+    local fire_sound = love.audio.newSource("sounds/rocket_fire.ogg", "static")
     fire_sound:setVolume(1.5)
     fire_sound:play()
 end
@@ -43,7 +43,7 @@ functions.shoot_missile = shoot_missile
 local function shoot_laser(x, y)
     local new_bullet = {}
 
-    new_bullet.texture = love.graphics.newImage("green_laser.png")
+    new_bullet.texture = love.graphics.newImage("img/green_laser.png")
 
     --- store scaling factor
     new_bullet.scale = .6
@@ -62,7 +62,7 @@ local function shoot_laser(x, y)
     table.insert(bullets, new_bullet)
 
     --- play firing sound
-    local fire_sound = love.audio.newSource("laser.ogg", "static")
+    local fire_sound = love.audio.newSource("sounds/laser.ogg", "static")
     fire_sound:setVolume(.3)
     fire_sound:play()
 end
