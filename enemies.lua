@@ -15,7 +15,7 @@ local function create_enemy()
     local new_enemy = {}
 
     --- load texture
-    new_enemy.texture = love.graphics.newImage("enemy_with_propulsion.png")
+    new_enemy.texture = love.graphics.newImage("enemy_ship_2_body.png")
 
     --- store width and height
     local width = new_enemy.texture:getWidth()

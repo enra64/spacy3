@@ -12,6 +12,7 @@ local planets = {}
 local stars = {}
 local star_image_paths = { "star_1.png", "star_2.png", "star_3.png", "star_4.png", "star_5.png" }
 local random = require("random")
+local collisions = require("collisions")
 
 local function load_planets()
     local planet_image_paths = { "blue_planet_1.png", "blue_planet_2.png", "yellow_planet.png" }
@@ -58,19 +59,20 @@ local function load_planets()
     end
 end
 
-local function create_single_star(x, y)
+local function get_single_star(x, y)
     local star = {}
 
     star.texture = love.graphics.newImage(star_image_paths[math.random(#star_image_paths)])
     star.rotation = math.rad(math.random(360))
-    star.scale = math.random(30) / 100
-    star.width = star.texture:getWidth()
-    star.height = star.texture:getHeight()
-    star.color = { math.random(255), math.random(255), math.random(255), math.random(255) }
+    star.scale = math.random(5, 12) / 100
+    star.width = star.texture:getWidth() * star.scale
+    star.height = star.texture:getHeight() * star.scale
+    --star.color = { math.random(255), math.random(255), math.random(255), math.random(255) }
+    star.color = {255, 255, 255}
     star.x = x
     star.y = y
 
-    table.insert(stars, star)
+    return star
 end
 
 local function create_gaussian_star_cluster()
@@ -84,24 +86,24 @@ local function create_gaussian_star_cluster()
     --- change slope so the cluster will be on screen
     local slope
     if y_aa > height / 2 then
-        slope = math.random(-100, -50) / 100
+        slope = math.random(-50, -10) / 100
     else
-        slope = math.random(50, 100) / 100
+        slope = math.random(10, 50) / 100
     end
 
     local normal_slope = -(1 / slope)
 
     --- generate me some stars
-    local star_count = 500
+    local star_count = math.random(100, 300)
     for i = 1, star_count do
         --- random position somewhere on the x axis with a normal distribution
-        local x_position = ((16 + random.box_muller(0, 6, 1)) / 30) * width
+        local x_position = ((16 + random.box_muller(0, 5, 1)) / 30) * width
 
         --- calculate the y position of that x position given our x
         local y_position = y_aa + slope * x_position
 
         --- choose an x position slightly offset, so we calculate some point of the tangent that is likely on the screen
-        local x = x_position + (random.box_muller(0, 5, 2) * 5)
+        local x = x_position + (random.box_muller(0, 2, 2) * 5)
 
         --- calculate normal position
         local y = normal_slope * x + (y_position - (normal_slope * x_position))
@@ -110,14 +112,20 @@ local function create_gaussian_star_cluster()
         if x < 0 or y < 0 or x > width or y > height then
             i = i - 1
         else
-            create_single_star(x, y)
+            local new_star = get_single_star(x, y)
+
+            if(collisions.has_rect_collision(new_star, stars)) then
+                i = i - 1
+            else
+                table.insert(stars, new_star)
+            end
         end
     end
 end
 
 local function load_stars()
     for i = 1, math.random(50, 100), 1 do
-        create_single_star(math.random(love.graphics.getWidth()), math.random(love.graphics.getHeight()))
+        table.insert(stars, get_single_star(math.random(love.graphics.getWidth()), math.random(love.graphics.getHeight())))
     end
 end
 
@@ -137,7 +145,7 @@ local function draw_background()
     --- draw all stars
     for _, star in ipairs(stars) do
         love.graphics.setColor(star.color)
-        love.graphics.draw(star.texture, star.x, star.y, math.rad(star.rotation), star.scale, star.scale, star.width / 2, star.height / 2)
+        love.graphics.draw(star.texture, star.x, star.y, star.rotation, star.scale, star.scale, star.width / 2, star.height / 2)
     end
     love.graphics.setColor(255, 255, 255)
 
