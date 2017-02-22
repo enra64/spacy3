@@ -8,6 +8,11 @@
 
 local functions = {}
 
+local function has_collision_point_rectangle(point, rectangle)
+    return point.x > rectangle.x and point.x < rectangle.x + rectangle.width and point.y > rectangle.y and point.y < rectangle.y + rectangle.height
+end
+functions.has_collision_point_rectangle = has_collision_point_rectangle
+
 local function has_rectangular_collision(a, b)
     return a.x < b.x + b.width and
             a.x + a.width > b.x and

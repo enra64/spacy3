@@ -1,4 +1,4 @@
-echo TOUCH > build_state
+echo "return function() return true end" > is_touch.lua
 
 # export all the variables
 export ANDROID_SDK=/opt/sdk-android
@@ -8,7 +8,7 @@ export ANDROID_HOME=${ANDROID_SDK}
 export PATH=$PATH:$ANDROID_SDK/tools:$ANDROID_NDK
 
 # zip to game.love
-zip -qr -9 game.love . -x "xcf/*" -x ".idea/*" -x spacy3.iml -x "out/*" -x .gitignore -x "raw/*"
+zip -qr -9 game.love . -x "xcf/*" -x ".idea/*" -x spacy3.iml -x "out/*" -x .gitignore -x "raw/*" -x *.apk
 
 # move the game.love to the love-android folder
 mkdir -p /home/arne/Programs/love-android-sdl2/assets
@@ -22,4 +22,5 @@ ant debug
 
 cp /home/arne/Programs/love-android-sdl2/bin/love-android-debug.apk /home/arne/Documents/Development/spacy3/love-android-debug.apk
 
-echo NO_TOUCH > build_state
+
+echo "return function() return false end" > /home/arne/Documents/Development/spacy3/is_touch.lua

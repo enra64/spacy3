@@ -17,6 +17,7 @@ local player = require("player")
 local explosions = require("explosions")
 local weapons = require("weapons")
 local enemies = require("enemies")
+local control = require("player_control")
 
 function on_kill(_, killed_enemy)
     score = score + 10
@@ -26,6 +27,7 @@ function on_kill(_, killed_enemy)
 end
 
 function love.update(dt)
+    control.update(dt)
     weapons.update(dt)
     player.update(dt)
     enemies.update(dt, on_kill)
@@ -39,6 +41,7 @@ function love.draw()
     weapons.draw()
     player.draw()
     explosions.draw()
+    control.draw()
 
     --- score
     love.graphics.print(score .. " points", 0, 0, 0, 2)
@@ -53,6 +56,9 @@ function love.load()
 
     --- load background textures
     bg.load()
+
+    --- initialise control
+    control.load()
 
     --- initialise the player
     player.load()

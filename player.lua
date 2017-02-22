@@ -8,37 +8,42 @@
 
 local functions = {}
 
-local key_lock = {}
+
 
 local collisions = require("collisions")
 local weaponry = require("weapons")
+local control = require("player_control")
 
+local a_button_lock = false
+local b_button_lock = false
 
 local function update_player(dt)
-    --- reset all movements to false
-    for i, _ in pairs(player.movement) do
-        player.movement[i] = false
+    player.movement = control.get_movement_table()
+
+    if control.is_button_pressed("a_button") and not a_button_lock then
+        weaponry.shoot_missile(player.x + player.width / 2 - 30, player.y + 2)
+        a_button_lock = true
+    elseif not control.is_button_pressed("a_button") then
+        a_button_lock = false
     end
 
-    --- check direction keys
-    if love.keyboard.isDown("d") and player.x + player.width < love.graphics.getWidth() then
-        player.x = player.x + (speed * dt)
-        player.movement.right = true
-    end
-    if love.keyboard.isDown("a") and player.x > 0 then
-        player.x = player.x - (speed * dt)
-        player.movement.left = true
-    end
-    if love.keyboard.isDown("w") and player.y > 0 then
-        player.y = player.y - (speed * dt)
-        player.movement.up = true
-    end
-    if love.keyboard.isDown("s") and player.y + player.height < love.graphics.getHeight() then
-        player.y = player.y + (speed * dt)
-        player.movement.down = true
+    if control.is_button_pressed("b_button") and not b_button_lock then
+        weaponry.shoot_laser(player.x + player.width, player.y + player.height / 2)
+        b_button_lock = true
+    elseif not control.is_button_pressed("b_button") then
+        b_button_lock = false
     end
 
-    --- adjust thruster volume
+    local dir = control.get_direction()
+    if math.abs(player.x) > .00001 then
+        player.x = player.x + dir.x * speed
+    end
+
+    if math.abs(player.y) > .00001 then
+        player.y = player.y + dir.y * speed
+    end
+
+    --- adjust thruster sound volume
     local thruster_count = 0
     for _, thruster_activated in pairs(player.movement) do
         if thruster_activated then
@@ -54,27 +59,7 @@ local function update_player(dt)
         player.thruster_sound:pause()
     end
 
-    --- shooting
-    if love.keyboard.isDown("q") and not key_lock["q"] then
-        weaponry.shoot_missile(player.x + player.width / 2 - 30, player.y + 2)
-        key_lock["q"] = true
-    elseif not love.keyboard.isDown("q") then
-        key_lock["q"] = false
-    end
 
-    if love.keyboard.isDown("e") and not key_lock["e"] then
-        weaponry.shoot_missile(player.x + player.width / 2 - 30, player.y + player.height - 15)
-        key_lock["e"] = true
-    elseif not love.keyboard.isDown("e") then
-        key_lock["e"] = false
-    end
-
-    if love.keyboard.isDown("space") and not key_lock["space"] then
-        weaponry.shoot_laser(player.x + player.width, player.y + player.height / 2)
-        key_lock["space"] = true
-    elseif not love.keyboard.isDown("space") then
-        key_lock["space"] = false
-    end
 
     --- die on collision
     if (collisions.has_rect_collision(player, enemies)) then
@@ -107,9 +92,6 @@ local function create_player()
 
     player.width = player.texture:getWidth()
     player.height = player.texture:getHeight()
-
-    --- storage for direction
-    player.movement = {right = false, left = false, up = false, down = false }
 
     --- store all four propulsion textures
     player.propulsion_texture = {}
