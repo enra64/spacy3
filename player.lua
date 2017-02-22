@@ -17,7 +17,7 @@ local control = require("player_control")
 local a_button_lock = false
 local b_button_lock = false
 
-local function update_player(dt)
+local function update_player(_)
     player.movement = control.get_movement_table()
 
     if control.is_button_pressed("a_button") and not a_button_lock then
@@ -67,6 +67,7 @@ local function update_player(dt)
         love.event.push('quit')
     end
 end
+
 functions.update = update_player
 
 local function draw_player()
@@ -83,6 +84,7 @@ local function draw_player()
 
     love.graphics.draw(player.texture, player.x, player.y, 0, 1, 1)
 end
+
 functions.draw = draw_player
 
 local function create_player()
@@ -94,16 +96,18 @@ local function create_player()
     player.height = player.texture:getHeight()
 
     --- store all four propulsion textures
-    player.propulsion_texture = {}
-    player.propulsion_texture.right = love.graphics.newImage("img/ship_flame_back.png")
-    player.propulsion_texture.left = love.graphics.newImage("img/ship_flame_front.png")
-    player.propulsion_texture.up = love.graphics.newImage("img/ship_flame_down.png")
-    player.propulsion_texture.down = love.graphics.newImage("img/ship_flame_up.png")
+    player.propulsion_texture = {
+        right = love.graphics.newImage("img/ship_flame_back.png"),
+        left = love.graphics.newImage("img/ship_flame_front.png"),
+        up = love.graphics.newImage("img/ship_flame_down.png"),
+        down = love.graphics.newImage("img/ship_flame_up.png")
+    }
 
     --- player audio
     player.thruster_sound = love.audio.newSource("sounds/thrusters2.ogg")
     player.thruster_sound:setLooping(true)
 end
+
 functions.load = create_player
 
 

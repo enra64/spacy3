@@ -158,18 +158,19 @@ functions.get_direction = get_direction
 
 local function get_movement_table()
     local movement = {}
-    if control_state.x > .05 then
+    local threshold = .01
+    if control_state.x > threshold then
         movement.right = true
-    elseif control_state.x < -0.5 then
+    elseif control_state.x < -threshold then
         movement.left = true
     else
         movement.right = false
         movement.left = false
     end
 
-    if control_state.y > .05 then
+    if control_state.y > threshold then
         movement.down = true
-    elseif control_state.y < -0.5 then
+    elseif control_state.y < -threshold then
         movement.up = true
     else
         movement.down = false
