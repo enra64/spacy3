@@ -35,11 +35,15 @@ local function update_player(_)
     end
 
     local dir = control.get_direction()
-    if math.abs(player.x) > .00001 then
+    if player.x > 0 and dir.x < -.0001 then
+        player.x = player.x + dir.x * speed
+    elseif player.x + player.width < love.graphics.getWidth() and dir.x > .0001 then
         player.x = player.x + dir.x * speed
     end
 
-    if math.abs(player.y) > .00001 then
+    if player.y > 0 and dir.y < -.0001 then
+        player.y = player.y + dir.y * speed
+    elseif player.y + player.height < love.graphics.getHeight() and dir.y > .0001 then
         player.y = player.y + dir.y * speed
     end
 
@@ -67,6 +71,7 @@ local function update_player(_)
         love.event.push('quit')
     end
 end
+
 functions.update = update_player
 
 local function draw_player()
