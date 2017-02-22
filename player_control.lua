@@ -14,6 +14,7 @@ local collision = require("collisions")
 local is_touch = require("is_touch")
 
 --- touch only stuff
+local opacity = 150
 local touch_controls = {}
 local dpad_background = {}
 
@@ -21,12 +22,24 @@ local dpad_background = {}
 local control_state = {}
 
 local function handle_dpad_touch(x, y)
+    --- position of touch relative to dpad background, negative if the touch is left of/above center
+    x = x - dpad_background.x - dpad_background.width / 2
+    y = y - dpad_background.y - dpad_background.height / 2
 
+    --- scale to dt, update control state
+    control_state.x = (x / dpad_background.width) * 0.06
+    control_state.y = (y / dpad_background.height) * 0.06
+
+    print(x..","..y)
+
+    --- set control knob position
+    touch_controls.dpad.x = dpad_background.x + x + 2 * touch_controls.dpad.width / 2
+    touch_controls.dpad.y = dpad_background.y + y + 2 * touch_controls.dpad.height / 2
 end
 
 local function update_touch()
     local touches = love.touch.getTouches()
-
+    local dpad_touched = false
     control_state.button_a_pressed = false
     control_state.button_b_pressed = false
     control_state.x = 0
@@ -34,17 +47,28 @@ local function update_touch()
 
     for _, touch_id in ipairs(touches) do
         local x, y = love.touch.getPosition(touch_id)
-        for _, touch_control in touch_controls do
-            if collision.has_collision_point_rectangle({x = x, y = y}, touch_control) then
-                if touch_control.type == button_a then
+
+        --- handle button clicks
+        for type, touch_control in pairs(touch_controls) do
+            if collision.has_collision_point_rectangle(x, y, touch_control) then
+                if type == "button_a" then
                     control_state.button_a_pressed = true
-                elseif touch_control.type == button_b then
-                    control_state.button_a_pressed = true
-                else
-                    handle_dpad_touch(x, y)
+                elseif type == "button_b" then
+                    control_state.button_b_pressed = true
                 end
             end
         end
+
+        --- handle dpad separately, because we want to check for touches in the background texture
+        if collision.has_collision_point_rectangle(x, y, dpad_background) then
+            handle_dpad_touch(x, y)
+            dpad_touched = true
+        end
+    end
+
+    if not dpad_touched then
+        touch_controls.dpad.x = dpad_background.x + dpad_background.width / 2 - touch_controls.dpad.width / 2
+        touch_controls.dpad.y = dpad_background.y + dpad_background.height / 2 - touch_controls.dpad.height / 2
     end
 end
 
@@ -83,10 +107,12 @@ functions.update = update
 
 local function draw()
     if is_touch() then
-        for _, control in ipairs(touch_controls) do
+        love.graphics.setColor(255, 255, 255, opacity)
+        love.graphics.draw(dpad_background.texture, dpad_background.x, dpad_background.y)
+        for _, control in pairs(touch_controls) do
             love.graphics.draw(control.texture, control.x, control.y)
         end
-        love.graphics.draw(dpad_background.texture, dpad_background.x, dpad_background.y)
+        love.graphics.setColor(255, 255, 255, 255)
     end
 end
 functions.draw = draw
@@ -107,32 +133,33 @@ function load()
         dpad_background.opacity = 50
 
         local control_textures = {
-            dpad = "img/touch_controls/dpad.png",
+            dpad = "img/touch_controls/dpad_knob.png",
             button_a = "img/touch_controls/button_a.png",
             button_b = "img/touch_controls/button_b.png"
         }
 
         for control_type, texture_location in pairs(control_textures) do
             local new_control = {}
-            new_control.type = control_type
             new_control.texture = love.graphics.newImage(texture_location)
             new_control.width = new_control.texture:getWidth()
             new_control.height = new_control.texture:getHeight()
 
-            if control_type == dpad then
+            if control_type == "dpad" then
                 new_control.default_x = (dpad_background.width - new_control.width) / 2
                 new_control.default_y = (dpad_background.height - new_control.height) / 2
                 new_control.x = new_control.default_x
                 new_control.y = new_control.default_y
-            elseif control_type == button_a then
+            elseif control_type == "button_a" then
                 new_control.x = love.graphics.getWidth() - 2 * new_control.width
                 new_control.y = love.graphics.getHeight() - new_control.height
-            elseif control_type == button_b then
+            elseif control_type == "button_b" then
                 new_control.x = love.graphics.getWidth() - new_control.width
                 new_control.y = love.graphics.getHeight() - 2 * new_control.height
+            else
+                print("unknown control type")
             end
 
-            table.insert(touch_controls, new_control)
+            touch_controls[control_type] = new_control
         end
     end
 end
@@ -158,7 +185,7 @@ functions.get_direction = get_direction
 
 local function get_movement_table()
     local movement = {}
-    local threshold = .01
+    local threshold = .0001
     if control_state.x > threshold then
         movement.right = true
     elseif control_state.x < -threshold then

@@ -67,7 +67,6 @@ local function update_player(_)
         love.event.push('quit')
     end
 end
-
 functions.update = update_player
 
 local function draw_player()

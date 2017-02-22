@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 echo "return function() return true end" > is_touch.lua
 
 # export all the variables
@@ -18,9 +19,18 @@ mv game.love /home/arne/Programs/love-android-sdl2/assets/
 cd /home/arne/Programs/love-android-sdl2/
 
 # DEPLOY
-ant debug
+echo "Building now. This might take a while."
+ant debug -quiet
 
 cp /home/arne/Programs/love-android-sdl2/bin/love-android-debug.apk /home/arne/Documents/Development/spacy3/love-android-debug.apk
 
 
 echo "return function() return false end" > /home/arne/Documents/Development/spacy3/is_touch.lua
+
+# DEPLOY EVEN MORE
+adbdevices=$(adb devices)
+
+if [[ $adbdevices == *"0c6f31ce541a0b8a"* ]]; then
+    echo "Installing on device now. This might also take a while."
+    adb install -r /home/arne/Documents/Development/spacy3/love-android-debug.apk
+fi
