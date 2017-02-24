@@ -3,7 +3,11 @@
 * add states, highscores
 * story?
 * ui
-* better collision system (handle scaling...)
+* more enemy types
+* more difficulty, possibility of achieving a victory
+* better collision system
+    * scaling
+    * non-rectangular objects
 
 ## mobile
 * increase ship etc sizes?
