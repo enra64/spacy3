@@ -8,6 +8,7 @@
 * overheating bar, missile count
 * store
 * ads?
+* custom font
 
 ## mobile
 * increase ship etc sizes?
