@@ -23,7 +23,7 @@ local function add_button(pause, text)
         button_rect.width = pause.menu_width
         button_rect.height = pause.button_rectangle_y_scale * pause.button_texture:getHeight()
         button_rect.x = pause.menu_x
-        button_rect.y = pause.menu_y + ((i - 1) * (button_rect.height + pause.horizontal_button_distance)) + button_rect.height / 4
+        button_rect.y = pause.menu_y + ((i - 1) * (button_rect.height + pause.horizontal_button_distance)) + button_rect.height / 5
         table.insert(pause.button_rectangles, button_rect)
     end
 end
@@ -31,13 +31,21 @@ end
 function pause:update()
 end
 
-function pause:draw()
+function pause:enter()
+    love.graphics.setFont(fonts[40])
+end
 
+function pause:draw()
     for i, button_rect in ipairs(self.button_rectangles) do
         love.graphics.draw(self.button_texture, button_rect.x, button_rect.y, 0, self.button_rectangle_x_scale, self.button_rectangle_y_scale)
 
-        love.graphics.setColor(0, 0, 0)
-        love.graphics.printf(self.button_texts[i], self.menu_x + self.menu_width / 4, self.menu_y + ((i - 1) * (button_rect.height + self.horizontal_button_distance)) + button_rect.height / 4, self.menu_width / 2, "left", 0, 3)
+        love.graphics.setColor(255, 0, 0)
+        love.graphics.printf(self.button_texts[i],
+            self.menu_x,
+            button_rect.y + button_rect.height / 2,
+            self.menu_width,
+            "center",
+            0, 1)
         love.graphics.setColor(255, 255, 255)
     end
 end
@@ -56,11 +64,11 @@ function pause:init()
     self.button_texture = love.graphics.newImage("img/ui/button_texture.png")
 
     --- construct appropriate buttons
-    add_button(self, "continue")
-    add_button(self, "back to menu")
+    add_button(pause, "continue")
+    add_button(pause, "back to menu")
 end
 
-function pause:mousepressed(x, y, button)
+function pause:mousepressed(x, y)
     for i, button_rect in ipairs(self.button_rectangles) do
         if self.collisions.has_collision_point_rectangle(x, y, button_rect) then
             self.on_button_clicked(self.button_texts[i])
