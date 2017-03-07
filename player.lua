@@ -17,7 +17,8 @@ local control = require("player_control")
 local a_button_lock = false
 local b_button_lock = false
 
-local function update_player(_)
+local function update_player(dt)
+    control.update(dt)
     player.movement = control.get_movement_table()
 
     if control.is_button_pressed("a_button") and not a_button_lock then
@@ -71,7 +72,6 @@ local function update_player(_)
         love.event.push('quit')
     end
 end
-
 functions.update = update_player
 
 local function draw_player()
