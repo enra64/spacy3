@@ -14,6 +14,9 @@ menu.button_texts = {}
 menu.button_rectangles = {}
 menu.button_texture = love.graphics.newImage("img/ui/button_texture.png")
 
+--- store possible title
+menu.title = ""
+
 --- store the target menu size and position
 menu.menu_width = love.graphics.getWidth() / 2
 menu.menu_height = 2 * love.graphics.getHeight() / 4
@@ -46,6 +49,15 @@ function menu:enter()
 end
 
 function menu:draw()
+    --- draw title
+    love.graphics.printf(self.title,
+        0,
+        self.menu_y / 2,
+        love.graphics.getWidth(),
+        "center",
+        0, 1)
+
+    --- draw buttons
     for i, button_rect in ipairs(self.button_rectangles) do
         love.graphics.draw(self.button_texture, button_rect.x, button_rect.y, 0, self.button_rectangle_x_scale, self.button_rectangle_y_scale)
 
@@ -66,6 +78,10 @@ function menu:mousepressed(x, y)
             self.on_button_clicked(self.button_texts[i])
         end
     end
+end
+
+function menu:set_title(title)
+    self.title = title
 end
 
 --- forward release input events to player control so it realizes that the pause button is no longer pressed

@@ -2,18 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7beaf12a-bf86-4ec9-86bf-01684f20587c" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/pause.lua" afterPath="$PROJECT_DIR$/menu.lua" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/raw/p2.png" afterPath="$PROJECT_DIR$/raw/p2.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/background.lua" afterPath="$PROJECT_DIR$/background.lua" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/enemies.lua" afterPath="$PROJECT_DIR$/enemies.lua" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/explosions.lua" afterPath="$PROJECT_DIR$/explosions.lua" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/game_gamestate.lua" afterPath="$PROJECT_DIR$/game_gamestate.lua" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.lua" afterPath="$PROJECT_DIR$/main.lua" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/player.lua" afterPath="$PROJECT_DIR$/player.lua" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/player_control.lua" afterPath="$PROJECT_DIR$/player_control.lua" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/todo.md" afterPath="$PROJECT_DIR$/todo.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/weapons.lua" afterPath="$PROJECT_DIR$/weapons.lua" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/menu.lua" afterPath="$PROJECT_DIR$/menu.lua" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -29,21 +21,31 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="main.lua" pinned="false" current-in-tab="true">
+      <file leaf-file-name="main.lua" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="28" column="46" lean-forward="false" selection-start-line="28" selection-start-column="46" selection-end-line="28" selection-end-column="46" />
+            <state relative-caret-position="327">
+              <caret line="67" column="35" lean-forward="true" selection-start-line="67" selection-start-column="35" selection-end-line="67" selection-end-column="35" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="game_gamestate.lua" pinned="false" current-in-tab="false">
+      <file leaf-file-name="menu.lua" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/menu.lua">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="741">
+              <caret line="75" column="59" lean-forward="true" selection-start-line="75" selection-start-column="59" selection-end-line="75" selection-end-column="59" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="game_gamestate.lua" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/game_gamestate.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="219">
-              <caret line="79" column="43" lean-forward="false" selection-start-line="79" selection-start-column="43" selection-end-line="79" selection-end-column="43" />
+            <state relative-caret-position="507">
+              <caret line="47" column="37" lean-forward="false" selection-start-line="47" selection-start-column="37" selection-end-line="47" selection-end-column="37" />
               <folding />
             </state>
           </provider>
@@ -55,18 +57,6 @@
             <state relative-caret-position="189">
               <caret line="53" column="25" lean-forward="false" selection-start-line="53" selection-start-column="20" selection-end-line="53" selection-end-column="25" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="background.lua" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/background.lua">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="489">
-              <caret line="169" column="11" lean-forward="false" selection-start-line="169" selection-start-column="11" selection-end-line="169" selection-end-column="11" />
-              <folding>
-                <marker date="1489055999500" expanded="true" signature="5534:5570" ph="..." />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -96,8 +86,8 @@
       <file leaf-file-name="player.lua" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/player.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="64" column="32" lean-forward="true" selection-start-line="64" selection-start-column="32" selection-end-line="64" selection-end-column="32" />
+            <state relative-caret-position="396">
+              <caret line="67" column="50" lean-forward="true" selection-start-line="67" selection-start-column="50" selection-end-line="67" selection-end-column="50" />
               <folding />
             </state>
           </provider>
@@ -106,11 +96,9 @@
       <file leaf-file-name="explosions.lua" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/explosions.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="507">
-              <caret line="60" column="14" lean-forward="false" selection-start-line="60" selection-start-column="14" selection-end-line="60" selection-end-column="14" />
-              <folding>
-                <marker date="1489055999506" expanded="true" signature="1818:1842" ph="..." />
-              </folding>
+            <state relative-caret-position="396">
+              <caret line="52" column="0" lean-forward="false" selection-start-line="52" selection-start-column="0" selection-end-line="55" selection-end-column="26" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -200,7 +188,6 @@
         <option value="$PROJECT_DIR$/clicky_input.lua" />
         <option value="$PROJECT_DIR$/todo.md" />
         <option value="$PROJECT_DIR$/pause.lua" />
-        <option value="$PROJECT_DIR$/menu.lua" />
         <option value="$PROJECT_DIR$/weapons.lua" />
         <option value="$PROJECT_DIR$/player_control.lua" />
         <option value="$PROJECT_DIR$/explosions.lua" />
@@ -208,8 +195,9 @@
         <option value="$PROJECT_DIR$/collisions.lua" />
         <option value="$PROJECT_DIR$/enemies.lua" />
         <option value="$PROJECT_DIR$/player.lua" />
-        <option value="$PROJECT_DIR$/game_gamestate.lua" />
+        <option value="$PROJECT_DIR$/menu.lua" />
         <option value="$PROJECT_DIR$/main.lua" />
+        <option value="$PROJECT_DIR$/game_gamestate.lua" />
       </list>
     </option>
   </component>
@@ -704,9 +692,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="756">
           <caret line="42" column="56" lean-forward="false" selection-start-line="42" selection-start-column="56" selection-end-line="42" selection-end-column="56" />
-          <folding>
-            <marker date="1489055999506" expanded="true" signature="1818:1842" ph="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -766,9 +752,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="756">
           <caret line="42" column="56" lean-forward="true" selection-start-line="42" selection-start-column="56" selection-end-line="42" selection-end-column="56" />
-          <folding>
-            <marker date="1489055999506" expanded="true" signature="1818:1842" ph="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -828,9 +812,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1026">
           <caret line="57" column="54" lean-forward="false" selection-start-line="57" selection-start-column="54" selection-end-line="57" selection-end-column="54" />
-          <folding>
-            <marker date="1489055999506" expanded="true" signature="1818:1842" ph="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -890,9 +872,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="162">
           <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-          <folding>
-            <marker date="1489055999506" expanded="true" signature="1818:1842" ph="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1017,14 +997,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/menu.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="309">
-          <caret line="65" column="56" lean-forward="true" selection-start-line="65" selection-start-column="56" selection-end-line="65" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/background.lua">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="489">
@@ -1051,13 +1023,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/player_control.lua">
+    <entry file="file://$PROJECT_DIR$/enemies.lua">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="183">
-          <caret line="165" column="0" lean-forward="true" selection-start-line="165" selection-start-column="0" selection-end-line="165" selection-end-column="0" />
+        <state relative-caret-position="327">
+          <caret line="64" column="0" lean-forward="false" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
           <folding>
-            <element signature="n#set_dpad_position#0" expanded="false" />
-            <element signature="n#handle_dpad_touch#0" expanded="false" />
+            <marker date="1489057027991" expanded="true" signature="1624:1677" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1070,46 +1041,53 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/explosions.lua">
+    <entry file="file://$PROJECT_DIR$/player_control.lua">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="507">
-          <caret line="60" column="14" lean-forward="false" selection-start-line="60" selection-start-column="14" selection-end-line="60" selection-end-column="14" />
+        <state relative-caret-position="183">
+          <caret line="165" column="0" lean-forward="true" selection-start-line="165" selection-start-column="0" selection-end-line="165" selection-end-column="0" />
           <folding>
-            <marker date="1489055999506" expanded="true" signature="1818:1842" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/enemies.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="327">
-          <caret line="64" column="0" lean-forward="false" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
-          <folding>
-            <marker date="1489057027991" expanded="true" signature="1624:1677" ph="..." />
+            <element signature="n#set_dpad_position#0" expanded="false" />
+            <element signature="n#handle_dpad_touch#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/player.lua">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="64" column="32" lean-forward="true" selection-start-line="64" selection-start-column="32" selection-end-line="64" selection-end-column="32" />
+        <state relative-caret-position="396">
+          <caret line="67" column="50" lean-forward="true" selection-start-line="67" selection-start-column="50" selection-end-line="67" selection-end-column="50" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/game_gamestate.lua">
+    <entry file="file://$PROJECT_DIR$/explosions.lua">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="219">
-          <caret line="79" column="43" lean-forward="false" selection-start-line="79" selection-start-column="43" selection-end-line="79" selection-end-column="43" />
+        <state relative-caret-position="396">
+          <caret line="52" column="0" lean-forward="false" selection-start-line="52" selection-start-column="0" selection-end-line="55" selection-end-column="26" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.lua">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="28" column="46" lean-forward="false" selection-start-line="28" selection-start-column="46" selection-end-line="28" selection-end-column="46" />
+        <state relative-caret-position="327">
+          <caret line="67" column="35" lean-forward="true" selection-start-line="67" selection-start-column="35" selection-end-line="67" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/menu.lua">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="741">
+          <caret line="75" column="59" lean-forward="true" selection-start-line="75" selection-start-column="59" selection-end-line="75" selection-end-column="59" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/game_gamestate.lua">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="507">
+          <caret line="47" column="37" lean-forward="false" selection-start-line="47" selection-start-column="37" selection-end-line="47" selection-end-column="37" />
           <folding />
         </state>
       </provider>

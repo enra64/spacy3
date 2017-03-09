@@ -35,7 +35,17 @@ function game:update(dt)
         gamestate.push(pause_menu)
     end
 
-    if not player.player_is_alive then
+    if not player.player_is_alive() then
+        --- stop all sounds
+        love.audio.stop()
+
+        --- play one last explosion sound
+        --- make explosion sound
+        local explosion_sound = love.audio.newSource("sounds/explosion.ogg", "static")
+        explosion_sound:setVolume(.8)
+        explosion_sound:play()
+
+        --- callback for main control
         player_died(score)
     end
 end

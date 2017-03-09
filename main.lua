@@ -55,6 +55,19 @@ function player_wants_back_to_main(score)
 end
 
 function player_died(score)
+    local quit_confirmation = dofile("menu.lua")
+    gamestate.push(quit_confirmation)
+    quit_confirmation:add_button("back to main")
+    quit_confirmation:add_button("quit")
+    quit_confirmation:set_title("you made " .. score .. " points. you also horifically failed your colony.")
+    quit_confirmation.on_button_clicked = function(button_txt)
+        if button_txt == "back to main" then
+            gamestate.pop() -- pop warning
+            gamestate.pop() -- pop game
+        elseif button_txt == "quit" then
+            love.event.push("quit")
+        end
+    end
 end
 
 local function load_fonts()
