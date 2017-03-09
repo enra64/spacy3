@@ -53,7 +53,7 @@ local function handle_dpad_touch(x, y)
     set_dpad_position(x, y)
 end
 
-function love.touchreleased(id)
+local function touchreleased(id)
     --- handle releases
     if id == touch_controls.button_a.touch_id then
         control_state.button_a_pressed = false
@@ -68,14 +68,16 @@ function love.touchreleased(id)
         touch_controls.dpad.touch_id = nil
     end
 end
+functions.touchreleased = touchreleased
 
-function love.touchmoved(id, x, y)
+local function touchmoved(id, x, y)
     if id == touch_controls.dpad.touch_id then
         handle_dpad_touch(x, y)
     end
 end
+functions.touchmoved = touchmoved
 
-function love.touchpressed(id, x, y)
+local function touchpressed(id, x, y)
     --- handle button clicks
     for type, touch_control in pairs(touch_controls) do
         if collision.has_collision_point_rectangle(x, y, touch_control) then
@@ -87,6 +89,8 @@ function love.touchpressed(id, x, y)
                 control_state.button_a_pressed = true
             elseif type == "button_b" then
                 control_state.button_b_pressed = true
+            elseif type == "button_escape" then
+                control_state.button_escape_pressed = true
             end
         end
     end
@@ -95,6 +99,7 @@ function love.touchpressed(id, x, y)
         touch_controls.dpad.touch_id = id
     end
 end
+functions.touchpressed = touchpressed
 
 local function update_keyboard(dt)
     --- reset direction vector
@@ -118,14 +123,9 @@ local function update_keyboard(dt)
     --- shooting
     control_state.button_a_pressed = love.keyboard.isDown("q")
     control_state.button_b_pressed = love.keyboard.isDown("space")
+    control_state.button_escape_pressed = love.keyboard.isDown("escape")
 end
-
-local function update(dt)
-    if not is_touch() then
-        update_keyboard(dt)
-    end
-end
-functions.update = update
+functions.update_keyboard = update_keyboard
 
 local function draw()
     if is_touch() then
@@ -135,7 +135,7 @@ local function draw()
         for _, control in pairs(touch_controls) do
             local opacity_touch = control.opacity
             if not control.touch_id == nil then
-                opacity_touch = opacity_touch + 30
+                opacity_touch = 230
             end
             love.graphics.setColor(255, 255, 255, opacity_touch)
             love.graphics.draw(control.texture, control.x, control.y)
@@ -143,11 +143,13 @@ local function draw()
         love.graphics.setColor(255, 255, 255, 255)
     end
 end
+
 functions.draw = draw
 
 local function load()
     control_state.button_a_pressed = false
     control_state.button_b_pressed = false
+    control_state.button_escape_pressed = false
     control_state.x = 0
     control_state.y = 0
 
@@ -165,7 +167,8 @@ local function load()
         local control_textures = {
             dpad = "img/touch_controls/dpad_knob.png",
             button_a = "img/touch_controls/button_a.png",
-            button_b = "img/touch_controls/button_b.png"
+            button_b = "img/touch_controls/button_b.png",
+            button_escape = "img/touch_controls/button_escape.png"
         }
 
         for control_type, texture_location in pairs(control_textures) do
@@ -179,19 +182,23 @@ local function load()
             touch_controls[control_type] = new_control
 
             if control_type == "dpad" then
-                set_dpad_position(0,0)
+                set_dpad_position(0, 0)
             elseif control_type == "button_a" then
                 new_control.x = love.graphics.getWidth() - 2 * new_control.width
                 new_control.y = love.graphics.getHeight() - new_control.height
             elseif control_type == "button_b" then
                 new_control.x = love.graphics.getWidth() - new_control.width
                 new_control.y = love.graphics.getHeight() - 2 * new_control.height
+            elseif control_type == "button_excape" then
+                new_control.x = love.graphics.getWidth() - new_control.width
+                new_control.y = 0
             else
                 print("unknown control type")
             end
         end
     end
 end
+
 functions.load = load
 
 local function is_button_pressed(button)
@@ -199,8 +206,10 @@ local function is_button_pressed(button)
         return control_state.button_a_pressed
     elseif button == "b_button" then
         return control_state.button_b_pressed
+    elseif button == "button_escape" then
+        return control_state.button_escape_pressed
     else
-        print("bad button identifier")
+        print("bad button identifier: " .. button .. " in " .. function_location())
     end
 end
 
@@ -235,7 +244,6 @@ local function get_movement_table()
 
     return movement
 end
-
 functions.get_movement_table = get_movement_table
 
 return functions

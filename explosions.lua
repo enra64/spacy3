@@ -7,7 +7,7 @@
 --
 
 local functions = {}
-
+local explosions = {}
 
 local function draw_explosions()
     for _, explosion in ipairs(explosions) do
@@ -56,5 +56,9 @@ local function create_explosion(x, y)
     explosion_sound:play()
 end
 functions.create_explosion = create_explosion
+
+functions.leave = function()
+    explosions = {}
+end
 
 return functions

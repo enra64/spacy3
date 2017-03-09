@@ -8,7 +8,8 @@
 
 local functions = {}
 
-
+local enemies = {}
+functions.enemies = enemies
 local collisions = require("collisions")
 
 local function create_enemy()
@@ -59,5 +60,14 @@ local function draw()
     end
 end
 functions.draw = draw
+
+functions.has_enemy_collision = function(object)
+    return collisions.has_rect_collision(object, enemies)
+end
+
+functions.leave = function()
+    enemies = {}
+    functions.enemies = enemies
+end
 
 return functions

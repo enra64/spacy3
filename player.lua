@@ -8,17 +8,15 @@
 
 local functions = {}
 
-
-
-local collisions = require("collisions")
+local enemies = require("enemies")
 local weaponry = require("weapons")
 local control = require("player_control")
+local player = {}
 
 local a_button_lock = false
 local b_button_lock = false
 
-local function update_player(dt)
-    control.update(dt)
+local function update_player()
     player.movement = control.get_movement_table()
 
     if control.is_button_pressed("a_button") and not a_button_lock then
@@ -63,16 +61,12 @@ local function update_player(dt)
     else
         player.thruster_sound:pause()
     end
-
-
-
-    --- die on collision
-    if (collisions.has_rect_collision(player, enemies)) then
-        print("\nYou failed your colony. Also, you made " .. score .. " points.")
-        love.event.push('quit')
-    end
 end
 functions.update = update_player
+
+functions.player_is_alive = function()
+    return not enemies.has_enemy_collision(player)
+end
 
 local function draw_player()
     --- the propulsion images are larger than the main ship body, so the must be drawn slightly up left from it

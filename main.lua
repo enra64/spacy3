@@ -6,20 +6,61 @@
 -- To change this template use File | Settings | File Templates.
 --
 gamestate = require "hump.gamestate"
-fonts = {}
 
-local game = require "game_gamestate"
-local pause = require "pause"
+local main_menu = dofile "menu.lua"
+
 
 function on_pause_button_clicked(button_text)
-    if (button_text == "continue" or button_text == "start game") then
-        gamestate.switch(game)
+    print(function_location() .. ": " .. button_text)
+    if (button_text == "new game") then
+        --- push game on gamestate stack
+        gamestate.push(dofile("game_gamestate.lua"))
     elseif (button_text == "highscore") then
         print "not yet implemented"
     end
 end
 
+function function_location()
+    local w = debug.getinfo(2, "S")
+    return w.short_src .. ":" .. w.linedefined
+end
+
+function player_wants_to_quit(score)
+    local quit_confirmation = dofile("menu.lua")
+    gamestate.push(quit_confirmation)
+    quit_confirmation:add_button("really quit")
+    quit_confirmation:add_button("abort quitting")
+    quit_confirmation.on_button_clicked = function(button_txt)
+        if button_txt == "really quit" then
+            love.event.push("quit")
+        elseif button_txt == "abort quitting" then
+            gamestate.pop()
+        end
+    end
+end
+
+function player_wants_back_to_main(score)
+    local quit_confirmation = dofile("menu.lua")
+    gamestate.push(quit_confirmation)
+    quit_confirmation:add_button("really back to main")
+    quit_confirmation:add_button("abort going to main")
+    quit_confirmation.on_button_clicked = function(button_txt)
+        if button_txt == "really back to main" then
+            gamestate.pop() -- pop warning
+            gamestate.pop() -- pop game
+        elseif button_txt == "abort going to main" then
+            gamestate.pop()
+        end
+    end
+end
+
+function player_died(score)
+end
+
 local function load_fonts()
+    --- create global fonts object
+    fonts = {}
+
     --- load custom fonts in different sizes
     table.insert(fonts, 14, love.graphics.newFont("spacy3font.otf", 14))
     table.insert(fonts, 16, love.graphics.newFont("spacy3font.otf", 16))
@@ -41,9 +82,15 @@ function love.load()
     --- set some window size
     love.window.setMode(1024, 768)
 
-    --- set pause menu callback
-    pause.on_button_clicked = on_pause_button_clicked
-
+    --- register event callbacks
     gamestate.registerEvents()
-    gamestate.switch(pause)
+
+    --- push main menu onto stack
+    gamestate.push(main_menu)
+
+    --- add main menu buttons
+    main_menu:add_button("new game")
+
+    --- set main menu callback
+    main_menu.on_button_clicked = on_pause_button_clicked
 end

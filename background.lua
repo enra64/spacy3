@@ -165,5 +165,10 @@ end
 
 functions.update = update_background
 
+functions.leave = function()
+    stars = {}
+    planets = {}
+end
+
 return functions
 

@@ -13,6 +13,7 @@
     * non-rectangular objects
 * store
 * ads?
+* set title
 
 ## mobile
 * increase ship etc sizes?

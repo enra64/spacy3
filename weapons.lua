@@ -10,6 +10,8 @@ local functions = {}
 
 
 local collisions = require("collisions")
+local enemies = require "enemies"
+local bullets = {}
 
 local function shoot_missile(x, y)
     local new_bullet = {}
@@ -68,7 +70,7 @@ local function shoot_laser(x, y)
 end
 functions.shoot_laser = shoot_laser
 
-local function update_bullets(dt)
+functions.update = function(dt)
     for i, bullet in ipairs(bullets) do
         bullet.x = bullet.x + (bullet_speed * dt)
 
@@ -76,18 +78,20 @@ local function update_bullets(dt)
             table.remove(bullets, i)
         end
 
-        if collisions.remove_all_colliding(enemies, bullet, on_kill) then
+        if collisions.remove_all_colliding(enemies.enemies, bullet, on_kill) then
             table.remove(bullets, i)
         end
     end
 end
-functions.update = update_bullets
 
-local function draw()
+functions.draw = function()
     for _, item in ipairs(bullets) do
         love.graphics.draw(item.texture, item.x, item.y, 0, item.scale)
     end
 end
-functions.draw = draw
+
+functions.leave = function()
+    bullets = {}
+end
 
 return functions
