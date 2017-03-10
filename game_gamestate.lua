@@ -2,11 +2,6 @@ local game = {}
 
 --- some constants
 maximum_explosion_age = .2
-bullet_speed = 1000
-enemy_speed = 200
-speed = 400
-
-
 
 local bg = require("background")
 local player = require("player")
@@ -15,8 +10,9 @@ local weapons = require("weapons")
 local enemies = require("enemies")
 local control = require("player_control")
 local pause_menu = dofile "menu.lua"
+local ingame_status = require("ingame_status")
+
 local score = 0
-local font_config = require("font_config")
 
 function on_kill(_, killed_enemy)
     score = score + 10
@@ -31,6 +27,7 @@ function game:update(dt)
     enemies.update(dt, on_kill)
     explosions.update(dt)
     bg.update(dt)
+    ingame_status.update(score)
 
     if control.is_button_pressed("button_escape") then
         gamestate.push(pause_menu)
@@ -58,9 +55,7 @@ function game:draw()
     player.draw()
     explosions.draw()
     control.draw()
-
-    --- score
-    love.graphics.print(score .. " points", 0, 0, 0, 1)
+    ingame_status.draw()
 end
 
 function game:resume()
@@ -71,11 +66,10 @@ function game:init()
     --- load background textures
     bg.load()
 
-    --- initialise control
+    --- init all
     control.load()
-
-    --- initialise the player
     player.load()
+    ingame_status.init()
 
     --- create some enemies to get started
     for i = 1, 3 do enemies.create_enemy() end
@@ -101,7 +95,7 @@ function game:init()
 end
 
 function game:enter()
-    love.graphics.setFont(font_config.get_font("ingame"))
+    ingame_status.enter()
 end
 
 function game:leave()

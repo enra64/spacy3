@@ -17,7 +17,7 @@ functions.init = function()
         fonts.ingame = love.graphics.newFont("spacy3font.otf", 40)
         fonts.menu = love.graphics.newFont("spacy3font.otf", 80)
     else
-        fonts.ingame = love.graphics.newFont("spacy3font.otf", 20)
+        fonts.ingame = love.graphics.newFont("spacy3font.otf", 40)
         fonts.menu = love.graphics.newFont("spacy3font.otf", 40)
     end
 end

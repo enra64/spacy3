@@ -7,9 +7,22 @@
 --
 gamestate = require "hump.gamestate"
 
+--- remove annoying 0 parameter in draw calls
+NO_ROTATION = 0
+
 --- overwrite luas "dofile" to work on android
 function dofile(file)
     return love.filesystem.load(file)()
+end
+
+function math.clamp(val, lower, upper)
+    assert(val and lower and upper, "missing argument for math.clamp")
+    if lower > upper then lower, upper = upper, lower end -- swap if boundaries supplied the wrong way
+    return math.max(lower, math.min(upper, val))
+end
+
+function math.scale_from_to(from, to)
+    return to / from
 end
 
 function on_pause_button_clicked(button_text)

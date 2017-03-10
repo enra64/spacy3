@@ -11,6 +11,7 @@ local functions = {}
 local enemies = {}
 functions.enemies = enemies
 local collisions = require("collisions")
+local enemy_speed = 200
 
 local function create_enemy()
     local new_enemy = {}

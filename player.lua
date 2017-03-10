@@ -16,6 +16,8 @@ local player = {}
 local a_button_lock = false
 local b_button_lock = false
 
+local speed = 400
+
 local function update_player()
     player.movement = control.get_movement_table()
 

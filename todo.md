@@ -14,6 +14,11 @@
 * store
 * ads?
 * set title
+* icons for ui (laser bar, missile count)
+* background music
+* settings
+    * resolution
+    * fullscreen
 
 ## mobile
 * increase ship etc sizes?
