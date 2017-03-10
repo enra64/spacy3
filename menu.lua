@@ -8,8 +8,11 @@
 
 local menu = {}
 menu.horizontal_button_distance = 20
+
 menu.collisions = require("collisions")
 menu.control = require("player_control")
+menu.font_config = require("font_config")
+
 menu.button_texts = {}
 menu.button_rectangles = {}
 menu.button_texture = love.graphics.newImage("img/ui/button_texture.png")
@@ -41,15 +44,13 @@ function menu:add_button(text)
     end
 end
 
-function menu:update()
-end
-
 function menu:enter()
-    love.graphics.setFont(fonts[40])
+    love.graphics.setFont(self.font_config.get_font("menu"))
 end
 
 function menu:draw()
-    --- draw title
+    --- draw title in white
+    love.graphics.setColor(255, 255, 255)
     love.graphics.printf(self.title,
         0,
         self.menu_y / 2,
@@ -59,17 +60,20 @@ function menu:draw()
 
     --- draw buttons
     for i, button_rect in ipairs(self.button_rectangles) do
+        love.graphics.setColor(255, 255, 255)
         love.graphics.draw(self.button_texture, button_rect.x, button_rect.y, 0, self.button_rectangle_x_scale, self.button_rectangle_y_scale)
 
-        love.graphics.setColor(255, 0, 0)
+        love.graphics.setColor(0, 0, 0)
         love.graphics.printf(self.button_texts[i],
             self.menu_x,
-            button_rect.y + button_rect.height / 2,
+            button_rect.y + button_rect.height / 2 - self.font_config.get_font("menu"):getHeight() / 2,
             self.menu_width,
             "center",
             0, 1)
-        love.graphics.setColor(255, 255, 255)
     end
+
+    -- reset font color
+    love.graphics.setColor(255, 255, 255)
 end
 
 function menu:mousepressed(x, y)

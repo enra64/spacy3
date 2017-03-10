@@ -13,6 +13,9 @@ local collisions = require("collisions")
 local enemies = require "enemies"
 local bullets = {}
 
+--- 0 - 1 of laser overheating bar - much fuzzy
+local laser_overheat = 0
+
 local function shoot_missile(x, y)
     local new_bullet = {}
 

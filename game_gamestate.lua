@@ -16,6 +16,7 @@ local enemies = require("enemies")
 local control = require("player_control")
 local pause_menu = dofile "menu.lua"
 local score = 0
+local font_config = require("font_config")
 
 function on_kill(_, killed_enemy)
     score = score + 10
@@ -97,6 +98,10 @@ function game:init()
             player_wants_to_quit(score)
         end
     end
+end
+
+function game:enter()
+    love.graphics.setFont(font_config.get_font("ingame"))
 end
 
 function game:leave()
