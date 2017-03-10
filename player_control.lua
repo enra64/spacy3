@@ -143,16 +143,19 @@ local function draw()
         love.graphics.setColor(255, 255, 255, 255)
     end
 end
-
 functions.draw = draw
 
-local function load()
+local function reset_control_state()
     control_state.button_a_pressed = false
     control_state.button_b_pressed = false
     control_state.button_escape_pressed = false
     control_state.x = 0
     control_state.y = 0
+end
 
+local function load()
+    -- initialise control state
+    reset_control_state()
 
     if is_touch() then
         dpad_background.texture = love.graphics.newImage("img/touch_controls/dpad_background.png")
@@ -189,7 +192,7 @@ local function load()
             elseif control_type == "button_b" then
                 new_control.x = love.graphics.getWidth() - new_control.width
                 new_control.y = love.graphics.getHeight() - 2 * new_control.height
-            elseif control_type == "button_excape" then
+            elseif control_type == "button_escape" then
                 new_control.x = love.graphics.getWidth() - new_control.width
                 new_control.y = 0
             else
@@ -245,5 +248,7 @@ local function get_movement_table()
     return movement
 end
 functions.get_movement_table = get_movement_table
+
+functions.on_resume = reset_control_state
 
 return functions

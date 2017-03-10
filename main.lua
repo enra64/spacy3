@@ -7,11 +7,16 @@
 --
 gamestate = require "hump.gamestate"
 
+--- overwrite luas "dofile" to work on android
+function dofile(file)
+    return love.filesystem.load(file)()
+end
+
 local main_menu = dofile "menu.lua"
 
 
 function on_pause_button_clicked(button_text)
-    print(function_location() .. ": " .. button_text)
+    -- for when i get confused print(function_location() .. ": " .. button_text)
     if (button_text == "new game") then
         --- push game on gamestate stack
         gamestate.push(dofile("game_gamestate.lua"))

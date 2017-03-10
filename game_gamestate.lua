@@ -62,6 +62,10 @@ function game:draw()
     love.graphics.print(score .. " points", 0, 0, 0, 1)
 end
 
+function game:resume()
+    control.on_resume()
+end
+
 function game:init()
     --- load background textures
     bg.load()
