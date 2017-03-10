@@ -10,9 +10,10 @@ local functions = {}
 
 local planets = {}
 local stars = {}
+local collider = require("hc").new()
 local star_image_paths = { "img/star_1.png", "img/star_2.png", "img/star_3.png", "img/star_4.png", "img/star_5.png" }
 local random = require("random")
-local collisions = require("collisions")
+
 
 local function load_planets()
     local planet_image_paths = { "img/blue_planet_1.png", "img/blue_planet_2.png", "img/yellow_planet.png" }
@@ -71,6 +72,8 @@ local function get_single_star(x, y)
     star.color = {255, 255, 255}
     star.x = x
     star.y = y
+    
+    star.shape = collider:rectangle(x, y, star.width, star.height)
 
     return star
 end
@@ -114,10 +117,17 @@ local function create_gaussian_star_cluster()
         else
             local new_star = get_single_star(x, y)
 
-            if(collisions.has_rect_collision(new_star, stars)) then
-                i = i - 1
-            else
+            has_no_collision = true
+            
+            for _, _ in pairs(collider:collisions(new_star.shape)) do
+                has_no_collision = false
+            end
+
+            if has_no_collision then
                 table.insert(stars, new_star)
+            else
+                i = i - 1
+                collider:remove(new_star.shape)
             end
         end
     end
@@ -168,6 +178,7 @@ functions.update = update_background
 functions.leave = function()
     stars = {}
     planets = {}
+    
 end
 
 return functions

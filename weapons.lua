@@ -8,8 +8,6 @@
 
 local functions = {}
 
-
-
 --- constants
 local missile_speed = 800
 local laser_speed = 1300
@@ -17,7 +15,7 @@ local laser_cooling_speed = .3
 local overheat_bar_y_scale = .5
 
 --- requires
-local collisions = require("collisions")
+local hc = require("hc")
 local enemies = require("enemies")
 
 --- list of current projectiles
@@ -40,14 +38,16 @@ local function shoot_missile(x, y)
     new_missile.scale = .6
 
     --- store width and height
-    local width = new_missile.texture:getWidth()
-    local height = new_missile.texture:getHeight()
+    local width, height = new_missile.texture:getDimensions()
     new_missile.width = width * new_missile.scale
     new_missile.height = height * new_missile.scale
 
     --- init pos
     new_missile.x = x
     new_missile.y = y
+    
+    --- store shape in collider
+    new_missile.shape = hc.rectangle(x, y, new_missile.width, new_missile.height)
 
     --- set speed
     new_missile.speed = missile_speed
@@ -82,8 +82,7 @@ local function shoot_laser(x, y)
     new_laser.scale = .6
 
     --- store width and height
-    local width = new_laser.texture:getWidth()
-    local height = new_laser.texture:getHeight()
+    local width, height = new_laser.texture:getDimensions()
     new_laser.width = width * new_laser.scale
     new_laser.height = height * new_laser.scale
 
@@ -93,6 +92,9 @@ local function shoot_laser(x, y)
 
     --- set speed
     new_laser.speed = laser_speed
+    
+    --- store shape in collider
+    new_laser.shape = hc.rectangle(x, y, new_laser.width, new_laser.height)
 
     --- add new bullet to list
     table.insert(projectiles, new_laser)
@@ -113,15 +115,20 @@ functions.update = function(dt)
     laser_overheat = math.clamp(laser_overheat - dt * laser_cooling_speed, 0, 1)
 
     --- move the bullets
-    for i, bullet in ipairs(projectiles) do
-        bullet.x = bullet.x + (bullet.speed * dt)
+    for i, projectile in ipairs(projectiles) do
+        projectile.x = projectile.x + (projectile.speed * dt)
 
-        if bullet.x > love.graphics.getWidth() then
+        projectile.shape:move(projectile.speed * dt, 0)
+
+        -- remove offscreen bullets
+        if projectile.x > love.graphics.getWidth() then
             table.remove(projectiles, i)
+            hc.remove(projectile.shape)
         end
 
-        if collisions.remove_all_colliding(enemies.enemies, bullet, on_kill) then
+        if enemies.remove_colliding_enemies(projectile.shape, on_kill) then
             table.remove(projectiles, i)
+            hc.remove(projectile.shape)
         end
     end
 end

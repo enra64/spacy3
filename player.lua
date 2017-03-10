@@ -11,12 +11,20 @@ local functions = {}
 local enemies = require("enemies")
 local weaponry = require("weapons")
 local control = require("player_control")
+local hc = require("hc")
+
 local player = {}
 
 local a_button_lock = false
 local b_button_lock = false
 
 local speed = 400
+
+local function move_player(dx, dy) 
+    player.x = player.x + dx
+    player.y = player.y + dy
+    player.shape:move(dx, dy)
+end
 
 local function update_player()
     player.movement = control.get_movement_table()
@@ -37,15 +45,15 @@ local function update_player()
 
     local dir = control.get_direction()
     if player.x > 0 and dir.x < -.0001 then
-        player.x = player.x + dir.x * speed
+        move_player(dir.x * speed, 0)
     elseif player.x + player.width < love.graphics.getWidth() and dir.x > .0001 then
-        player.x = player.x + dir.x * speed
+        move_player(dir.x * speed, 0)
     end
 
     if player.y > 0 and dir.y < -.0001 then
-        player.y = player.y + dir.y * speed
+        move_player(0, dir.y * speed)
     elseif player.y + player.height < love.graphics.getHeight() and dir.y > .0001 then
-        player.y = player.y + dir.y * speed
+        move_player(0, dir.y * speed)
     end
 
     --- adjust thruster sound volume
@@ -92,8 +100,7 @@ local function create_player()
     player.y = love.graphics.getHeight() / 2
     player.texture = love.graphics.newImage("img/ship_main.png")
 
-    player.width = player.texture:getWidth()
-    player.height = player.texture:getHeight()
+    player.width, player.height = player.texture:getDimensions()
 
     --- store all four propulsion textures
     player.propulsion_texture = {
@@ -102,6 +109,9 @@ local function create_player()
         up = love.graphics.newImage("img/ship_flame_down.png"),
         down = love.graphics.newImage("img/ship_flame_up.png")
     }
+    
+    --- player collision shape
+    player.shape = hc.rectangle(player.x, player.y, player.width, player.height)
 
     --- player audio
     player.thruster_sound = love.audio.newSource("sounds/thrusters2.ogg")

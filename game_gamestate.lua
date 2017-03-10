@@ -14,7 +14,7 @@ local ingame_status = require("ingame_status")
 
 local score = 0
 
-function on_kill(_, killed_enemy)
+function on_kill(killed_enemy)
     score = score + 10
 
     --- make explody thing over enemy

@@ -8,12 +8,11 @@
 
 local functions = {}
 
-local collision = require("collisions")
-
 -- contains "return function() return <false|true> end"
 local is_touch = require("is_touch")
 
 --- touch only stuff
+local touch_collider
 local touch_controls = {}
 local dpad_background = {}
 
@@ -61,6 +60,9 @@ local function touchreleased(id)
     elseif id == touch_controls.button_b.touch_id then
         control_state.button_b_pressed = false
         touch_controls.button_b.touch_id = nil
+    elseif id == touch_controls.button_b.touch_id then
+        control_state.button_escape_pressed = false
+        touch_controls.button_escape.touch_id = nil
     elseif id == touch_controls.dpad.touch_id then
         control_state.x = 0
         control_state.y = 0
@@ -78,25 +80,26 @@ end
 functions.touchmoved = touchmoved
 
 local function touchpressed(id, x, y)
+    local touch_point = touch_collider:point(x, y)
+    
     --- handle button clicks
-    for type, touch_control in pairs(touch_controls) do
-        if collision.has_collision_point_rectangle(x, y, touch_control) then
-            --- update stored touch id
-            touch_control.touch_id = id
+    for shape, _ in pairs(touch_collider:collisions(touch_point)) do
+        --- retrieve the control type stored in the collision shape
+        local type = shape.control_type
+        
+        --- update stored touch id
+        touch_controls[type].touch_id = id
 
-            --- update control state
-            if type == "button_a" then
-                control_state.button_a_pressed = true
-            elseif type == "button_b" then
-                control_state.button_b_pressed = true
-            elseif type == "button_escape" then
-                control_state.button_escape_pressed = true
-            end
+        --- update control state
+        if type == "button_a" then
+            control_state.button_a_pressed = true
+        elseif type == "button_b" then
+            control_state.button_b_pressed = true
+        elseif type == "button_escape" then
+            control_state.button_escape_pressed = true
+        elseif type == "dpad_background" then
+            touch_controls.dpad.touch_id = id
         end
-    end
-
-    if collision.has_collision_point_rectangle(x, y, dpad_background) then
-        touch_controls.dpad.touch_id = id
     end
 end
 functions.touchpressed = touchpressed
@@ -158,6 +161,8 @@ local function load()
     reset_control_state()
 
     if is_touch() then
+        touch_collider = require("hc").new()
+        
         dpad_background.texture = love.graphics.newImage("img/touch_controls/dpad_background.png")
         dpad_background.x = 50
         dpad_background.y = love.graphics.getHeight() - dpad_background.texture:getHeight() - 50
@@ -198,6 +203,9 @@ local function load()
             else
                 print("unknown control type")
             end
+            
+            new_control.shape = touch_collider:rectangle(new_control.x, new_control.y, new_control.width, new_control.height)
+            new_control.shape.control_type = control_type
         end
     end
 end
@@ -215,7 +223,6 @@ local function is_button_pressed(button)
         print("bad button identifier: " .. button .. " in " .. function_location())
     end
 end
-
 functions.is_button_pressed = is_button_pressed
 
 local function get_direction()
