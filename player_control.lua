@@ -85,20 +85,20 @@ local function touchpressed(id, x, y)
     --- handle button clicks
     for shape, _ in pairs(touch_collider:collisions(touch_point)) do
         --- retrieve the control type stored in the collision shape
-        local type = shape.control_type
+        local ctrl_type = shape.control_type
         
-        --- update stored touch id
-        touch_controls[type].touch_id = id
+        --- update stored touch id. dpad_background must be handled separately, as it is not in the touch_controls table
+        
+        
+        touch_controls[ctrl_type].touch_id = id
 
         --- update control state
-        if type == "button_a" then
+        if ctrl_type == "button_a" then
             control_state.button_a_pressed = true
-        elseif type == "button_b" then
+        elseif ctrl_type == "button_b" then
             control_state.button_b_pressed = true
-        elseif type == "button_escape" then
+        elseif ctrl_type == "button_escape" then
             control_state.button_escape_pressed = true
-        elseif type == "dpad_background" then
-            touch_controls.dpad.touch_id = id
         end
     end
 end
@@ -171,6 +171,8 @@ local function load()
         dpad_background.opacity = 100
         dpad_background.right_border = dpad_background.width + dpad_background.x
         dpad_background.bottom_border = dpad_background.height + dpad_background.y
+        dpad_background.shape = touch_collider:rectangle(dpad_background.x, dpad_background.y, dpad_background.width, dpad_background.height)
+        dpad_background.shape.control_type = "dpad"
 
         local control_textures = {
             dpad = "img/touch_controls/dpad_knob.png",

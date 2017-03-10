@@ -57,7 +57,6 @@ function menu:enter()
 end
 
 function menu:draw()
-    self.hc_world.hash:draw("line")
     --- draw title in white
     love.graphics.setColor(255, 255, 255)
     love.graphics.printf(self.title,
@@ -90,7 +89,7 @@ function menu:mousepressed(x, y)
     local mouse_point = self.hc_world:point(x, y)
         
     for button, _ in pairs(self.hc_world:collisions(mouse_point)) do
-        print(button.text.." clicked")
+        --print(button.text.." clicked")
         self.on_button_clicked(button.text)
     end
     
