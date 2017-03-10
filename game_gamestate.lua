@@ -28,6 +28,7 @@ function game:update(dt)
     explosions.update(dt)
     bg.update(dt)
     ingame_status.update(score)
+    
 
     if control.is_button_pressed("button_escape") then
         gamestate.push(pause_menu)

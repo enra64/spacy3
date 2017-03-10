@@ -9,7 +9,7 @@
 local menu = {}
 menu.horizontal_button_distance = 20
 
-menu.collisions = require("collisions")
+menu.hc_world = require("hc").new()
 menu.control = require("player_control")
 menu.font_config = require("font_config")
 
@@ -34,12 +34,20 @@ function menu:add_button(text)
     self.button_rectangle_x_scale = self.menu_width / self.button_texture:getWidth()
     self.button_rectangle_y_scale = ((self.menu_height - self.horizontal_button_distance * #self.button_texts) / self.button_texture:getHeight()) / #self.button_texts
 
+    --- clear the collider spatial hash
+    self.hc_world = require("hc").new()
+
     for i = 1, #self.button_texts do
         local button_rect = {}
+        
         button_rect.width = self.menu_width
         button_rect.height = self.button_rectangle_y_scale * self.button_texture:getHeight()
         button_rect.x = self.menu_x
         button_rect.y = self.menu_y + ((i - 1) * (button_rect.height + self.horizontal_button_distance)) + button_rect.height / 5
+        
+        button_rect.collider = self.hc_world:rectangle(button_rect.x, button_rect.y, button_rect.width, button_rect.height)
+        button_rect.collider.text = self.button_texts[i]
+                
         table.insert(self.button_rectangles, button_rect)
     end
 end
@@ -49,6 +57,7 @@ function menu:enter()
 end
 
 function menu:draw()
+    self.hc_world.hash:draw("line")
     --- draw title in white
     love.graphics.setColor(255, 255, 255)
     love.graphics.printf(self.title,
@@ -76,12 +85,17 @@ function menu:draw()
     love.graphics.setColor(255, 255, 255)
 end
 
+
 function menu:mousepressed(x, y)
-    for i, button_rect in ipairs(self.button_rectangles) do
-        if self.collisions.has_collision_point_rectangle(x, y, button_rect) then
-            self.on_button_clicked(self.button_texts[i])
-        end
+    local mouse_point = self.hc_world:point(x, y)
+        
+    for button, _ in pairs(self.hc_world:collisions(mouse_point)) do
+        print(button.text.." clicked")
+        self.on_button_clicked(button.text)
     end
+    
+    --- remove point
+    self.hc_world:remove(mouse_point)
 end
 
 function menu:set_title(title)

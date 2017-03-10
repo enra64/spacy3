@@ -1,8 +1,7 @@
 # TODO
 ## general
 * highscores
-* story?
-* ui
+* story
 * more weapons
 * more enemy types
     * asteroids
@@ -12,8 +11,6 @@
     * non-rectangular objects
 * store
 * ads?
-* set title
-* icons for ui (laser bar, missile count)
 * background music
 * settings
     * resolution

@@ -8,8 +8,16 @@
 
 local functions = {}
 
+local HC = require("hc")
+
 local function has_collision_point_rectangle(x, y, rectangle)
-    return x > rectangle.x and x < rectangle.x + rectangle.width and y > rectangle.y and y < rectangle.y + rectangle.height
+    local point = HC.point(x, y)
+    for colliding, _ in pairs(HC.collisions(point)) do
+        if colliding == rectangle then
+            return true
+        end
+    end
+    return false
 end
 functions.has_collision_point_rectangle = has_collision_point_rectangle
 
@@ -50,4 +58,5 @@ local function has_rect_collision(collision_check_object, table)
 end
 functions.has_rect_collision = has_rect_collision
 
+--functions = {}
 return functions

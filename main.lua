@@ -87,7 +87,10 @@ function player_died(score)
     end
 end
 
-function love.load()
+function love.load(arg)
+    --- enable zerobrane ide debugging
+    if arg[#arg] == "-debug" then require("mobdebug").start() end
+    
     --- unshittify random numbers
     math.randomseed(os.time())
 
