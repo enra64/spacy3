@@ -8,5 +8,7 @@
 
 function love.conf(def_conf)
     def_conf.identity = spacy3
+    def_conf.title = "spacy3"
+    def_conf.window.title = "spacy3"
+    def_conf.window.icon = "img/icon.png"
 end
-
