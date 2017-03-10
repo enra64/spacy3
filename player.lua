@@ -111,7 +111,10 @@ local function create_player()
     }
     
     --- player collision shape
-    player.shape = hc.rectangle(player.x, player.y, player.width, player.height)
+    player.shape = hc.polygon(41,87,41,75,9,74,9,59,1,59,2,27,8,26,10,15,39,15,41,1,77,1,79,15,99,15,111,19,123,18,147,39,155,41,165,42,166,51,147,54,144,58,139,59,127,70,111,70,101,75,78,75,79,87)
+    
+    --- move player collision shape so that it is above the ships initial coordinates
+    player.shape:move(player.x, player.y)
 
     --- player audio
     player.thruster_sound = love.audio.newSource("sounds/thrusters2.ogg")
