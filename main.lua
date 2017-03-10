@@ -92,7 +92,10 @@ function love.load()
     math.randomseed(os.time())
 
     --- set some window size
-    love.window.setMode(1024, 768)
+    love.window.setMode(1366, 768)
+
+    --love.window.setMode(1920, 1080)
+    --love.window.setFullscreen(true)
 
     --- initialise all fonts
     require("font_config").init()

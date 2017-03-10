@@ -60,7 +60,7 @@ functions.init = function()
 
     width, height = overheat_bar.texture:getDimensions()
 
-    overheat_bar.x_scale = math.scale_from_to(width,  ui_width * 3 / 6)
+    overheat_bar.x_scale = math.scale_from_to(width,  ui_width / 2)
     overheat_bar.y_scale = math.scale_from_to(height, ui_height)
 
     -- both bar textures should have the same width and height
@@ -95,14 +95,36 @@ functions.draw = function()
     love.graphics.draw(laser_icon.texture, laser_icon.x + ui_margin, laser_icon.y + ui_margin, NO_ROTATION, laser_icon.x_scale, laser_icon.y_scale)
 
     --- laser overheat bar
-    love.graphics.draw(overheat_bar.texture, overheat_bar.quad, overheat_bar.x + ui_margin, overheat_bar.y + ui_margin, NO_ROTATION, overheat_bar.x_scale, overheat_bar.y_scale)
-    love.graphics.draw(overheat_bar.background_texture, overheat_bar.x + ui_margin, overheat_bar.y + ui_margin, NO_ROTATION, overheat_bar.x_scale, overheat_bar.y_scale)
+    love.graphics.draw(
+        overheat_bar.texture,
+        overheat_bar.quad,
+        overheat_bar.x + ui_margin,
+        overheat_bar.y + ui_margin,
+        NO_ROTATION,
+        overheat_bar.x_scale,
+        overheat_bar.y_scale)
+    love.graphics.draw(
+        overheat_bar.background_texture,
+        overheat_bar.x + ui_margin,
+        overheat_bar.y + ui_margin,
+        NO_ROTATION,
+        overheat_bar.x_scale,
+        overheat_bar.y_scale)
 
     --- missile count
-    love.graphics.print(missile_count, missile_count_widget.x + ui_margin, missile_count_widget.y + ui_margin)
+    love.graphics.print(
+        missile_count,
+        missile_count_widget.x + ui_margin,
+        missile_count_widget.y + ui_margin)
 
     --- missile count icon
-    love.graphics.draw(missile_icon.texture, missile_icon.x + ui_margin, missile_icon.y + ui_margin, NO_ROTATION, missile_icon.x_scale, missile_icon.y_scale)
+    love.graphics.draw(
+        missile_icon.texture,
+        missile_icon.x + ui_margin,
+        missile_icon.y + ui_margin,
+        NO_ROTATION,
+        missile_icon.x_scale,
+        missile_icon.y_scale)
 
     --- score
     love.graphics.print(score .. " points", ui_margin, ui_margin)
@@ -118,7 +140,7 @@ functions.update = function(score_)
     score = score_
 
     laser_heat = weaponry.get_laser_heat()
-    overheat_bar.quad:setViewport(0, 0, overheat_bar.width * laser_heat, overheat_bar.height / overheat_bar.y_scale)
+    overheat_bar.quad:setViewport(0, 0, (overheat_bar.width / overheat_bar.x_scale) * laser_heat, overheat_bar.height / overheat_bar.y_scale)
 end
 
 return functions
