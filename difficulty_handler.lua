@@ -12,9 +12,10 @@ local desktop_value_dictionary = {
 
 local common_value_dictionary = {
     player_speed = 400,
-    enemy_simple_speed = {200, 250, 300, 320, 500},
+    enemy_simple_speed = {200, 250, 300, 350, 400},
     enemy_simple_score = {2, 4, 8, 16, 32},
-    level_threshold = {10, 45, 100, 200, 400}
+    level_threshold = {10, 45, 100, 200, 400},
+    enemy_simple_count = {3, 4, 5, 5, 6}
 }
 
 function difficulty.get(value, level)

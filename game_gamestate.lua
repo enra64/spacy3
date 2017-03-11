@@ -84,9 +84,6 @@ function game:init()
     player.load()
     ingame_status.init()
 
-    --- create some enemies to get started
-    for i = 1, 3 do enemies.create_enemy() end
-
     --- create pause menu
     pause_menu:add_button("resume")
     pause_menu:add_button("back to main menu")

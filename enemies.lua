@@ -8,8 +8,8 @@
 
 local functions = {}
 
-local enemies = {}
-functions.enemies = enemies
+local simple_enemies = {}
+functions.enemies = simple_enemies
 local hc = require("hc")
 require("difficulty_handler")
 
@@ -49,33 +49,34 @@ local function create_enemy()
     end
     
 
-    table.insert(enemies, new_enemy)
+    table.insert(simple_enemies, new_enemy)
 end
 functions.create_enemy = create_enemy
 
-
+local function create_simple_enemies()
+    while #simple_enemies < difficulty.get("enemy_simple_count", current_level()) do
+        create_enemy()
+    end
+end
 
 local function update_enemies(dt)
+    create_simple_enemies()
     
-    for index, enemy in ipairs(enemies) do
+    for index, enemy in ipairs(simple_enemies) do
         local enemy_speed = difficulty.get("enemy_"..enemy.type.."_speed", current_level())
         enemy.x = enemy.x - (dt * enemy_speed)
         enemy.shape:move(-dt * enemy_speed, 0)
 
         if enemy.x + enemy.width < 0 then
             hc.remove(enemy.shape)
-            table.remove(enemies, index)
+            table.remove(simple_enemies, index)
         end
-    end
-
-    while #enemies < 3 do
-        create_enemy()
-    end
+    end    
 end
 functions.update = update_enemies
 
 local function draw()
-    for _, item in ipairs(enemies) do
+    for _, item in ipairs(simple_enemies) do
         love.graphics.draw(item.texture, item.x, item.y, 0, item.scale)
     end
 end
@@ -93,9 +94,9 @@ end
 
 functions.remove_colliding_enemies = function(shape, on_kill)
     had_collision = false
-    for i, enemy in ipairs(enemies) do 
+    for i, enemy in ipairs(simple_enemies) do 
         if enemy.shape:collidesWith(shape) then
-            table.remove(enemies, i)
+            table.remove(simple_enemies, i)
             hc.remove(enemy.shape)
             had_collision = true
             on_kill(enemy)
@@ -106,8 +107,8 @@ functions.remove_colliding_enemies = function(shape, on_kill)
 end
 
 functions.leave = function()
-    enemies = {}
-    functions.enemies = enemies
+    simple_enemies = {}
+    functions.enemies = simple_enemies
 end
 
 return functions
