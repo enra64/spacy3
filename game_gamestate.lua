@@ -11,14 +11,22 @@ local enemies = require("enemies")
 local control = require("player_control")
 local pause_menu = dofile "menu.lua"
 local ingame_status = require("ingame_status")
+local difficulty_handler = require("difficulty_handler")
+
+local level_thresholds = difficulty.get("level_threshold")
+local level = 1
 
 local score = 0
 
 function on_kill(killed_enemy)
-    score = score + 10
+    score = score + killed_enemy.score
 
     --- make explody thing over enemy
     explosions.create_explosion(killed_enemy.x, killed_enemy.y)
+end
+
+function current_level()
+    return level
 end
 
 function game:update(dt)
@@ -29,6 +37,10 @@ function game:update(dt)
     bg.update(dt)
     ingame_status.update(score)
     
+    if score > level_thresholds[level] then
+        level = math.clamp(level + 1, 1, 5)
+    end
+
 
     if control.is_button_pressed("button_escape") then
         gamestate.push(pause_menu)

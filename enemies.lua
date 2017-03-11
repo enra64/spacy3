@@ -11,7 +11,8 @@ local functions = {}
 local enemies = {}
 functions.enemies = enemies
 local hc = require("hc")
-local enemy_speed = 200
+require("difficulty_handler")
+
 
 local function create_enemy()
     local new_enemy = {}
@@ -25,6 +26,8 @@ local function create_enemy()
 
     --- no scaling
     new_enemy.scale = 1
+    new_enemy.score = difficulty.get("enemy_simple_score", current_level())
+    new_enemy.type = "simple"
 
     --- find free position
     position_found = false
@@ -53,7 +56,9 @@ functions.create_enemy = create_enemy
 
 
 local function update_enemies(dt)
+    
     for index, enemy in ipairs(enemies) do
+        local enemy_speed = difficulty.get("enemy_"..enemy.type.."_speed", current_level())
         enemy.x = enemy.x - (dt * enemy_speed)
         enemy.shape:move(-dt * enemy_speed, 0)
 

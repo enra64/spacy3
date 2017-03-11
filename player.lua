@@ -12,13 +12,14 @@ local enemies = require("enemies")
 local weaponry = require("weapons")
 local control = require("player_control")
 local hc = require("hc")
+local difficulty_handler = require("difficulty_handler")
 
 local player = {}
 
 local a_button_lock = false
 local b_button_lock = false
 
-local speed = 400
+local speed = difficulty.get("player_speed")
 
 local function move_player(dx, dy) 
     player.x = player.x + dx
