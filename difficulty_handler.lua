@@ -3,11 +3,13 @@ local is_touch = require("is_touch")()
 difficulty = {}
 
 local touch_value_dictionary = {
-    
+    ship_scale = 1.8,
+    enemy_simple_scale = 1.8
 }
 
 local desktop_value_dictionary = {
-    
+    ship_scale = 1,
+    enemy_simple_scale = 1
 }
 
 local common_value_dictionary = {
@@ -30,7 +32,7 @@ function difficulty.get(value, level)
     elseif is_touch then
         dict = touch_value_dictionary
     else
-        dict = value_dictionary
+        dict = desktop_value_dictionary
     end
     
     --- return level value for dict if level was given

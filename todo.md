@@ -14,4 +14,3 @@
     * fullscreen
 
 ## mobile
-* increase ship etc sizes?

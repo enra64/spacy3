@@ -21,11 +21,10 @@ local function create_enemy()
     new_enemy.texture = love.graphics.newImage("img/enemy_ship_2_body.png")
 
     --- store width and height
-    local width, height = new_enemy.texture:getDimensions()
-    new_enemy.width, new_enemy.height = width, height
+    new_enemy.width, new_enemy.height = new_enemy.texture:getDimensions()
 
     --- no scaling
-    new_enemy.scale = 1
+    new_enemy.scale = difficulty.get("enemy_simple_scale")
     new_enemy.score = difficulty.get("enemy_simple_score", current_level())
     new_enemy.type = "simple"
 
@@ -34,18 +33,17 @@ local function create_enemy()
     
     while not position_found do
         new_enemy.x = math.random(love.graphics.getWidth(), love.graphics.getWidth() + 100)
-        new_enemy.y = math.random(love.graphics.getHeight() - height)
-        new_enemy.shape = hc.rectangle(new_enemy.x, new_enemy.y, width, height)
+        new_enemy.y = math.random(love.graphics.getHeight() - new_enemy.height)
+        new_enemy.shape = hc.rectangle(new_enemy.x, new_enemy.y, new_enemy.width * new_enemy.scale, new_enemy.height * new_enemy.scale)
         new_enemy.shape.object_type = "enemy"
         
         position_found = true
         
         for _,_ in pairs(hc.collisions(new_enemy.shape)) do
-            -- if we found a collision, that enemy will not be added; its shape must be deleted
+            -- if we found a collision, that enemy will not be added; its shape must be deleted from the collision system
             position_found = false
             hc.remove(new_enemy.shape)
         end
-        
     end
     
 
@@ -77,7 +75,7 @@ functions.update = update_enemies
 
 local function draw()
     for _, item in ipairs(simple_enemies) do
-        love.graphics.draw(item.texture, item.x, item.y, 0, item.scale)
+        love.graphics.draw(item.texture, item.x, item.y, NO_ROTATION, item.scale)
     end
 end
 functions.draw = draw

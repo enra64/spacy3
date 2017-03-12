@@ -22,7 +22,6 @@ local b_button_lock = false
 
 local speed = difficulty.get("player_speed")
 
-
 local function move_player(dx, dy) 
     player.x = player.x + dx
     player.y = player.y + dy
@@ -83,17 +82,17 @@ end
 
 local function draw_player()
     --- the propulsion images are larger than the main ship body, so the must be drawn slightly up left from it
-    local x_prop_offset = (player.propulsion_texture.right:getWidth() - player.texture:getWidth()) / 1
-    local y_prop_offset = (player.propulsion_texture.right:getHeight() - player.texture:getHeight()) / 2
+    local x_prop_offset = player.propulsion_texture.right:getWidth() * player.scale - player.width
+    local y_prop_offset = (player.propulsion_texture.right:getHeight() * player.scale - player.height) / 2
 
     --- draw the available bodies
     for direction, direction_enabled in pairs(player.movement) do
         if direction_enabled then
-            love.graphics.draw(player.propulsion_texture[direction], player.x - x_prop_offset, player.y - y_prop_offset)
+            love.graphics.draw(player.propulsion_texture[direction], player.x - x_prop_offset, player.y - y_prop_offset, NO_ROTATION, player.scale)
         end
     end
 
-    love.graphics.draw(player.texture, player.x, player.y, 0, 1, 1)
+    love.graphics.draw(player.texture, player.x, player.y, NO_ROTATION, player.scale)
 end
 
 functions.draw = draw_player
@@ -102,6 +101,8 @@ local function create_player()
     player.x = 50
     player.y = love.graphics.getHeight() / 2
     player.texture = love.graphics.newImage("img/ship_main.png")
+
+    player.scale = difficulty.get("ship_scale")
 
     player.width, player.height = player.texture:getDimensions()
 
@@ -118,6 +119,13 @@ local function create_player()
     
     --- move player collision shape so that it is above the ships initial coordinates
     player.shape:move(player.x, player.y)
+
+    --- hc scales from the center, so we need to move the shape some more
+    player.shape:scale(player.scale)
+    player.shape:move(-(player.width - player.width * player.scale) / 2, -(player.height - player.height * player.scale) / 2)
+
+    -- adjust stored player size for scaling
+    player.width, player.height = player.width * player.scale, player.height * player.scale
 
     --- player audio
     player.thruster_sound = love.audio.newSource("sounds/thrusters2.ogg")
