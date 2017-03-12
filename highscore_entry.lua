@@ -1,5 +1,6 @@
 local this = {}
 
+local utf8 = require("utf8")
 this.is_touch = require("is_touch")()
 this.font = require("font_config").get_font("menu")
 this.timer = require("hump.timer")
@@ -113,13 +114,23 @@ function this:mousepressed(x, y)
     end
 end 
 
-function this:keypressed(key)
+function this:textinput(text)
     if self.entered_text.text:len() < 10 then
-        if key and key:match( '^[%w%s]$' ) then self.entered_text.text = self.entered_text.text..key end
+        self.entered_text.text = self.entered_text.text..text
     end
+end
 
-    if self.entered_text.text:len() > 1 then
-        if key == "backspace" then self.entered_text.text = string.sub(self.entered_text.text, 1, -2) end
+-- see https://love2d.org/wiki/love.textinput, necessary for deleting in the entered text
+function this:keypressed(key)
+    if key == "backspace" then
+        -- get the byte offset to the last UTF-8 character in the string.
+        local byteoffset = utf8.offset(self.entered_text.text, -1)
+ 
+        if byteoffset then
+            -- remove the last UTF-8 character.
+            -- string.sub operates on bytes rather than UTF-8 characters, so we couldn't do string.sub(text, 1, -2).
+            self.entered_text.text = string.sub(self.entered_text.text, 1, byteoffset - 1)
+        end
     end
 end
 

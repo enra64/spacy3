@@ -26,7 +26,7 @@ function this:init()
     self.title = {}
     self.title.x = 0
     self.title.y = 10
-    self.title.text = "Highscores"
+    self.title.text = "highscores"
 
     --- init list of highscores
     self.highscore_labels = {}
@@ -40,7 +40,7 @@ function this:init()
         new.x = 0
         new.y = (i - 1) * (self.font:getHeight() * 1.5) + list_y
         new.width = love.graphics.getWidth()
-        new.text = score[2].."points : "..score[1]
+        new.text = score[2].." points : "..score[1]
         table.insert(self.highscore_labels, new)
     end 
 

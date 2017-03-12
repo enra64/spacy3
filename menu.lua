@@ -93,22 +93,12 @@ function menu:mousepressed(x, y)
         self.on_button_clicked(button.text)
     end
     
-    --- remove point
+    --- remove pointforward
     self.hc_world:remove(mouse_point)
 end
 
 function menu:set_title(title)
     self.title = title
-end
-
---- forward release input events to player control so it realizes that the pause button is no longer pressed
-
-function menu:touchreleased(id)
-    self.control.touchreleased(id)
-end
-
-function menu:keyreleased()
-    self.control.update_keyboard(0.016)
 end
 
 return menu

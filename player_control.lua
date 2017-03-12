@@ -87,9 +87,7 @@ local function touchpressed(id, x, y)
         --- retrieve the control type stored in the collision shape
         local ctrl_type = shape.control_type
         
-        --- update stored touch id. dpad_background must be handled separately, as it is not in the touch_controls table
-        
-        
+        --- update stored touch id
         touch_controls[ctrl_type].touch_id = id
 
         --- update control state
