@@ -52,6 +52,14 @@ function menu:add_button(text)
     end
 end
 
+function menu:clear_buttons()
+    self.button_texts = {}
+    self.button_rectangles = {}
+
+    --- clear the collider spatial hash
+    self.hc_world = require("hc").new()
+end     
+
 function menu:enter()
     love.graphics.setFont(self.font_config.get_font("menu"))
 end

@@ -75,6 +75,17 @@ function print_table( t )
     print()
 end
 
+--http://stackoverflow.com/a/7615129
+function string.split(inputstr, sep)
+        assert(sep)
+        local t={} ; i=1
+        for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+                t[i] = str
+                i = i + 1
+        end
+        return t
+end
+
 function math.clamp(val, lower, upper)
     assert(val and lower and upper, "missing argument for math.clamp")
     if lower > upper then lower, upper = upper, lower end -- swap if boundaries supplied the wrong way
@@ -92,6 +103,8 @@ function on_pause_button_clicked(button_text)
         gamestate.push(dofile("game_gamestate.lua"))
     elseif (button_text == "view highscores") then
         gamestate.push(dofile("highscore_view.lua"))
+    elseif button_text == "settings" then
+        gamestate.push(dofile("settings.lua"))
     elseif button_text == "quit" then
         love.event.quit()
     end
@@ -206,6 +219,7 @@ function love.load(arg)
     --- configure main menu
     main_menu:add_button("new game")
     main_menu:add_button("view highscores")
+    main_menu:add_button("settings")
     main_menu:add_button("quit")
     main_menu:set_title("main menu")
 
