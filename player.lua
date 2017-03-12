@@ -13,6 +13,7 @@ local weaponry = require("weapons")
 local control = require("player_control")
 local hc = require("hc")
 local difficulty_handler = require("difficulty_handler")
+require("asteroids")
 
 local player = {}
 
@@ -20,6 +21,7 @@ local a_button_lock = false
 local b_button_lock = false
 
 local speed = difficulty.get("player_speed")
+
 
 local function move_player(dx, dy) 
     player.x = player.x + dx
@@ -76,7 +78,7 @@ end
 functions.update = update_player
 
 functions.player_is_alive = function()
-    return not enemies.has_enemy_collision(player)
+    return not enemies.has_enemy_collision(player) and not asteroids.has_collision(player.shape)
 end
 
 local function draw_player()
@@ -87,7 +89,7 @@ local function draw_player()
     --- draw the available bodies
     for direction, direction_enabled in pairs(player.movement) do
         if direction_enabled then
-            love.graphics.draw(player.propulsion_texture[direction], player.x - x_prop_offset, player.y - y_prop_offset, 0, 1, 1)
+            love.graphics.draw(player.propulsion_texture[direction], player.x - x_prop_offset, player.y - y_prop_offset)
         end
     end
 

@@ -12,17 +12,26 @@ local control = require("player_control")
 local pause_menu = dofile "menu.lua"
 local ingame_status = require("ingame_status")
 local difficulty_handler = require("difficulty_handler")
+require("asteroids")
+local timer = require("hump.timer")
 
 local level_thresholds = difficulty.get("level_threshold")
 local level = 1
 
 local score = 0
 
-function on_kill(killed_enemy)
+local function on_kill(killed_enemy)
     score = score + killed_enemy.score
 
     --- make explody thing over enemy
     explosions.create_explosion(killed_enemy.x, killed_enemy.y)
+end
+
+local function on_asteroid_kill(asteroid, asteroid_type) 
+    score = score + 1
+
+    --- make explody thing over enemy
+    explosions.create_explosion(asteroid.x, asteroid.y)
 end
 
 function current_level()
@@ -30,12 +39,15 @@ function current_level()
 end
 
 function game:update(dt)
-    weapons.update(dt)
+    timer.update(dt)
+    weapons.update(dt, on_kill, on_asteroid_kill)
     player.update(dt)
-    enemies.update(dt, on_kill)
+    enemies.update(dt)
     explosions.update(dt)
     bg.update(dt)
     ingame_status.update(score)
+    asteroids.update(dt)
+    
     
     if score > level_thresholds[level] then
         level = math.clamp(level + 1, 1, 5)
@@ -64,15 +76,19 @@ end
 function game:draw()
     bg.draw()
     enemies.draw()
+    
+    asteroids.draw()    
     weapons.draw()
     player.draw()
     explosions.draw()
+    
     control.draw()
     ingame_status.draw()
 end
 
 function game:resume()
     control.on_resume()
+    asteroids.resume()
 end
 
 function game:init()
@@ -83,6 +99,7 @@ function game:init()
     control.load()
     player.load()
     ingame_status.init()
+    asteroids.init()
 
     --- create pause menu
     pause_menu:add_button("resume")
@@ -106,6 +123,7 @@ end
 
 function game:enter()
     ingame_status.enter()
+    asteroids.enter()
 end
 
 function game:leave()
@@ -113,6 +131,7 @@ function game:leave()
     enemies.leave()
     weapons.leave()
     explosions.leave()
+    asteroids.leave()
 end
 
 --- forward relevant input events

@@ -5,10 +5,7 @@
 * more weapons
 * more enemy types
     * asteroids
-* more difficulty, possibility of achieving a victory
-* better collision system
-    * scaling
-    * non-rectangular objects
+* better difficulty, possibility of achieving a victory
 * store
 * ads?
 * background music

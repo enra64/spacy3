@@ -17,6 +17,7 @@ local overheat_bar_y_scale = .5
 --- requires
 local hc = require("hc")
 local enemies = require("enemies")
+require("asteroids")
 
 --- list of current projectiles
 local projectiles = {}
@@ -110,7 +111,7 @@ end
 
 functions.shoot_laser = shoot_laser
 
-functions.update = function(dt)
+functions.update = function(dt, on_kill, on_asteroid_kill)
     --- reduce laser overheat
     laser_overheat = math.clamp(laser_overheat - dt * laser_cooling_speed, 0, 1)
 
@@ -126,7 +127,14 @@ functions.update = function(dt)
             hc.remove(projectile.shape)
         end
 
+        -- remove colliding enemies
         if enemies.remove_colliding_enemies(projectile.shape, on_kill) then
+            table.remove(projectiles, i)
+            hc.remove(projectile.shape)
+        end
+
+        -- let asteroids handle the bullet
+        if asteroids.handle_projectile(projectile.shape, on_asteroid_kill) then
             table.remove(projectiles, i)
             hc.remove(projectile.shape)
         end

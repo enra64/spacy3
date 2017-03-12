@@ -71,7 +71,7 @@ local function update_enemies(dt)
             hc.remove(enemy.shape)
             table.remove(simple_enemies, index)
         end
-    end    
+    end
 end
 functions.update = update_enemies
 

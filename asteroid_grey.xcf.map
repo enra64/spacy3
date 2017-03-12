@@ -1,0 +1,10 @@
+<img src="asteroid_grey.xcf" width="176" height="175" border="0" usemap="#map" />
+
+<map name="map">
+<!-- #$-:Image map file created by GIMP Image Map plug-in -->
+<!-- #$-:GIMP Image Map plug-in by Maurits Rijk -->
+<!-- #$-:Please do not edit lines starting with "#$" -->
+<!-- #$VERSION:2.3 -->
+<!-- #$AUTHOR:Arne Herdick -->
+<area shape="poly" coords="31,149,31,142,18,123,7,114,7,107,4,96,5,83,2,74,20,45,21,36,29,25,43,20,47,15,61,5,81,2,88,5,107,2,114,4,115,12,145,21,143,27,170,41,162,59,171,79,175,102,172,122,165,143,141,158,118,169,92,172,66,171,52,168,31,150,31,149" href="asd" />
+</map>

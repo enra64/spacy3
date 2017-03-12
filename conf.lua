@@ -13,4 +13,6 @@ function love.conf(def_conf)
     def_conf.window.icon = "img/icon.png"
 
     def_conf.modules.physics = false
+
+    io.stdout:setvbuf("no")
 end
