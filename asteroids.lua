@@ -32,7 +32,7 @@ local function add_asteroid()
     
     --- positioning, movement
     new.x = math.random(love.graphics.getWidth())
-    new.gradient = math.random(80, 100)
+    new.gradient = math.random(30, 100)
     
     
     -- position asteroid above or below game field, store information
@@ -65,8 +65,11 @@ local function add_asteroid()
     --- collision shape
     new.shape = hc.polygon(unpack(asteroid_collision_coordinates))
 
+    new.scale = math.random(40, 70) / 100
+
     -- move to "position of asteroid" + "center of asteroid"
     new.shape:move(new.x - new.width / 2, new.y - new.height / 2)
+    new.shape:scale(new.scale)
     new.shape.type = "asteroid"
     
     --print("new asteroid at "..new.x..","..new.y..", going "..new.speed..","..new.gradient.." from "..new.y_intersection)
