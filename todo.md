@@ -4,7 +4,6 @@
 * story
 * more weapons
 * more enemy types
-    * asteroids
 * better difficulty, possibility of achieving a victory
 * store
 * ads?
