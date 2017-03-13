@@ -30,7 +30,7 @@ function this:init()
 
     --- init list of highscores
     self.highscore_labels = {}
-    local list_y = 50
+    local list_y = 70
     local highscores = persistent_storage.get("highscores", {})
     print("highscore view highscore table:")
     print_table(highscores)

@@ -30,7 +30,8 @@ end
 function this:graphics_mode_changed()
     --- touch has more limited options
     if is_touch then
-        love.graphics.setMode(0, 0, {fullscreen = self:get_current_value("fullscreen") == "yes"})
+        love.window.setMode(0, 0, {fullscreen = self:get_current_value("fullscreen") == "yes"})
+        return
     end
 
     -- get resolution as settings display

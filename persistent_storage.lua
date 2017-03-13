@@ -16,7 +16,7 @@ local function load_storage()
 end 
 
 local function save_storage()
-    love.filesystem.write(file_name, binser.serialize(persistent_storage.storage))
+    return love.filesystem.write(file_name, binser.serialize(persistent_storage.storage))
 end 
 
 persistent_storage.get = function(key, default)
@@ -36,5 +36,5 @@ persistent_storage.set = function(key, value)
     persistent_storage.storage[key] = value
 
     --- save storage table on disk immediately
-    save_storage()
+    return save_storage()
 end

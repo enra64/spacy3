@@ -15,4 +15,6 @@ function love.conf(def_conf)
     def_conf.modules.physics = false
 
     io.stdout:setvbuf("no")
+
+    def_conf.externalstorage = true
 end
