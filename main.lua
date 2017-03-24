@@ -123,11 +123,10 @@ function love.load(arg)
     --- unshittify random numbers
     math.randomseed(os.time())
 
-    --- set some window size
-    love.window.setMode(1366, 768)
-
-    --love.window.setMode(1920, 1080)
-    --love.window.setFullscreen(true)
+    --- apply settings (or default)
+    settings = dofile("settings.lua")
+    settings:init()
+    settings:graphics_mode_changed()
 
     --- initialise all fonts
     require("font_config").init()
