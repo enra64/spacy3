@@ -19,7 +19,7 @@ local common_value_dictionary = {
     level_threshold = {10, 45, 100, 200, 400},
     enemy_simple_count = {3, 4, 5, 5, 6},
     asteroid_period = {4, 3, 2.8, 2.3, 1.7},
-    asteroid_speed = {2, 5, 7, 8, 9}
+    asteroid_speed = {100, 200, 300, 550, 800}
 }
 
 function difficulty.get(value, level)
