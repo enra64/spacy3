@@ -3,8 +3,10 @@ asteroids = {}
 local asteroid_storage = {}
 
 local hc = require("hc")
+local explosions = require("explosions")
 local timer = require("hump.timer")
 require("difficulty_handler")
+local enemies = require("enemies")
 
 local function load_random_asteroid()
     local textures = {"img/asteroid_brown.png", "img/asteroid_grey.png"}
@@ -31,9 +33,8 @@ local function add_asteroid()
     new.width, new.height = new.texture:getDimensions()
     
     --- positioning, movement
-    new.x = math.random(love.graphics.getWidth())
-    new.gradient = math.random(30, 100)
-    
+    new.x = math.random(love.graphics.getWidth() / 2, love.graphics.getWidth())
+    new.gradient = math.random(30, 80)
     
     -- position asteroid above or below game field, store information
     if math.random() > 0.5 then
@@ -120,6 +121,32 @@ asteroids.update = function(dt)
             asteroid.y + 2 * asteroid.height < 0 or asteroid.y - 2 * asteroid.height > love.graphics.getHeight()) then
             table.remove(asteroid_storage, i)
             hc.remove(asteroid.shape)
+        end
+        
+        for other, collision_vector in pairs(hc.collisions(asteroid.shape)) do
+            if other.object_type == "enemy" then
+                local ast_bbox = {}
+                local oth_bbox = {}
+                ast_bbox.x1, ast_bbox.y1, ast_bbox.x2, ast_bbox.y2 = asteroid.shape:bbox()
+                oth_bbox.x1, oth_bbox.y1, oth_bbox.x2, oth_bbox.y2 = other:bbox()
+                local center_x, center_y
+                
+                if oth_bbox.x1 < ast_bbox.x2 then
+                    center_x = oth_bbox.x1 + (ast_bbox.x2 - oth_bbox.x1) / 2
+                else
+                    center_x = ast_bbox.x1 + (oth_bbox.x2 - ast_bbox.x1) / 2
+                end
+                if oth_bbox.y1 < ast_bbox.y2 then
+                    center_y = oth_bbox.y1 + (ast_bbox.y2 - oth_bbox.y1) / 2
+                else
+                    center_y = ast_bbox.y1 + (oth_bbox.y2 - ast_bbox.y1) / 2
+                end
+                
+                explosions.create_explosion(center_x, center_y)
+                enemies.remove_colliding_enemies(asteroid.shape, function() end)
+                table.remove(asteroid_storage, i)
+                hc.remove(asteroid.shape)
+            end
         end
     end
 end
