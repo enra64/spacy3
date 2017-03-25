@@ -90,7 +90,9 @@ function player_died(score)
     gamestate.push(quit_confirmation)
     quit_confirmation:add_button("back to main")
 
-    if score > persistent_storage.get("lowest_highscore", {"", 0})[2] then
+
+    local hs_entry_ok = #persistent_storage.get("highscores", {}) < 10 or score > persistent_storage.get("lowest_highscore", {"", 0})[2]
+    if hs_entry_ok then
         quit_confirmation:add_button("enter highscore")
     end 
 

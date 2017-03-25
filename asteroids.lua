@@ -34,7 +34,9 @@ local function add_asteroid()
     
     --- positioning, movement
     new.x = math.random(love.graphics.getWidth() / 2, love.graphics.getWidth())
-    new.gradient = math.random(30, 80)
+    new.gradient = math.random(100)
+    
+    print("new asteroid gradient: "..new.gradient)
     
     -- position asteroid above or below game field, store information
     if math.random() > 0.5 then

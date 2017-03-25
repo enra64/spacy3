@@ -32,9 +32,7 @@ function this:init()
     self.highscore_labels = {}
     local list_y = 70
     local highscores = persistent_storage.get("highscores", {})
-    print("highscore view highscore table:")
-    print_table(highscores)
-
+    
     for i, score in spairs(highscores, function(t,a,b) return t[b][2] < t[a][2] end) do
         local new = {}
         new.x = 0
