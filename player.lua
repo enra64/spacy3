@@ -14,6 +14,7 @@ local control = require("player_control")
 local hc = require("hc")
 local difficulty_handler = require("difficulty_handler")
 require("asteroids")
+require("drops")
 
 local player = {}
 
@@ -72,6 +73,10 @@ local function update_player()
         player.thruster_sound:play()
     else
         player.thruster_sound:pause()
+    end
+    
+    if drops.remove_colliding_drops(player.shape) then
+        score = score + 50
     end
 end
 functions.update = update_player

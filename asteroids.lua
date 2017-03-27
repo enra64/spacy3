@@ -6,6 +6,7 @@ local hc = require("hc")
 local explosions = require("explosions")
 local timer = require("hump.timer")
 require("difficulty_handler")
+require("drops")
 local enemies = require("enemies")
 
 local function load_random_asteroid()
@@ -69,7 +70,7 @@ local function add_asteroid()
 
     new.scale = math.random(40, 70) / 100
 
-    -- move to "position of asteroid" + "center of asteroid"
+    -- move to "position of asteroid" - "center of asteroid"
     new.shape:move(new.x - new.width / 2, new.y - new.height / 2)
     new.shape:scale(new.scale)
     new.shape.object_type = "asteroid"
