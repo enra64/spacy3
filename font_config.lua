@@ -16,9 +16,13 @@ functions.init = function()
     if is_touch then
         fonts.ingame = love.graphics.newFont("spacy3font.otf", 40)
         fonts.menu = love.graphics.newFont("spacy3font.otf", 80)
+        fonts.store_description = love.graphics.newFont("spacy3font.otf", 30)
+        fonts.store_title = love.graphics.newFont("spacy3font.otf", 50)
     else
         fonts.ingame = love.graphics.newFont("spacy3font.otf", 40)
         fonts.menu = love.graphics.newFont("spacy3font.otf", 40)
+        fonts.store_description = love.graphics.newFont("spacy3font.otf", 30)
+        fonts.store_title = love.graphics.newFont("spacy3font.otf", 50)
     end
 end
 

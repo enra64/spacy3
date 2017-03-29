@@ -35,7 +35,7 @@ function menu:invalidate_buttons()
 end
 
 function menu:add_button(text)
-    if text then
+    if text ~= nil then
         table.insert(self.button_texts, text)
     end
     
@@ -102,16 +102,11 @@ function menu:draw()
     love.graphics.setColor(255, 255, 255)
 end
 
-
 function menu:mousepressed(x, y)
-    local mouse_point = self.hc_world:point(x, y)
-        
+    local mouse_point = self.hc_world:point(x, y) 
     for button, _ in pairs(self.hc_world:collisions(mouse_point)) do
-        --print(button.text.." clicked")
         self.on_button_clicked(button.text)
     end
-    
-    --- remove pointforward
     self.hc_world:remove(mouse_point)
 end
 
