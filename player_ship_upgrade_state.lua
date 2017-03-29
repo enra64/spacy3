@@ -24,8 +24,8 @@ end
 player_ship_upgrade_state.upgrade = function(part_to_upgrade)
     local price = player_ship_upgrade_state.get_price(part_to_upgrade)
     if player_ship_upgrade_state.credits >= price then
-        player_ship_upgrade_state[part_to_upgrade] = math.clamp(
-            player_ship_upgrade_state[part_to_upgrade],
+        player_ship_upgrade_state.state[part_to_upgrade] = math.clamp(
+            player_ship_upgrade_state.state[part_to_upgrade],
             1,
             state_maximum[part_to_upgrade])
         player_ship_upgrade_state.credits = player_ship_upgrade_state.credits - price
@@ -35,7 +35,7 @@ player_ship_upgrade_state.upgrade = function(part_to_upgrade)
 end
 
 player_ship_upgrade_state.get_state = function(part)
-    return player_ship_upgrade_state[part_to_upgrade]
+    return player_ship_upgrade_state.state[part_to_upgrade]
 end
 
 player_ship_upgrade_state.get_price = function(part)

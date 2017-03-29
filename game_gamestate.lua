@@ -15,6 +15,7 @@ local difficulty_handler = require("difficulty_handler")
 require("asteroids")
 local timer = require("hump.timer")
 require("flyapartomatic")
+require("player_ship_upgrade_state")
 
 local level_thresholds = difficulty.get("level_threshold")
 local level = 1
@@ -109,9 +110,10 @@ function game:init()
     score = 0
     --- load background textures
     bg.load()
-    flyapartomatic.init()
 
     --- init all
+    player_ship_upgrade_state.init()
+    flyapartomatic.init()
     drops.init()
     control.load()
     player.load()
