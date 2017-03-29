@@ -14,6 +14,7 @@ local ingame_status = require("ingame_status")
 local difficulty_handler = require("difficulty_handler")
 require("asteroids")
 local timer = require("hump.timer")
+require("flyapartomatic")
 
 local level_thresholds = difficulty.get("level_threshold")
 local level = 1
@@ -22,9 +23,15 @@ score = 0
 
 local function on_kill(killed_enemy)
     score = score + killed_enemy.score
-
+    
     --- make explody thing over enemy
     explosions.create_explosion(killed_enemy.x, killed_enemy.y)
+    
+    flyapartomatic.spawn(
+        {"img/blue_laser.png", "img/green_laser.png", "img/yellow_laser.png"},
+        killed_enemy.x,
+        killed_enemy.y
+    )
 end
 
 local function on_asteroid_kill(asteroid, asteroid_type) 
@@ -79,6 +86,7 @@ end
 
 function game:draw()
     bg.draw()
+    flyapartomatic.draw()
     enemies.draw()
     
     drops.draw()
@@ -101,6 +109,7 @@ function game:init()
     score = 0
     --- load background textures
     bg.load()
+    flyapartomatic.init()
 
     --- init all
     drops.init()
