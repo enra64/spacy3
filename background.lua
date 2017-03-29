@@ -144,20 +144,36 @@ local function load()
     load_planets()
     load_stars()
     create_gaussian_star_cluster()
-end
-
-functions.load = load
-
-local function draw_background()
-    --- clear to black background
-    love.graphics.clear(0, 0, 0)
-
-    --- draw all stars
+    
+    -- draw the stars to a separate canvas
+    functions.star_canvas = love.graphics.newCanvas(
+        love.graphics.getWidth(), 
+        love.graphics.getHeight())
+    love.graphics.setCanvas(functions.star_canvas)
+    
+    -- draw all stars
     for _, star in ipairs(stars) do
         love.graphics.setColor(star.color)
         love.graphics.draw(star.texture, star.x, star.y, star.rotation, star.scale, star.scale, star.width / 2, star.height / 2)
     end
     love.graphics.setColor(255, 255, 255)
+    
+    -- reset canvas to screen
+    love.graphics.setCanvas()
+end
+
+functions.load = load
+
+
+
+local function draw_background()
+    --- clear to black background
+    love.graphics.clear(0, 0, 0)
+
+    -- draw star canvas
+    love.graphics.setBlendMode("alpha", "premultiplied")
+    love.graphics.draw(functions.star_canvas)
+    love.graphics.setBlendMode("alpha")
 
     --- draw all planets
     for _, planet in ipairs(planets) do
