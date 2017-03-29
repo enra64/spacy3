@@ -1,18 +1,14 @@
-local Timer = require("hump.timer")
+local timer = require("hump.timer")
 local hc = require("hc")
 
 drops = {}
-
-local function drop_tweener(tween_duration, drop, rotation_tweening_max)
-    return function() 
-    Timer.tween(tween_duration, drop, {rotation = drop.rotation + rotation_tweening_max}, 'in-out-linear') end
-end
 
 drops.make_drop = function(type, x, y)
   drop = {}
   
   if type == "asteroid_drop" then
       drop.texture = love.graphics.newImage("img/asteroid_drop.png")
+      drop.illuminated_texture = love.graphics.newImage("img/blue_laser.png")
   else
       print("unknown drop type requested: "..type)
   end
@@ -33,13 +29,12 @@ drops.make_drop = function(type, x, y)
     drop.x - drop.width / 2, 
     drop.y - drop.height / 2)      
   
-  local rotation_tweening_max = math.random(drop.rotation / 10)
-  
-  local tween_duration = math.random() + 1
+  timer.tween(.5, drop, {x = drop.x - math.random(50, 70)}, 'out-quad')
   
   -- tween every "tween_duration", begin tweening manually
-  drop_tweener(tween_duration, drop, rotation_tweening_max)()
-  drop.tweening_timer = Timer.every(tween_duration, drop_tweener(tween_duration, drop, rotation_tweening_max))
+  timer.every(1, function() drop.illuminated = not drop.illuminated end)
+  
+  timer.every(.5, function() print("test") end)
   
   table.insert(drops.drop_list, drop)
 end
@@ -78,5 +73,4 @@ end
 
 drops.init = function()
     drops.drop_list = {}
-    Timer.tween.drop = Timer.tween.chain(Timer.tween.sine, Timer.tween.out(Timer.tween.sine))
 end
