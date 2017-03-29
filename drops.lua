@@ -4,7 +4,7 @@ local hc = require("hc")
 drops = {}
 
 drops.make_drop = function(type, x, y)
-  drop = {}
+  local drop = {}
   
   if type == "asteroid_drop" then
       drop.texture = love.graphics.newImage("img/asteroid_drop.png")
@@ -32,9 +32,8 @@ drops.make_drop = function(type, x, y)
   timer.tween(.5, drop, {x = drop.x - math.random(50, 70)}, 'out-quad')
   
   -- tween every "tween_duration", begin tweening manually
+  drop.illuminated = false
   timer.every(1, function() drop.illuminated = not drop.illuminated end)
-  
-  timer.every(.5, function() print("test") end)
   
   table.insert(drops.drop_list, drop)
 end
@@ -67,7 +66,13 @@ end
 
 drops.draw = function() 
   for _, drop in ipairs(drops.drop_list) do
-    love.graphics.draw(drop.texture, drop.x, drop.y, drop.rotation, drop.x_scale, drop.y_scale, drop.width / 2, drop.height / 2)
+    local texture
+    if drop.illuminated then
+      texture = drop.texture
+    else
+      texture = drop.illuminated_texture
+    end
+    love.graphics.draw(texture, drop.x, drop.y, drop.rotation, drop.x_scale, drop.y_scale, drop.width / 2, drop.height / 2)
   end
 end
 
