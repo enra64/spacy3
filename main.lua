@@ -94,7 +94,7 @@ function player_died(score)
     local hs_entry_ok = #persistent_storage.get("highscores", {}) < 10 or score > persistent_storage.get("lowest_highscore", {"", 0})[2]
     if hs_entry_ok then
         quit_confirmation:add_button("enter highscore")
-    end 
+    end
 
     quit_confirmation:add_button("quit")
     quit_confirmation:set_title("you made " .. score .. " points.\nyou also horifically failed your colony.")
