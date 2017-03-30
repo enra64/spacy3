@@ -118,12 +118,13 @@ asteroids.update = function(dt)
         asteroid.rotation = asteroid.rotation + asteroid.rotation_speed
         asteroid.shape:rotate(asteroid.rotation_speed)
         
-        -- the following calculations include some safety margins
+        -- determine whether an asteroid ever was within the viewport
         if not (asteroid.x + 2 * asteroid.width < 0 or asteroid.x - asteroid.width > love.graphics.getWidth() or
             asteroid.y + 2 * asteroid.height < 0 or asteroid.y - 2 * asteroid.height > love.graphics.getHeight()) then
             asteroid.was_in_viewport = true
         end
         
+        -- remove if asteroid went through viewport
         if asteroid.was_in_viewport and (asteroid.x + 2 * asteroid.width < 0 or asteroid.x - asteroid.width > love.graphics.getWidth() or
             asteroid.y + 2 * asteroid.height < 0 or asteroid.y - 2 * asteroid.height > love.graphics.getHeight()) then
             table.remove(asteroid_storage, i)
@@ -149,15 +150,21 @@ asteroids.update = function(dt)
                     center_y = ast_bbox.y1 + (oth_bbox.y2 - ast_bbox.y1) / 2
                 end
                 
-                explosions.create_explosion(center_x, center_y)
+                
+                
                 
                 table.remove(asteroid_storage, i)
                 hc.remove(asteroid.shape)
                 
                 if other.object_type == "enemy" then
                     enemies.remove_colliding_enemies(asteroid.shape, function() end)
+                    explosions.create_explosion(center_x, center_y)
                 elseif other.object_type == "asteroid" then
                     local ast_index = get_index_of_asteroid_by_shape(other)
+                    local other_asteroid = asteroid_storage[ast_index]
+                    if asteroid.was_in_viewport and other_asteroid.was_in_viewport then
+                        explosions.create_explosion(center_x, center_y)
+                    end
                     table.remove(asteroid_storage, ast_index)
                     hc.remove(other)
                 end

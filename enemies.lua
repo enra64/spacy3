@@ -33,7 +33,7 @@ local function create_enemy()
     
     while not position_found do
         new_enemy.x = math.random(love.graphics.getWidth(), love.graphics.getWidth() + 100)
-        new_enemy.y = math.random(love.graphics.getHeight() - new_enemy.height)
+        new_enemy.y = math.random(new_enemy.height, love.graphics.getHeight() - 2 * new_enemy.height)
         new_enemy.shape = hc.rectangle(new_enemy.x, new_enemy.y, new_enemy.width * new_enemy.scale, new_enemy.height * new_enemy.scale)
         new_enemy.shape.object_type = "enemy"
         
