@@ -57,6 +57,7 @@ end
 
 function game:update(dt)
     timer.update(dt)
+    flyapartomatic.update(dt)
     weapons.update(dt, on_kill, on_asteroid_kill)
     drops.update(dt)
     player.update(dt)

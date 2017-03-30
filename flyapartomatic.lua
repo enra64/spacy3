@@ -48,11 +48,15 @@ flyapartomatic.spawn = function(list_of_texture_paths, x, y)
         part.y = y
         part.opacity = 255
         part.rotation = math.rad(math.random(360))
+        part.rotation_speed = math.rad(math.random(3, 7))
         part.x_scale = .3
         part.y_scale = .3
+        part.width = part.texture:getWidth() * part.x_scale
+        part.height = part.texture:getHeight() * part.y_scale
+        
         local flying_distance = math.random(screen_size / 10, screen_size / 2)
         
-        local movement_duration = 0.6
+        local movement_duration = math.random(70, 100) / 100
         timer.tween(
             movement_duration, 
             part, 
@@ -79,10 +83,16 @@ flyapartomatic.spawn = function(list_of_texture_paths, x, y)
     end
 end
 
+flyapartomatic.update = function(dt)
+    for _, part in ipairs(parts) do
+        part.rotation = part.rotation + part.rotation_speed
+    end
+end
+
 flyapartomatic.draw = function()
     for _, part in ipairs(parts) do
         love.graphics.setColor(255, 255, 255, part.opacity)
-        love.graphics.draw(part.texture, part.x, part.y, part.rotation, part.x_scale, part.y_scale)
+        love.graphics.draw(part.texture, part.x, part.y, part.rotation, part.x_scale, part.y_scale, part.width / 2, part.height / 2)
     end
     love.graphics.setColor(255, 255, 255, 255)
 end
