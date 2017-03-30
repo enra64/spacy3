@@ -29,7 +29,13 @@ local function on_kill(killed_enemy)
     explosions.create_explosion(killed_enemy.x, killed_enemy.y)
     
     flyapartomatic.spawn(
-        {"img/blue_laser.png", "img/green_laser.png", "img/yellow_laser.png"},
+        {
+            "img/simple_enemy_ship_fragment_1.png", 
+            "img/simple_enemy_ship_fragment_2.png", 
+            "img/simple_enemy_ship_fragment_3.png", 
+            "img/simple_enemy_ship_fragment_4.png", 
+            "img/simple_enemy_ship_fragment_5.png", 
+        },
         killed_enemy.x,
         killed_enemy.y
     )

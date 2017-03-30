@@ -43,10 +43,10 @@ flyapartomatic.spawn = function(list_of_texture_paths, x, y)
         part.x = x
         part.y = y
         part.rotation = math.rad(math.random(360))
-        part.x_scale = 1
-        part.y_scale = 1
+        part.x_scale = .4
+        part.y_scale = .4
         timer.tween(
-            1.5, 
+            3, 
             part, 
             {x = directions[i].x * 1920, y = directions[i].y * 1920}, 
             'out-linear', 
