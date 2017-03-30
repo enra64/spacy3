@@ -90,7 +90,9 @@ function player_died(score)
     gamestate.push(quit_confirmation)
     quit_confirmation:add_button("back to main")
 
-    if score > persistent_storage.get("lowest_highscore", {"", 0})[2] then
+
+    local hs_entry_ok = #persistent_storage.get("highscores", {}) < 10 or score > persistent_storage.get("lowest_highscore", {"", 0})[2]
+    if hs_entry_ok then
         quit_confirmation:add_button("enter highscore")
     end 
 
@@ -123,11 +125,10 @@ function love.load(arg)
     --- unshittify random numbers
     math.randomseed(os.time())
 
-    --- set some window size
-    love.window.setMode(1366, 768)
-
-    --love.window.setMode(1920, 1080)
-    --love.window.setFullscreen(true)
+    --- apply settings (or default)
+    settings = dofile("settings.lua")
+    settings:init()
+    settings:graphics_mode_changed()
 
     --- initialise all fonts
     require("font_config").init()

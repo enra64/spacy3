@@ -26,9 +26,19 @@ menu.menu_height = 2 * love.graphics.getHeight() / 4
 menu.menu_x = love.graphics.getWidth() / 4
 menu.menu_y = love.graphics.getHeight() / 4
 
-function menu:add_button(text)
-    table.insert(self.button_texts, text)
+function menu:invalidate_buttons()
+    self.menu_width = love.graphics.getWidth() / 2
+    self.menu_height = 2 * love.graphics.getHeight() / 4
+    self.menu_x = love.graphics.getWidth() / 4
+    self.menu_y = love.graphics.getHeight() / 4    
+    self:add_button()
+end
 
+function menu:add_button(text)
+    if text then
+        table.insert(self.button_texts, text)
+    end
+    
     --- re-calculate all button rectangles
     self.button_rectangles = {}
     self.button_rectangle_x_scale = self.menu_width / self.button_texture:getWidth()

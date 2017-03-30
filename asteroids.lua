@@ -3,8 +3,11 @@ asteroids = {}
 local asteroid_storage = {}
 
 local hc = require("hc")
+local explosions = require("explosions")
 local timer = require("hump.timer")
 require("difficulty_handler")
+require("drops")
+local enemies = require("enemies")
 
 local function load_random_asteroid()
     local textures = {"img/asteroid_brown.png", "img/asteroid_grey.png"}
@@ -31,9 +34,8 @@ local function add_asteroid()
     new.width, new.height = new.texture:getDimensions()
     
     --- positioning, movement
-    new.x = math.random(love.graphics.getWidth())
-    new.gradient = math.random(30, 100)
-    
+    new.x = math.random(love.graphics.getWidth() * 0.75, love.graphics.getWidth() + 100)
+    new.gradient = math.random() + 0.3
     
     -- position asteroid above or below game field, store information
     if math.random() > 0.5 then
@@ -44,8 +46,9 @@ local function add_asteroid()
         new.gradient = -new.gradient
     end
     
-    --- set random speed
+    --- set random speed -- "speed" should be horizontal speed
     new.speed = difficulty.get("asteroid_speed", current_level())
+    new.speed = new.speed + math.random(0, new.speed / 10)
     
     if math.random() > .6 then
         new.speed = -new.speed
@@ -59,7 +62,7 @@ local function add_asteroid()
     --- calculate y axis intersection given our position and the random gradient
     new.y_intersection = new.y - new.gradient * new.x
     
-    new.rotation_speed = math.random(7, 11) / 100
+    new.rotation_speed = math.random(7, 7 + new.speed / 80) / 100
     new.rotation = math.random(2 * math.pi)
     
     --- collision shape
@@ -67,10 +70,10 @@ local function add_asteroid()
 
     new.scale = math.random(40, 70) / 100
 
-    -- move to "position of asteroid" + "center of asteroid"
+    -- move to "position of asteroid" - "center of asteroid"
     new.shape:move(new.x - new.width / 2, new.y - new.height / 2)
     new.shape:scale(new.scale)
-    new.shape.type = "asteroid"
+    new.shape.object_type = "asteroid"
     
     --print("new asteroid at "..new.x..","..new.y..", going "..new.speed..","..new.gradient.." from "..new.y_intersection)
     
@@ -104,6 +107,14 @@ local function move(asteroid, dx)
     asteroid.shape:move(dx, dy)
 end
 
+local function get_index_of_asteroid_by_shape(shape)
+    for i, ast in ipairs(asteroid_storage) do
+        if ast.shape == shape then
+            return i
+        end
+    end
+end
+
 asteroids.update = function(dt)
     for i, asteroid in ipairs(asteroid_storage) do
         move(asteroid, dt * asteroid.speed)
@@ -121,6 +132,40 @@ asteroids.update = function(dt)
             table.remove(asteroid_storage, i)
             hc.remove(asteroid.shape)
         end
+        
+        for other, collision_vector in pairs(hc.collisions(asteroid.shape)) do
+            if other.object_type == "enemy" or other.object_type == "asteroid" then
+                local ast_bbox = {}
+                local oth_bbox = {}
+                ast_bbox.x1, ast_bbox.y1, ast_bbox.x2, ast_bbox.y2 = asteroid.shape:bbox()
+                oth_bbox.x1, oth_bbox.y1, oth_bbox.x2, oth_bbox.y2 = other:bbox()
+                local center_x, center_y
+                
+                if oth_bbox.x1 < ast_bbox.x2 then
+                    center_x = oth_bbox.x1 + (ast_bbox.x2 - oth_bbox.x1) / 2
+                else
+                    center_x = ast_bbox.x1 + (oth_bbox.x2 - ast_bbox.x1) / 2
+                end
+                if oth_bbox.y1 < ast_bbox.y2 then
+                    center_y = oth_bbox.y1 + (ast_bbox.y2 - oth_bbox.y1) / 2
+                else
+                    center_y = ast_bbox.y1 + (oth_bbox.y2 - ast_bbox.y1) / 2
+                end
+                
+                explosions.create_explosion(center_x, center_y)
+                
+                table.remove(asteroid_storage, i)
+                hc.remove(asteroid.shape)
+                
+                if other.object_type == "enemy" then
+                    enemies.remove_colliding_enemies(asteroid.shape, function() end)
+                elseif other.object_type == "asteroid" then
+                    local ast_index = get_index_of_asteroid_by_shape(other)
+                    table.remove(asteroid_storage, ast_index)
+                    hc.remove(other)
+                end
+            end
+        end
     end
 end
 
@@ -134,7 +179,7 @@ asteroids.has_collision = function(shape)
     has_collision = false
     
     for shape_, _ in pairs(hc.collisions(shape)) do
-        if shape_.type == "asteroid" then
+        if shape_.object_type == "asteroid" then
             has_collision = true
         end
     end

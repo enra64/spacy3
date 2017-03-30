@@ -18,7 +18,7 @@ local timer = require("hump.timer")
 local level_thresholds = difficulty.get("level_threshold")
 local level = 1
 
-local score = 0
+score = 0
 
 local function on_kill(killed_enemy)
     score = score + killed_enemy.score
@@ -32,6 +32,9 @@ local function on_asteroid_kill(asteroid, asteroid_type)
 
     --- make explody thing over enemy
     explosions.create_explosion(asteroid.x, asteroid.y)
+    
+    --- let the asteroid drop something
+    drops.make_drop("asteroid_drop", asteroid.x, asteroid.y)
 end
 
 function current_level()
@@ -41,6 +44,7 @@ end
 function game:update(dt)
     timer.update(dt)
     weapons.update(dt, on_kill, on_asteroid_kill)
+    drops.update(dt)
     player.update(dt)
     enemies.update(dt)
     explosions.update(dt)
@@ -77,7 +81,8 @@ function game:draw()
     bg.draw()
     enemies.draw()
     
-    asteroids.draw()    
+    drops.draw()
+    asteroids.draw()
     weapons.draw()
     player.draw()
     explosions.draw()
@@ -92,10 +97,13 @@ function game:resume()
 end
 
 function game:init()
+    --- reset score
+    score = 0
     --- load background textures
     bg.load()
 
     --- init all
+    drops.init()
     control.load()
     player.load()
     ingame_status.init()

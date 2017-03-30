@@ -2,7 +2,6 @@ local this = {}
 
 this.is_touch = require("is_touch")()
 this.font = require("font_config").get_font("menu")
-this.timer = require("hump.timer")
 require("persistent_storage")
 
 function this:draw()
@@ -10,7 +9,7 @@ function this:draw()
 
     for _, label in ipairs(self.highscore_labels) do
         love.graphics.printf(label.text, label.x, label.y, label.width, "center")
-    end 
+    end
 
     --- button
     love.graphics.draw(self.back_button.texture, self.back_button.x, self.back_button.y, NO_ROTATION, self.back_button.scale_x, self.back_button.scale_y)
@@ -32,9 +31,7 @@ function this:init()
     self.highscore_labels = {}
     local list_y = 70
     local highscores = persistent_storage.get("highscores", {})
-    print("highscore view highscore table:")
-    print_table(highscores)
-
+    
     for i, score in spairs(highscores, function(t,a,b) return t[b][2] < t[a][2] end) do
         local new = {}
         new.x = 0

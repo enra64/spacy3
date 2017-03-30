@@ -7,14 +7,18 @@
     - background music
     - improve timings etc
 * story
-* asteroids
-    - warning
-    - labyrinth
 * more weapons
 * more enemy types
 * better difficulty, possibility of achieving a victory
-* store - Maybe Station on the left
+* store
 * ads?
 * (Pvp) nes controller
+* asteroids dropping ingame currency -> store on the left
+  * upgrade hull
+  * upgrade heat diffuser
+* asteroids
+    - warning
+    - improve spawning
+    - labyrinth
 
 ## mobile

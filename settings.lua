@@ -11,8 +11,8 @@ local avl_settings = {
 
 local default_state = {
     fullscreen = 3,
-    resolution = 2,
-    vsync = 2
+    resolution = 1,
+    vsync = 1
 }
 
 local avl_settings_touch = {
@@ -49,6 +49,10 @@ function this:graphics_mode_changed()
     end
 
     love.window.setMode(width, height, flags)
+    
+    -- refresh buttons so they are visible
+    self.menu:invalidate_buttons()
+    self:generate_buttons()
 end
 
 -- create all buttons currently needed, representing the current state
@@ -99,9 +103,9 @@ function this:init()
     self.menu.on_button_clicked = on_button_clicked
 
     if is_touch then 
-        self.available_settings = avl_settings_touch 
+        self.available_settings = avl_settings_touch
         self.state = persistent_storage.get("settings", default_state_touch)
-    else 
+    else
         self.available_settings = avl_settings
         self.state = persistent_storage.get("settings", default_state)
     end
