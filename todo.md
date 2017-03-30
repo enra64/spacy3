@@ -14,6 +14,8 @@
 * asteroids dropping ingame currency -> store on the left
   * upgrade hull
   * upgrade heat diffuser - change laser color?
+  * exit button in store...
+  * trigger area for space station opening the store
 
 
 ## mobile
