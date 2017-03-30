@@ -17,8 +17,7 @@
   * upgrade hull
   * upgrade heat diffuser
 * asteroids
-    - warning
-    - improve spawning
+    - warning?
     - labyrinth
 
 ## mobile

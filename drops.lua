@@ -7,8 +7,8 @@ drops.make_drop = function(type, x, y)
   local drop = {}
   
   if type == "asteroid_drop" then
-      drop.texture = love.graphics.newImage("img/asteroid_drop.png")
-      drop.illuminated_texture = love.graphics.newImage("img/blue_laser.png")
+      drop.texture = love.graphics.newImage("img/drop_box.png")
+      drop.illuminated_texture = love.graphics.newImage("img/drop_box_illuminated.png")
   else
       print("unknown drop type requested: "..type)
   end
@@ -16,20 +16,20 @@ drops.make_drop = function(type, x, y)
   drop.x = x
   drop.y = y
   drop.rotation = math.rad(math.random(360))
-  drop.x_scale = math.random(80, 120) / 100
-  drop.y_scale = math.random(80, 120) / 100
+  drop.x_scale = 0.3
+  drop.y_scale = drop.x_scale--keep square
   drop.width = drop.texture:getWidth() * drop.x_scale
   drop.height = drop.texture:getHeight() * drop.y_scale
   
-  -- create hc shape, align to texture (rect is temp, thus the weird init)
-  drop.shape = hc.rectangle(0, 0, drop.texture:getWidth(), drop.texture:getHeight())
-  drop.shape:scale(drop.x_scale, drop.y_scale)
+  -- create hc shape, align to texture
+  drop.shape = hc.rectangle(0, 0, drop.width, drop.height)
+  -- since we draw centered, we can easily use these functions, which work with regard to the shape center
+  drop.shape:moveTo(drop.x, drop.y)
   drop.shape:rotate(drop.rotation)
-  drop.shape:move(
-    drop.x - drop.width / 2, 
-    drop.y - drop.height / 2)      
   
-  timer.tween(.5, drop, {x = drop.x - math.random(50, 70)}, 'out-quad')
+  timer.tween(.5, drop, {x = drop.x - math.random(50, 70)}, 'out-quad', 
+      -- adjust the drop shape position after tweening
+      function() drop.shape:moveTo(drop.x, drop.y) end)
   
   -- tween every "tween_duration", begin tweening manually
   drop.illuminated = false
