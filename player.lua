@@ -22,6 +22,7 @@ local a_button_lock = false
 local b_button_lock = false
 
 local speed = difficulty.get("player_speed")
+local store_trigger_shape = nil
 
 local function move_player(dx, dy) 
     player.x = player.x + dx
@@ -32,6 +33,7 @@ end
 local function update_player()
     player.movement = control.get_movement_table()
 
+    -- fire weapons
     if control.is_button_pressed("a_button") and not a_button_lock then
         weaponry.shoot_missile(player.x + player.width / 2 - 30, player.y + 2)
         a_button_lock = true
@@ -46,13 +48,15 @@ local function update_player()
         b_button_lock = false
     end
 
+    -- move player horizontally
     local dir = control.get_direction()
     if player.x > 0 and dir.x < -.0001 then
         move_player(dir.x * speed, 0)
     elseif player.x + player.width < love.graphics.getWidth() and dir.x > .0001 then
         move_player(dir.x * speed, 0)
     end
-
+    
+    -- move player vertically
     if player.y > 0 and dir.y < -.0001 then
         move_player(0, dir.y * speed)
     elseif player.y + player.height < love.graphics.getHeight() and dir.y > .0001 then
@@ -67,16 +71,22 @@ local function update_player()
         end
     end
 
+    -- play thruster sound
     player.thruster_sound:setVolume(.25 * thruster_count)
-
     if thruster_count > 0 then
         player.thruster_sound:play()
     else
         player.thruster_sound:pause()
     end
     
+    -- check for drop collisions
     if drops.remove_colliding_drops(player.shape) then
         score = score + 50
+    end
+    
+    -- check store trigger
+    if player.shape:collidesWith(store_trigger_shape) then
+        gamestate.push(dofile("store.lua"))
     end
 end
 functions.update = update_player
@@ -102,7 +112,7 @@ end
 
 functions.draw = draw_player
 
-local function create_player()
+functions.load = function()
     player.x = 50
     player.y = love.graphics.getHeight() / 2
     player.texture = love.graphics.newImage("img/ship_main.png")
@@ -132,14 +142,14 @@ local function create_player()
     -- adjust stored player size for scaling
     player.width, player.height = player.width * player.scale, player.height * player.scale
 
-    --- player audio
+    --- player audio file
     player.thruster_sound = love.audio.newSource("sounds/thrusters2.ogg")
     player.thruster_sound:setLooping(true)
+    
+    -- define area where store is triggered
+    store_trigger_shape = hc.rectangle(50, 200, 50, 50)
+    store_trigger_shape.object_type = "store_trigger"
 end
-
-functions.load = create_player
-
-
 
 return functions
 

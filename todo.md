@@ -8,7 +8,6 @@
     - improve timings etc
 * story
 * add separate asteroid explosion
-* add drop box with toggling illuminated font, like "DRP-17"
 * more enemy types
 * better difficulty, possibility of achieving a victory
 * store

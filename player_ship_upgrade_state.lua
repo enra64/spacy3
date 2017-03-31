@@ -34,7 +34,7 @@ player_ship_upgrade_state.upgrade = function(part_to_upgrade)
     return false
 end
 
-player_ship_upgrade_state.get_state = function(part)
+player_ship_upgrade_state.get_state = function(part_to_upgrade)
     return player_ship_upgrade_state.state[part_to_upgrade]
 end
 
