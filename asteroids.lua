@@ -7,7 +7,11 @@ local explosions = require("explosions")
 local timer = require("hump.timer")
 require("difficulty_handler")
 require("drops")
+require("flyapartomatic")
 local enemies = require("enemies")
+
+local FRAGMENT_SPEED = 2
+local FRAGMENT_SCALE = 4
 
 local function load_random_asteroid()
     local textures = {"img/asteroid_brown.png", "img/asteroid_grey.png"}
@@ -26,16 +30,40 @@ local function load_random_asteroid()
     return love.graphics.newImage(textures[choice]), polygons[choice], string.sub(textures[choice], 5, -5)
 end
 
+local function get_asteroid_fragments(asteroid_type)
+    if asteroid_type == "asteroid_brown" then
+        return {
+                    "img/brown_asteroid_fragment_1.png", 
+                    "img/brown_asteroid_fragment_2.png", 
+                    "img/brown_asteroid_fragment_3.png", 
+                    "img/brown_asteroid_fragment_4.png", 
+                    "img/brown_asteroid_fragment_5.png", 
+                    "img/brown_asteroid_fragment_6.png"
+                }
+    elseif asteroid_type == "asteroid_grey" then
+        return {
+                    "img/grey_asteroid_fragment_1.png", 
+                    "img/grey_asteroid_fragment_2.png", 
+                    "img/grey_asteroid_fragment_3.png", 
+                    "img/grey_asteroid_fragment_4.png", 
+                    "img/grey_asteroid_fragment_5.png", 
+                    "img/grey_asteroid_fragment_6.png"
+                }
+    end
+end
+
 local function add_asteroid()
     local new = {}
     
     --- load some asteroid
     new.texture, asteroid_collision_coordinates, new.asteroid_type = load_random_asteroid()
     new.width, new.height = new.texture:getDimensions()
-    
+        
     --- positioning, movement
     new.x = math.random(love.graphics.getWidth() * 0.75, love.graphics.getWidth() + 100)
     new.gradient = math.random() + 0.3
+    
+    new.fragments = get_asteroid_fragments(new.asteroid_type)
     
     -- position asteroid above or below game field, store information
     if math.random() > 0.5 then
@@ -124,13 +152,14 @@ asteroids.update = function(dt)
             asteroid.was_in_viewport = true
         end
         
-        -- remove if asteroid went through viewport
+        -- remove if asteroid went through viewport and is not within 
         if asteroid.was_in_viewport and (asteroid.x + 2 * asteroid.width < 0 or asteroid.x - asteroid.width > love.graphics.getWidth() or
             asteroid.y + 2 * asteroid.height < 0 or asteroid.y - 2 * asteroid.height > love.graphics.getHeight()) then
             table.remove(asteroid_storage, i)
             hc.remove(asteroid.shape)
         end
         
+        --- remove asteroids that collided with an enemy or another asteroid
         for other, collision_vector in pairs(hc.collisions(asteroid.shape)) do
             if other.object_type == "enemy" or other.object_type == "asteroid" then
                 local ast_bbox = {}
@@ -150,9 +179,6 @@ asteroids.update = function(dt)
                     center_y = ast_bbox.y1 + (oth_bbox.y2 - ast_bbox.y1) / 2
                 end
                 
-                
-                
-                
                 table.remove(asteroid_storage, i)
                 hc.remove(asteroid.shape)
                 
@@ -168,6 +194,8 @@ asteroids.update = function(dt)
                     table.remove(asteroid_storage, ast_index)
                     hc.remove(other)
                 end
+                
+                flyapartomatic.spawn(asteroid.fragments, asteroid.x, asteroid.y, FRAGMENT_SCALE, FRAGMENT_SPEED)
             end
         end
     end
@@ -197,6 +225,8 @@ asteroids.handle_projectile = function(projectile_shape, callback)
     for i, asteroid in ipairs(asteroid_storage) do
         if asteroid.shape:collidesWith(projectile_shape) then
             callback(asteroid, asteroid.asteroid_type)
+            
+            flyapartomatic.spawn(asteroid.fragments, asteroid.x, asteroid.y, FRAGMENT_SPEED, FRAGMENT_SCALE)
 
             table.remove(asteroid_storage, i)
             hc.remove(asteroid.shape)
