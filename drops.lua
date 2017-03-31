@@ -20,6 +20,8 @@ drops.make_drop = function(type, x, y)
   drop.y_scale = drop.x_scale--keep square
   drop.width = drop.texture:getWidth() * drop.x_scale
   drop.height = drop.texture:getHeight() * drop.y_scale
+  -- async move after tweening must be able to check if the hc shape has been removed
+  drop.is_removed = false
   
   -- create hc shape, align to texture
   drop.shape = hc.rectangle(0, 0, drop.width, drop.height)
@@ -29,7 +31,7 @@ drops.make_drop = function(type, x, y)
   
   timer.tween(.5, drop, {x = drop.x - math.random(50, 70)}, 'out-quad', 
       -- adjust the drop shape position after tweening
-      function() drop.shape:moveTo(drop.x, drop.y) end)
+      function() if not drop.is_removed then drop.shape:moveTo(drop.x, drop.y) end end)
   
   -- tween every "tween_duration", begin tweening manually
   drop.illuminated = false
@@ -55,6 +57,7 @@ end
 drops.remove_colliding_drops = function(shape)
   for i, drop in ipairs(drops.drop_list) do
       if shape:collidesWith(drop.shape) then
+          drop.is_removed = true
           table.remove(drops.drop_list, i)
           hc.remove(drop.shape)
           return "asteroid_drop"

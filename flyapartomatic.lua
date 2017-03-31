@@ -38,6 +38,12 @@ end
 
 flyapartomatic.spawn = function(list_of_texture_paths, x, y)
     local list_of_texture_paths = random.shuffle(list_of_texture_paths)
+    
+    local number_of_textures_to_be_spawned = math.random(#list_of_texture_paths / 3, #list_of_texture_paths)
+    for i=1,number_of_textures_to_be_spawned do
+        table.remove(list_of_texture_paths, #list_of_texture_paths)
+    end
+    
     local directions = get_flying_directions(#list_of_texture_paths)
     local screen_size = math.max(love.graphics.getHeight(), love.graphics.getWidth())
     
@@ -49,14 +55,16 @@ flyapartomatic.spawn = function(list_of_texture_paths, x, y)
         part.opacity = 255
         part.rotation = math.rad(math.random(360))
         part.rotation_speed = math.rad(math.random(3, 7))
-        part.x_scale = .3
-        part.y_scale = .3
+        part.x_scale = .25
+        part.y_scale = .25
         part.width = part.texture:getWidth() * part.x_scale
         part.height = part.texture:getHeight() * part.y_scale
         
-        local flying_distance = math.random(screen_size / 10, screen_size / 2)
+        local flying_distance = math.random(screen_size / 10, screen_size / 4)
         
-        local movement_duration = math.random(70, 100) / 100
+        local movement_duration = math.random(30, 50) / 100
+        local percentage_to_fadeout = 0.25
+        
         timer.tween(
             movement_duration, 
             part, 
@@ -68,10 +76,10 @@ flyapartomatic.spawn = function(list_of_texture_paths, x, y)
         )
         
         timer.after(
-            movement_duration * 0.5,
+            movement_duration * percentage_to_fadeout,
             function()
                 timer.tween(
-                    movement_duration * 0.5,
+                    movement_duration * (1 - percentage_to_fadeout),
                     part,
                     {opacity = 0},
                     'out-linear'

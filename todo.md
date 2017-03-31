@@ -8,7 +8,6 @@
     - improve timings etc
 * story
 * add separate asteroid explosion
-* add things flying apart from the enemy ships
 * add drop box with toggling illuminated font, like "DRP-17"
 * more enemy types
 * better difficulty, possibility of achieving a victory
@@ -20,7 +19,6 @@
   * upgrade heat diffuser - change laser color?
   * exit button in store...
   * trigger area for space station opening the store
-
   * upgrade heat diffuser
 * asteroids
     - warning?
