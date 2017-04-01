@@ -13,6 +13,8 @@ local enemies = require("enemies")
 local FRAGMENT_SPEED = 2
 local FRAGMENT_SCALE = 4
 
+local asteroid_base_scale
+
 local function load_random_asteroid()
     local textures = {"img/asteroid_brown.png", "img/asteroid_grey.png"}
     local polygons = {
@@ -93,7 +95,8 @@ local function add_asteroid()
     --- collision shape
     new.shape = hc.polygon(unpack(asteroid_collision_coordinates))
 
-    new.scale = math.random(40, 70) / 100
+    
+    new.scale = asteroid_base_scale + math.random(-asteroid_base_scale * 25, asteroid_base_scale * 25) / 100
 
     -- move to "position of asteroid" - "center of asteroid"
     new.shape:move(new.x - new.width / 2, new.y - new.height / 2)
@@ -237,7 +240,7 @@ asteroids.handle_projectile = function(projectile_shape, callback)
 end
 
 asteroids.enter = function()
-    
+    asteroid_base_scale = scaling.get("asteroid_base_scale")
 end
 
 asteroids.resume = function()

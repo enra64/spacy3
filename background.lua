@@ -13,7 +13,7 @@ local stars = {}
 local collider = require("hc").new()
 local star_image_paths = { "img/star_1.png", "img/star_2.png", "img/star_3.png", "img/star_4.png", "img/star_5.png" }
 local random = require("random")
-
+local planet_base_scale
 
 local function load_planets()
     local planet_image_paths = { "img/blue_planet_1.png", "img/blue_planet_2.png", "img/yellow_planet.png" }
@@ -39,7 +39,8 @@ local function load_planets()
         planet.rotation = math.rad(math.random(360))
         planet.rotation_speed = math.random(-4, 4)
 
-        planet.scale = (math.random(30, 40) / 100)
+        
+        planet.scale = planet_base_scale + math.random(-planet_base_scale * 100 / 7, planet_base_scale * 100 / 7) / 100
 
         --- store size
         planet.width = planet.texture:getWidth()
@@ -141,6 +142,9 @@ end
 
 local function load()
     math.randomseed(os.time())
+    
+    planet_base_scale = scaling.get("planet_scale")
+    
     load_planets()
     load_stars()
     create_gaussian_star_cluster()
@@ -195,6 +199,10 @@ functions.leave = function()
     stars = {}
     planets = {}
     
+end
+
+functions.enter = function()
+    planet_base_scale = scaling.get("planet_scale")
 end
 
 return functions

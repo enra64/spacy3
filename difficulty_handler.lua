@@ -3,13 +3,9 @@ local is_touch = require("is_touch")()
 difficulty = {}
 
 local touch_value_dictionary = {
-    ship_scale = 0.5,
-    enemy_simple_scale = 1.8
 }
 
 local desktop_value_dictionary = {
-    ship_scale = 0.3,
-    enemy_simple_scale = 1
 }
 
 local common_value_dictionary = {

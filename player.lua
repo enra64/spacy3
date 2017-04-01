@@ -15,6 +15,7 @@ local hc = require("hc")
 local difficulty_handler = require("difficulty_handler")
 require("asteroids")
 require("drops")
+require("scaling")
 
 local player = {}
 
@@ -208,7 +209,7 @@ functions.load = function()
     player.x = 100
     player.y = love.graphics.getHeight() / 2
     
-    player.scale = difficulty.get("ship_scale")
+    player.scale = scaling.get("ship_scale")
     
     create_ship_hull()
 

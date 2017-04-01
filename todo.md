@@ -8,7 +8,7 @@
     - improve timings etc
     - blinking etc on ships
 * story
-* change scaling from touch/non-touch to resolution based
+* find a solution to values depending on both the resolution and the difficulty, like enemy or ship speed. maybe resolution-based base value? or factor?
 * enemies
     * more types
     * formations

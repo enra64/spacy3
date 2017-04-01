@@ -24,7 +24,7 @@ local function create_enemy()
     new_enemy.width, new_enemy.height = new_enemy.texture:getDimensions()
 
     --- no scaling
-    new_enemy.scale = difficulty.get("enemy_simple_scale")
+    new_enemy.scale = scaling.get("enemy_simple_scale")
     new_enemy.score = difficulty.get("enemy_simple_score", current_level())
     new_enemy.type = "simple"
 

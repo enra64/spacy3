@@ -141,6 +141,7 @@ end
 function game:enter()
     ingame_status.enter()
     asteroids.enter()
+    bg.enter()
 end
 
 function game:leave()
