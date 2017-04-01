@@ -135,8 +135,6 @@ functions.draw = function()
                 player.propulsion_texture[direction]:getHeight() / 2)
         end
     end
-    
-    store_trigger_shape:draw()
 end
 
 -- Convert from CSV string to table (converts a single line of a CSV file)
@@ -224,6 +222,9 @@ functions.load = function()
     store_trigger_shape = hc.polygon(57,476,119,490,176,279,108,265)
     
     --TODO: fix so that the shape aligns with the landing pad
+    local inverse_scale = 1 - station.scale
+    local x_off, y_off = inverse_scale * station.texture:getWidth(), inverse_scale * station.texture:getHeight()
+    store_trigger_shape:move(-x_off / 4, -y_off / 4)
     store_trigger_shape:scale(station.scale)
     
     store_trigger_shape.object_type = "store_trigger"
