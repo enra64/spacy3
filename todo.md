@@ -11,15 +11,13 @@
 * change scaling from touch/non-touch to resolution based
 * more enemy types
 * better difficulty, possibility of achieving a victory
-* store
 * ads?
 * (Pvp) nes controller
 * asteroids dropping ingame currency -> store on the left
-  * upgrade hull
-  * upgrade heat diffuser - change laser color?
-  * exit button in store...
+  * upgraded hull images
+  * store images for laser
+  * draw station on the left
   * trigger area for space station opening the store
-  * upgrade heat diffuser
 * asteroids
     - warning?
     - labyrinth
