@@ -93,6 +93,7 @@ local function update_player()
     -- check store trigger
     if player.shape:collidesWith(store_trigger_shape) then
         if not player.store_lock then
+            love.audio.stop(player.thruster_sound)
             gamestate.push(dofile("store.lua"))
             player.store_lock = true
         end
@@ -142,7 +143,7 @@ end
 function read_csv(path)
     local f = io.open(path, "rb")
     local s = f:read("*all")
-    f:close() 
+    f:close()
     s = s .. ','        -- ending comma
     local t = {}        -- table to collect fields
     local fieldstart = 1
@@ -221,7 +222,6 @@ functions.load = function()
     station.scale = math.scale_from_to(station.texture:getHeight(), love.graphics.getHeight())
     store_trigger_shape = hc.polygon(57,476,119,490,176,279,108,265)
     
-    --TODO: fix so that the shape aligns with the landing pad
     local inverse_scale = 1 - station.scale
     local x_off, y_off = inverse_scale * station.texture:getWidth(), inverse_scale * station.texture:getHeight()
     store_trigger_shape:move(-x_off / 4, -y_off / 4)

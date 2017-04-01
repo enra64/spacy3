@@ -8,7 +8,7 @@ local touch_value_dictionary = {
 }
 
 local desktop_value_dictionary = {
-    ship_scale = 0.4,
+    ship_scale = 0.3,
     enemy_simple_scale = 1
 }
 
