@@ -6,8 +6,8 @@
 * polishing
     - background music
     - improve timings etc
+    - blinking etc on ships
 * story
-* add separate asteroid explosion
 * change scaling from touch/non-touch to resolution based
 * enemies
     * more types

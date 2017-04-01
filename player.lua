@@ -24,6 +24,8 @@ local b_button_lock = false
 local speed = difficulty.get("player_speed")
 local store_trigger_shape = nil
 
+local station
+
 local function move_player(dx, dy) 
     player.x = player.x + dx
     player.y = player.y + dy
@@ -105,6 +107,10 @@ functions.player_is_alive = function()
 end
 
 functions.draw = function()
+    -- draw station
+    love.graphics.draw(station.texture, 0, 0, NO_ROTATION, station.scale)
+    
+    -- draw ship
         love.graphics.draw(
         player.texture, 
         player.x, 
@@ -129,6 +135,8 @@ functions.draw = function()
                 player.propulsion_texture[direction]:getHeight() / 2)
         end
     end
+    
+    store_trigger_shape:draw()
 end
 
 -- Convert from CSV string to table (converts a single line of a CSV file)
@@ -210,7 +218,14 @@ functions.load = function()
     player.thruster_sound:setLooping(true)
     
     -- define area where store is triggered
-    store_trigger_shape = hc.rectangle(500, 200, 50, 50)
+    station = {}
+    station.texture = love.graphics.newImage("img/station.png")
+    station.scale = math.scale_from_to(station.texture:getHeight(), love.graphics.getHeight())
+    store_trigger_shape = hc.polygon(57,476,119,490,176,279,108,265)
+    
+    --TODO: fix so that the shape aligns with the landing pad
+    store_trigger_shape:scale(station.scale)
+    
     store_trigger_shape.object_type = "store_trigger"
     player.store_lock = false
 end
