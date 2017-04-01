@@ -139,13 +139,19 @@ function store:draw()
             image = item.images[item.state + 1]
         end
         
+        local scale
+        if image:getWidth() > image:getHeight() then
+            scale = math.scale_from_to(image:getWidth(), button.image.width)
+        else
+            scale = math.scale_from_to(image:getHeight(), button.image.height)
+        end
+        
         love.graphics.draw(
             image,
             button.image.x, 
             button.image.y, 
             NO_ROTATION, 
-            math.scale_from_to(image:getWidth(), button.image.width),
-            math.scale_from_to(image:getHeight(), button.image.height)
+            scale
         )
         
         -- draw all text in black
@@ -221,9 +227,9 @@ function store:init()
             title = "Hull upgrade",
             description = "An upgraded hull withstands some impacts from enemy ships or asteroids.",
             images = {
-                love.graphics.newImage("img/ship_main_upgrade_0.png"),
-                love.graphics.newImage("img/ship_flame_down.png"),
-                love.graphics.newImage("img/simple_enemy_ship_fragment_1.png")
+                love.graphics.newImage("img/player_ships/upgrade_0/main.png"),
+                love.graphics.newImage("img/player_ships/upgrade_1/main.png"),
+                love.graphics.newImage("img/player_ships/upgrade_2/main.png")
             },
             prices = difficulty.get("hull_upgrade_costs"),
             state = player_ship_upgrade_state.get_state("ship_hull")

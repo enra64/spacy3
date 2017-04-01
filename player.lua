@@ -105,7 +105,17 @@ functions.player_is_alive = function()
 end
 
 functions.draw = function()
-    --- draw the available bodies
+        love.graphics.draw(
+        player.texture, 
+        player.x, 
+        player.y, 
+        NO_ROTATION, 
+        player.scale,
+        player.scale,
+        player.texture:getWidth() / 2,
+        player.texture:getHeight() / 2)
+    
+    --- draw the activated propulsion textures
     for direction, direction_enabled in pairs(player.movement) do
         if direction_enabled then
             love.graphics.draw(
@@ -119,16 +129,6 @@ functions.draw = function()
                 player.propulsion_texture[direction]:getHeight() / 2)
         end
     end
-
-    love.graphics.draw(
-        player.texture, 
-        player.x, 
-        player.y, 
-        NO_ROTATION, 
-        player.scale,
-        player.scale,
-        player.texture:getWidth() / 2,
-        player.texture:getHeight() / 2)
 end
 
 -- Convert from CSV string to table (converts a single line of a CSV file)
