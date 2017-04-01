@@ -35,14 +35,18 @@ local function update_player()
 
     -- fire weapons
     if control.is_button_pressed("a_button") and not a_button_lock then
-        weaponry.shoot_missile(player.x + player.width / 2 - 30, player.y + 2)
+        weaponry.shoot_missile(
+            player.x + player.missile_spawn_point.x, 
+            player.y + player.missile_spawn_point.y)
         a_button_lock = true
     elseif not control.is_button_pressed("a_button") then
         a_button_lock = false
     end
 
     if control.is_button_pressed("b_button") and not b_button_lock then
-        weaponry.shoot_laser(player.x + player.width, player.y + player.height / 2)
+        weaponry.shoot_laser(
+            player.x + player.laser_spawn_point.x, 
+            player.y + player.laser_spawn_point.y)
         b_button_lock = true
     elseif not control.is_button_pressed("b_button") then
         b_button_lock = false
@@ -52,14 +56,14 @@ local function update_player()
     local dir = control.get_direction()
     if player.x > 0 and dir.x < -.0001 then
         move_player(dir.x * speed, 0)
-    elseif player.x + player.width < love.graphics.getWidth() and dir.x > .0001 then
+    elseif player.x + player.width / 2< love.graphics.getWidth() and dir.x > .0001 then
         move_player(dir.x * speed, 0)
     end
     
     -- move player vertically
     if player.y > 0 and dir.y < -.0001 then
         move_player(0, dir.y * speed)
-    elseif player.y + player.height < love.graphics.getHeight() and dir.y > .0001 then
+    elseif player.y + player.height / 2 < love.graphics.getHeight() and dir.y > .0001 then
         move_player(0, dir.y * speed)
     end
 
@@ -86,7 +90,12 @@ local function update_player()
     
     -- check store trigger
     if player.shape:collidesWith(store_trigger_shape) then
-        gamestate.push(dofile("store.lua"))
+        if not player.store_lock then
+            gamestate.push(dofile("store.lua"))
+            player.store_lock = true
+        end
+    else
+        player.store_lock = false
     end
 end
 functions.update = update_player
@@ -95,60 +104,76 @@ functions.player_is_alive = function()
     return not enemies.has_enemy_collision(player) and not asteroids.has_collision(player.shape)
 end
 
-local function draw_player()
-    --- the propulsion images are larger than the main ship body, so the must be drawn slightly up left from it
-    local x_prop_offset = player.propulsion_texture.right:getWidth() * player.scale - player.width
-    local y_prop_offset = (player.propulsion_texture.right:getHeight() * player.scale - player.height) / 2
-
+functions.draw = function()
     --- draw the available bodies
     for direction, direction_enabled in pairs(player.movement) do
         if direction_enabled then
-            love.graphics.draw(player.propulsion_texture[direction], player.x - x_prop_offset, player.y - y_prop_offset, NO_ROTATION, player.scale)
+            love.graphics.draw(
+                player.propulsion_texture[direction], 
+                player.x, 
+                player.y, 
+                NO_ROTATION, 
+                player.scale, 
+                player.scale, 
+                player.propulsion_texture[direction]:getWidth() / 2,
+                player.propulsion_texture[direction]:getHeight() / 2)
         end
     end
 
-    love.graphics.draw(player.texture, player.x, player.y, NO_ROTATION, player.scale)
+    love.graphics.draw(
+        player.texture, 
+        player.x, 
+        player.y, 
+        NO_ROTATION, 
+        player.scale,
+        player.scale,
+        player.texture:getWidth() / 2,
+        player.texture:getHeight() / 2)
 end
-
-functions.draw = draw_player
 
 functions.load = function()
     player.x = 50
     player.y = love.graphics.getHeight() / 2
-    player.texture = love.graphics.newImage("img/ship_main.png")
+    player.texture = love.graphics.newImage("img/player_ships/upgrade_0/main.png")
 
     player.scale = difficulty.get("ship_scale")
 
-    player.width, player.height = player.texture:getDimensions()
-
     --- store all four propulsion textures
     player.propulsion_texture = {
-        right = love.graphics.newImage("img/ship_flame_back.png"),
-        left = love.graphics.newImage("img/ship_flame_front.png"),
-        up = love.graphics.newImage("img/ship_flame_down.png"),
-        down = love.graphics.newImage("img/ship_flame_up.png")
+        right = love.graphics.newImage("img/player_ships/upgrade_0/right_flame.png"),
+        left = love.graphics.newImage("img/player_ships/upgrade_0/left_flame.png"),
+        up = love.graphics.newImage("img/player_ships/upgrade_0/top_flame.png"),
+        down = love.graphics.newImage("img/player_ships/upgrade_0/bottom_flame.png")
     }
     
     --- player collision shape
-    player.shape = hc.polygon(41,87,41,75,9,74,9,59,1,59,2,27,8,26,10,15,39,15,41,1,77,1,79,15,99,15,111,19,123,18,147,39,155,41,165,42,166,51,147,54,144,58,139,59,127,70,111,70,101,75,78,75,79,87)
+    player.shape = hc.polygon(173,124,291,124,296,71,445,71,447,122,525,124,578,142,627,139,696,202,723,219,723,230,756,229,759,238,782,242,784,235,797,236,798,269,787,270,785,261,761,261,761,275,723,278,719,296,693,300,637,345,585,345,535,366,445,365,447,416,296,414,294,367,170,364,171,304,141,304,145,176,170,173,170,174)
     
     --- move player collision shape so that it is above the ships initial coordinates
-    player.shape:move(player.x, player.y)
+    player.shape:moveTo(player.x, player.y)
 
-    --- hc scales from the center, so we need to move the shape some more
+    --- scale shape to player size
     player.shape:scale(player.scale)
-    player.shape:move(-(player.width - player.width * player.scale) / 2, -(player.height - player.height * player.scale) / 2)
 
     -- adjust stored player size for scaling
+    player.width, player.height = player.texture:getDimensions()
     player.width, player.height = player.width * player.scale, player.height * player.scale
+
+    player.missile_spawn_point = {
+        x = 450 * player.scale - player.width / 2, 
+        y = 100 * player.scale - player.height / 2}
+    player.laser_spawn_point = {
+        x = 800 * player.scale - player.width / 2, 
+        y = 250 * player.scale - player.height / 2}
 
     --- player audio file
     player.thruster_sound = love.audio.newSource("sounds/thrusters2.ogg")
     player.thruster_sound:setLooping(true)
     
     -- define area where store is triggered
-    store_trigger_shape = hc.rectangle(50, 200, 50, 50)
+    store_trigger_shape = hc.rectangle(500, 200, 50, 50)
     store_trigger_shape.object_type = "store_trigger"
+    player.store_lock = false
 end
 
 return functions

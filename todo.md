@@ -8,6 +8,7 @@
     - improve timings etc
 * story
 * add separate asteroid explosion
+* change scaling from touch/non-touch to resolution based
 * more enemy types
 * better difficulty, possibility of achieving a victory
 * store

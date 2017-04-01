@@ -39,13 +39,14 @@ player_ship_upgrade_state.get_state = function(part_to_upgrade)
 end
 
 player_ship_upgrade_state.get_price = function(part)
-    local price_table, current_state
+    local price_table
+    local current_state = player_ship_upgrade_state.get_state(part)
     if part == "heat_diffuser" then
         price_table = difficulty.get("heat_diffuser_upgrade_costs")
-        current_state = player_ship_upgrade_state.get_state("heat_diffuser")
     elseif part == "ship_hull" then
         price_table = difficulty.get("hull_upgrade_costs")
-        current_state = player_ship_upgrade_state.get_state("ship_hull")
+    else
+        print("unrecognized part: "..part)
     end
     return price_table[current_state]
 end

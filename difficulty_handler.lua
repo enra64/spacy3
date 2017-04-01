@@ -3,12 +3,12 @@ local is_touch = require("is_touch")()
 difficulty = {}
 
 local touch_value_dictionary = {
-    ship_scale = 1.8,
+    ship_scale = 0.5,
     enemy_simple_scale = 1.8
 }
 
 local desktop_value_dictionary = {
-    ship_scale = 1,
+    ship_scale = 0.4,
     enemy_simple_scale = 1
 }
 
@@ -21,7 +21,7 @@ local common_value_dictionary = {
     asteroid_period = {4, 3, 2.8, 2.6, 2.2},
     asteroid_speed = {100, 120, 150, 180, 220},
     heat_diffuser_upgrade_costs = {100, 200, 300},
-    hull_upgrade_costs = {150, 250}
+    hull_upgrade_costs = {10, 20}
 }
 
 function difficulty.get(value, level)
