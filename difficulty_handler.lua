@@ -21,6 +21,7 @@ local common_value_dictionary = {
     asteroid_period = {4, 3, 2.8, 2.6, 2.2},
     asteroid_speed = {100, 120, 150, 180, 220},
     heat_diffuser_upgrade_costs = {100, 200, 300},
+    heat_diffuser_resulting_speeds = {0.3, 0.4, 0.5},
     hull_upgrade_costs = {10, 20, 30}
 }
 

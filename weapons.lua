@@ -11,8 +11,17 @@ local functions = {}
 --- constants
 local missile_speed = 800
 local laser_speed = 1300
-local laser_cooling_speed = .3
 local overheat_bar_y_scale = .5
+local laser_cooling_speed = .3
+local laser_texture
+
+-- images
+local missile_texture = love.graphics.newImage("img/missile_with_propulsion.png")
+local laser_textures = {
+    love.graphics.newImage("img/green_laser.png"),
+    love.graphics.newImage("img/yellow_laser.png"),
+    love.graphics.newImage("img/blue_laser.png")
+}
 
 --- requires
 local hc = require("hc")
@@ -33,7 +42,7 @@ local function shoot_missile(x, y)
 
     local new_missile = {}
 
-    new_missile.texture = love.graphics.newImage("img/missile_with_propulsion.png")
+    new_missile.texture = missile_texture
 
     --- store scaling factor
     new_missile.scale = .6
@@ -77,7 +86,7 @@ local function shoot_laser(x, y)
 
     local new_laser = {}
 
-    new_laser.texture = love.graphics.newImage("img/green_laser.png")
+    new_laser.texture = laser_texture
 
     --- store scaling factor
     new_laser.scale = .6
@@ -108,7 +117,6 @@ local function shoot_laser(x, y)
     --- make the laser hotter
     laser_overheat = math.clamp(laser_overheat + .23, 0, 1)
 end
-
 functions.shoot_laser = shoot_laser
 
 functions.update = function(dt, on_kill, on_asteroid_kill)
@@ -150,5 +158,15 @@ end
 functions.leave = function()
     projectiles = {}
 end
+
+local function load_upgrade_level_dependent_information()
+    local heat_diff_state = player_ship_upgrade_state.get_state("heat_diffuser")
+    laser_cooling_speed = difficulty.get("heat_diffuser_resulting_speeds")[heat_diff_state]
+    laser_texture = laser_textures[heat_diff_state]
+end
+
+functions.init = load_upgrade_level_dependent_information
+
+functions.resume = load_upgrade_level_dependent_information
 
 return functions

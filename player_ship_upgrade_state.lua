@@ -14,7 +14,7 @@ local state_maximum = {
 
 player_ship_upgrade_state.init = function()
     player_ship_upgrade_state.state = default_state
-    player_ship_upgrade_state.credits = 0
+    player_ship_upgrade_state.credits = 330
 end
 
 player_ship_upgrade_state.increase_credits = function(amount)
@@ -32,7 +32,6 @@ player_ship_upgrade_state.upgrade = function(part_to_upgrade)
             player_ship_upgrade_state.state[part_to_upgrade] + 1,
             1,
             state_maximum[part_to_upgrade])
-        print(part_to_upgrade.." at "..player_ship_upgrade_state.state[part_to_upgrade])
         player_ship_upgrade_state.credits = player_ship_upgrade_state.credits - price
         return true
     end

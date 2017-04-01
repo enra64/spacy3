@@ -96,8 +96,10 @@ function game:draw()
 end
 
 function game:resume()
+    weapons.resume()
     control.on_resume()
     asteroids.resume()
+    player.resume()
 end
 
 function game:init()
@@ -110,6 +112,7 @@ function game:init()
     player_ship_upgrade_state.init()
     flyapartomatic.init()
     drops.init()
+    weapons.init()
     control.load()
     player.load()
     ingame_status.init()
@@ -138,7 +141,6 @@ end
 function game:enter()
     ingame_status.enter()
     asteroids.enter()
-    player.enter()
 end
 
 function game:leave()

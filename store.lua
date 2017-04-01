@@ -212,7 +212,7 @@ function store:init()
             images = {
                 love.graphics.newImage("img/green_laser.png"),
                 love.graphics.newImage("img/yellow_laser.png"),
-                love.graphics.newImage("img/explosion.png")
+                love.graphics.newImage("img/blue_laser.png")
             },
             prices = difficulty.get("heat_diffuser_upgrade_costs"),
             state = player_ship_upgrade_state.get_state("heat_diffuser"),

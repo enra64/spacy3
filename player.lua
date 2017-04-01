@@ -148,15 +148,17 @@ function read_csv(path)
     return t
 end
 
-local function create_ship_hull(state)
+local function create_ship_hull()
+    local state = player_ship_upgrade_state.get_state("ship_hull")
     local path = "img/player_ships/upgrade_"..(state - 1).."/"
+    
     --- load all textures
     player.texture = love.graphics.newImage(path.."main.png")
     player.propulsion_texture = {
-        right = love.graphics.newImage(path.."right_flame.png"),
-        left = love.graphics.newImage(path.."left_flame.png"),
-        up = love.graphics.newImage(path.."top_flame.png"),
-        down = love.graphics.newImage(path.."bottom_flame.png")
+        right = love.graphics.newImage(path.."left_flame.png"),
+        left = love.graphics.newImage(path.."right_flame.png"),
+        up = love.graphics.newImage(path.."bottom_flame.png"),
+        down = love.graphics.newImage(path.."top_flame.png")
     }
     
     --- remove old collision shape
@@ -191,8 +193,8 @@ local function create_ship_hull(state)
     }
 end
 
-functions.enter = function()
-    create_ship_hull(player_ship_upgrade_state.get_state("ship_hull"))
+functions.resume = function()
+    create_ship_hull()
 end
 
 functions.load = function()
@@ -200,8 +202,8 @@ functions.load = function()
     player.y = love.graphics.getHeight() / 2
     
     player.scale = difficulty.get("ship_scale")
-
     
+    create_ship_hull()
 
     --- player audio file
     player.thruster_sound = love.audio.newSource("sounds/thrusters2.ogg")
