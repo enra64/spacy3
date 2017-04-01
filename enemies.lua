@@ -97,6 +97,21 @@ functions.remove_colliding_enemies = function(shape, on_kill)
             table.remove(simple_enemies, i)
             hc.remove(enemy.shape)
             had_collision = true
+            
+            flyapartomatic.spawn(
+                {
+                    "img/simple_enemy_ship_fragment_1.png", 
+                    "img/simple_enemy_ship_fragment_2.png", 
+                    "img/simple_enemy_ship_fragment_3.png", 
+                    "img/simple_enemy_ship_fragment_4.png", 
+                    "img/simple_enemy_ship_fragment_5.png", 
+                },
+                enemy.x,
+                enemy.y, 
+                1,
+                1.3
+            )
+            
             on_kill(enemy)
         end
     end

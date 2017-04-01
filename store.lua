@@ -32,7 +32,10 @@ function store:create_buttons()
 
     local i = 1
     local lowest_button_position
-    for key, item in pairs(self.items) do       
+    for key, item in pairs(self.items) do
+        -- update item state
+        item.has_reached_max_state = player_ship_upgrade_state.has_max(key)
+        
         -- create table for this button
         self.buttons[key] = {}
         -- create button background rectangles
@@ -129,7 +132,13 @@ function store:draw()
         local item = self.items[key]
         
         -- draw image
-        local image = item.images[item.state + 1]
+        local image
+        if item.has_reached_max_state then
+            image = item.images[item.state]
+        else
+            image = item.images[item.state + 1]
+        end
+        
         love.graphics.draw(
             image,
             button.image.x, 
@@ -147,8 +156,15 @@ function store:draw()
         love.graphics.printf(item.title, button.title.x, button.title.y, button.title.width, 'left')
         
         -- draw price
+        local price_text
+        if item.has_reached_max_state then
+            price_text = "max"
+        else
+            price_text = item.prices[item.state]
+        end
+        
         love.graphics.printf(
-            item.prices[item.state + 1], 
+            price_text, 
             button.price.x, 
             button.price.y, 
             button.price.width, 
@@ -199,7 +215,7 @@ function store:init()
                 love.graphics.newImage("img/explosion.png")
             },
             prices = difficulty.get("heat_diffuser_upgrade_costs"),
-            state = player_ship_upgrade_state.get_state("heat_diffuser")
+            state = player_ship_upgrade_state.get_state("heat_diffuser"),
         },
         ship_hull = {
             title = "Hull upgrade",

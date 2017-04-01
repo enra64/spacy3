@@ -27,20 +27,6 @@ local function on_kill(killed_enemy)
     
     --- make explody thing over enemy
     explosions.create_explosion(killed_enemy.x, killed_enemy.y)
-    
-    flyapartomatic.spawn(
-        {
-            "img/simple_enemy_ship_fragment_1.png", 
-            "img/simple_enemy_ship_fragment_2.png", 
-            "img/simple_enemy_ship_fragment_3.png", 
-            "img/simple_enemy_ship_fragment_4.png", 
-            "img/simple_enemy_ship_fragment_5.png", 
-        },
-        killed_enemy.x,
-        killed_enemy.y, 
-        1,
-        1
-    )
 end
 
 local function on_asteroid_kill(asteroid, asteroid_type) 
@@ -152,6 +138,7 @@ end
 function game:enter()
     ingame_status.enter()
     asteroids.enter()
+    player.enter()
 end
 
 function game:leave()

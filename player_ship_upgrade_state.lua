@@ -8,8 +8,8 @@ local default_state = {
 }
 
 local state_maximum = {
-    heat_diffuser = 1,
-    ship_hull = 1
+    heat_diffuser = 3,
+    ship_hull = 3
 }
 
 player_ship_upgrade_state.init = function()
@@ -21,17 +21,26 @@ player_ship_upgrade_state.increase_credits = function(amount)
     player_ship_upgrade_state.credits = player_ship_upgrade_state.credits + amount
 end
 
+player_ship_upgrade_state.get_credits = function()
+    return player_ship_upgrade_state.credits
+end
+
 player_ship_upgrade_state.upgrade = function(part_to_upgrade)
     local price = player_ship_upgrade_state.get_price(part_to_upgrade)
     if player_ship_upgrade_state.credits >= price then
         player_ship_upgrade_state.state[part_to_upgrade] = math.clamp(
-            player_ship_upgrade_state.state[part_to_upgrade],
+            player_ship_upgrade_state.state[part_to_upgrade] + 1,
             1,
             state_maximum[part_to_upgrade])
+        print(part_to_upgrade.." at "..player_ship_upgrade_state.state[part_to_upgrade])
         player_ship_upgrade_state.credits = player_ship_upgrade_state.credits - price
         return true
     end
     return false
+end
+
+player_ship_upgrade_state.has_max = function(part)
+    return player_ship_upgrade_state.get_state(part) == state_maximum[part]
 end
 
 player_ship_upgrade_state.get_state = function(part_to_upgrade)

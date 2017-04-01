@@ -14,6 +14,7 @@ local score_widget = {}
 local overheat_bar = {}
 local missile_icon = {}
 local laser_icon = {}
+local credit_widget = {}
 
 --- variables
 local missile_count = 0
@@ -29,6 +30,7 @@ local font
 
 --- required stuff
 local weaponry = require("weapons")
+require("player_ship_upgrade_state")
 
 functions.init = function()
     font = require("font_config").get_font("ingame")
@@ -74,7 +76,6 @@ functions.init = function()
     overheat_bar.x = ui_margin + laser_icon.x + laser_icon.width
     overheat_bar.y = 0
 
-
     --- missile count display
     missile_count_widget.x = ui_rhs - font:getWidth("200")
     missile_count_widget.y = 0
@@ -85,6 +86,11 @@ functions.init = function()
     missile_icon.x_scale = math.scale_from_to(height, ui_height)
     missile_icon.y_scale = math.scale_from_to(height, ui_height)
     missile_icon.width, missile_icon.height = width * missile_icon.x_scale, height * missile_icon.y_scale
+    
+    -- credit count display
+    credit_widget.x = missile_count_widget.x - font:getWidth("$200000")
+    credit_widget.y = missile_count_widget.y
+    
 
     missile_icon.x = missile_count_widget.x - missile_icon.width - ui_margin
     missile_icon.y = 0
@@ -110,6 +116,13 @@ functions.draw = function()
         NO_ROTATION,
         overheat_bar.x_scale,
         overheat_bar.y_scale)
+
+    -- credits
+    love.graphics.print(
+        "$"..player_ship_upgrade_state.get_credits(),
+        credit_widget.x,
+        credit_widget.y + ui_margin
+    )
 
     --- missile count
     love.graphics.print(

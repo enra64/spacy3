@@ -54,14 +54,14 @@ local function update_player()
 
     -- move player horizontally
     local dir = control.get_direction()
-    if player.x > 0 and dir.x < -.0001 then
+    if player.x > player.width / 2 and dir.x < -.0001 then
         move_player(dir.x * speed, 0)
     elseif player.x + player.width / 2< love.graphics.getWidth() and dir.x > .0001 then
         move_player(dir.x * speed, 0)
     end
     
     -- move player vertically
-    if player.y > 0 and dir.y < -.0001 then
+    if player.y > player.height / 2 and dir.y < -.0001 then
         move_player(0, dir.y * speed)
     elseif player.y + player.height / 2 < love.graphics.getHeight() and dir.y > .0001 then
         move_player(0, dir.y * speed)
@@ -85,7 +85,7 @@ local function update_player()
     
     -- check for drop collisions
     if drops.remove_colliding_drops(player.shape) then
-        score = score + 50
+        player_ship_upgrade_state.increase_credits(300)
     end
     
     -- check store trigger
@@ -131,25 +131,44 @@ functions.draw = function()
         player.texture:getHeight() / 2)
 end
 
-functions.load = function()
-    player.x = 50
-    player.y = love.graphics.getHeight() / 2
-    player.texture = love.graphics.newImage("img/player_ships/upgrade_0/main.png")
+-- Convert from CSV string to table (converts a single line of a CSV file)
+-- from http://lua-users.org/wiki/CsvUtils
+function read_csv(path)
+    local f = io.open(path, "rb")
+    local s = f:read("*all")
+    f:close() 
+    s = s .. ','        -- ending comma
+    local t = {}        -- table to collect fields
+    local fieldstart = 1
+    repeat
+    local nexti = string.find(s, ',', fieldstart)
+    table.insert(t, tonumber(string.sub(s, fieldstart, nexti-1)))
+    fieldstart = nexti + 1
+    until fieldstart > string.len(s)
+    return t
+end
 
-    player.scale = difficulty.get("ship_scale")
-
-    --- store all four propulsion textures
+local function create_ship_hull(state)
+    local path = "img/player_ships/upgrade_"..(state - 1).."/"
+    --- load all textures
+    player.texture = love.graphics.newImage(path.."main.png")
     player.propulsion_texture = {
-        right = love.graphics.newImage("img/player_ships/upgrade_0/right_flame.png"),
-        left = love.graphics.newImage("img/player_ships/upgrade_0/left_flame.png"),
-        up = love.graphics.newImage("img/player_ships/upgrade_0/top_flame.png"),
-        down = love.graphics.newImage("img/player_ships/upgrade_0/bottom_flame.png")
+        right = love.graphics.newImage(path.."right_flame.png"),
+        left = love.graphics.newImage(path.."left_flame.png"),
+        up = love.graphics.newImage(path.."top_flame.png"),
+        down = love.graphics.newImage(path.."bottom_flame.png")
     }
     
-    --- player collision shape
-    player.shape = hc.polygon(173,124,291,124,296,71,445,71,447,122,525,124,578,142,627,139,696,202,723,219,723,230,756,229,759,238,782,242,784,235,797,236,798,269,787,270,785,261,761,261,761,275,723,278,719,296,693,300,637,345,585,345,535,366,445,365,447,416,296,414,294,367,170,364,171,304,141,304,145,176,170,173,170,174)
+    --- remove old collision shape
+    if player.shape then
+        hc.remove(player.shape)
+    end
     
-    --- move player collision shape so that it is above the ships initial coordinates
+    -- load collision polygon
+    local polygon_table = read_csv(path.."collision_polygon.csv")
+    player.shape = hc.polygon(unpack(polygon_table))
+    
+    --- move player collision shape so that it is above the ships coordinates
     player.shape:moveTo(player.x, player.y)
 
     --- scale shape to player size
@@ -158,13 +177,31 @@ functions.load = function()
     -- adjust stored player size for scaling
     player.width, player.height = player.texture:getDimensions()
     player.width, player.height = player.width * player.scale, player.height * player.scale
-
+    
+    -- load weapon spawn points
+    local msp = read_csv(path.."missile_spawn_point.csv")
     player.missile_spawn_point = {
-        x = 450 * player.scale - player.width / 2, 
-        y = 100 * player.scale - player.height / 2}
+        x = msp[1] * player.scale - player.width / 2, 
+        y = msp[2] * player.scale - player.height / 2
+    }
+    local lsp = read_csv(path.."laser_spawn_point.csv")
     player.laser_spawn_point = {
-        x = 800 * player.scale - player.width / 2, 
-        y = 250 * player.scale - player.height / 2}
+        x = lsp[1] * player.scale - player.width / 2, 
+        y = lsp[2] * player.scale - player.height / 2
+    }
+end
+
+functions.enter = function()
+    create_ship_hull(player_ship_upgrade_state.get_state("ship_hull"))
+end
+
+functions.load = function()
+    player.x = 100
+    player.y = love.graphics.getHeight() / 2
+    
+    player.scale = difficulty.get("ship_scale")
+
+    
 
     --- player audio file
     player.thruster_sound = love.audio.newSource("sounds/thrusters2.ogg")
