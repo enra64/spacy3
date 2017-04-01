@@ -188,9 +188,7 @@ asteroids.update = function(dt)
                 elseif other.object_type == "asteroid" then
                     local ast_index = get_index_of_asteroid_by_shape(other)
                     local other_asteroid = asteroid_storage[ast_index]
-                    if asteroid.was_in_viewport and other_asteroid.was_in_viewport then
-                        explosions.create_explosion(center_x, center_y)
-                    end
+                    --if asteroid.was_in_viewport and other_asteroid.was_in_viewport then explosions.create_explosion(center_x, center_y) end
                     table.remove(asteroid_storage, ast_index)
                     hc.remove(other)
                 end
