@@ -45,6 +45,7 @@ end
 
 function game:update(dt)
     timer.update(dt)
+    control.update(dt)
     flyapartomatic.update(dt)
     weapons.update(dt, on_kill, on_asteroid_kill)
     drops.update(dt)
@@ -171,6 +172,22 @@ end
 
 function game:keyreleased()
     control.update_keyboard(0.016)
+end
+
+function game:joystickpressed(joystick, button)
+    control.joystickpressed(joystick, button, 0.016)
+end
+
+function game:joystickreleased(joystick, button)
+    control.joystickreleased(joystick, button, 0.016)
+end
+
+function game:joystickadded(joystick)
+    control.joystickadded(joystick)
+end
+
+function game:joystickremoved(joystick)
+    control.joystickremoved(joystick)
 end
 
 return game

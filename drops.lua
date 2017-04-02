@@ -43,8 +43,6 @@ drops.make_drop = function(type, x, y)
   table.insert(drops.drop_list, drop)
 end
 
-
-
 drops.update = function()
     for i, drop in ipairs(drops.drop_list) do
         if drop.remove_flag then

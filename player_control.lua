@@ -19,6 +19,8 @@ local dpad_background = {}
 --- the current control state
 local control_state = {}
 
+local joystick_list = {}
+
 local function set_dpad_position(x, y)
     --- set control knob position
     touch_controls.dpad.x = dpad_background.x + x - touch_controls.dpad.width / 2 + dpad_background.width / 2
@@ -128,6 +130,28 @@ local function update_keyboard(dt)
 end
 functions.update_keyboard = update_keyboard
 
+
+functions.joystickadded = function(joystick)
+    print("added joystick")
+    table.insert(joystick_list, joystick)
+end
+
+functions.update = function(dt)
+    for _, joystick in ipairs(joystick_list) do
+        local axis_x, axis_y = joystick:getAxes()
+        control_state.x = axis_x * dt
+        control_state.y = axis_y * dt
+    end
+end
+
+functions.joystickremoved = function(joystick)    
+    for i, it_joystick in ipairs(joystick_list) do
+        if it_joystick == joystick then
+            table.remove(joystick_list, i)
+        end
+    end
+end
+
 local function draw()
     if is_touch() then
         love.graphics.setColor(255, 255, 255, dpad_background.opacity)
@@ -152,6 +176,26 @@ local function reset_control_state()
     control_state.button_escape_pressed = false
     control_state.x = 0
     control_state.y = 0
+end
+
+functions.joystickpressed = function(joystick, button)
+    if button == 2 then
+        control_state.button_a_pressed = true
+    elseif button == 1 then
+        control_state.button_b_pressed = true
+    elseif button == 10 or button == 9 then
+        control_state.button_escape_pressed = true
+    end
+end
+
+functions.joystickreleased = function(joystick, button)
+    if button == 2 then
+        control_state.button_a_pressed = false
+    elseif button == 1 then
+        control_state.button_b_pressed = false
+    elseif button == 10 or button == 9 then
+        control_state.button_escape_pressed = false
+    end
 end
 
 local function load()
@@ -228,7 +272,6 @@ functions.is_button_pressed = is_button_pressed
 local function get_direction()
     return { x = control_state.x, y = control_state.y }
 end
-
 functions.get_direction = get_direction
 
 local function get_movement_table()
