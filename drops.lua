@@ -37,12 +37,22 @@ drops.make_drop = function(type, x, y)
   drop.illuminated = false
   timer.every(1, function() drop.illuminated = not drop.illuminated end)
   
+  drop.remove_flag = false
+  timer.after(5, function() drop.remove_flag = true end)
+  
   table.insert(drops.drop_list, drop)
 end
 
 
 
 drops.update = function()
+    for i, drop in ipairs(drops.drop_list) do
+        if drop.remove_flag then
+            drop.is_removed = true
+            table.remove(drops.drop_list, i)
+            hc.remove(drop.shape)
+        end
+    end
 end
 
 local function get_index_of_shape(shape)
@@ -53,6 +63,8 @@ local function get_index_of_shape(shape)
   end
   return 0
 end
+
+
 
 drops.remove_colliding_drops = function(shape)
   for i, drop in ipairs(drops.drop_list) do

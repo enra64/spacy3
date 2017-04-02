@@ -8,6 +8,8 @@
     - improve timings etc
     - blinking etc on ships
 * story
+* fix the balancing...
+* fonts must be changed depending on the resolution
 * find a solution to values depending on both the resolution and the difficulty, like enemy or ship speed. maybe resolution-based base value? or factor?
 * enemies
     * more types

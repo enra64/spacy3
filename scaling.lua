@@ -1,37 +1,37 @@
 scaling = {}
 
 local vga = {
-    ship_scale = 0.1,
-    enemy_simple_scale = .3,
-    asteroid_base_scale = 1,
-    planet_scale = .2
+    ship_scale = 0.2,
+    enemy_simple_scale = .8,
+    asteroid_base_scale = .4,
+    planet_scale = .3
 }
 
 local thirteen_sixtysix = {
     ship_scale = 0.3,
     enemy_simple_scale = 1,
-    asteroid_base_scale = 1,
+    asteroid_base_scale = 0.7,
     planet_scale = .35
 }
 
 local fhd = {
     ship_scale = 0.4,
     enemy_simple_scale = 1.7,
-    asteroid_base_scale = 1.2,
+    asteroid_base_scale = 1,
     planet_scale = .5
 }
 
 local wqhd = {
     ship_scale = 0.3,
     enemy_simple_scale = 1,
-    asteroid_base_scale = 1,
+    asteroid_base_scale = 1.2,
     planet_scale = .7
 }
 
 local uhd = {
     ship_scale = 0.3,
     enemy_simple_scale = 1,
-    asteroid_base_scale = 1,
+    asteroid_base_scale = 1.5,
     planet_scale = 1
 }
 
