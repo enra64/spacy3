@@ -13,7 +13,11 @@ local state_maximum = {
 }
 
 player_ship_upgrade_state.init = function()
-    player_ship_upgrade_state.state = default_state
+    -- *copy* the values
+    player_ship_upgrade_state.state = {}
+    for k, v in pairs(default_state) do
+        player_ship_upgrade_state.state[k] = v
+    end
     player_ship_upgrade_state.credits = difficulty.get("player_start_money")
 end
 

@@ -54,7 +54,7 @@ function game:update(dt)
     explosions.update(dt)
     bg.update(dt)
     ingame_status.update(score)
-    asteroids.update(dt)
+    asteroids.update(dt, player.asteroid_hit)
     
     
     if score > level_thresholds[level] then
@@ -108,6 +108,8 @@ function game:init()
     score = 0
     --- load background textures
     bg.load()
+
+    print("init game")
 
     --- init all
     player_ship_upgrade_state.init()

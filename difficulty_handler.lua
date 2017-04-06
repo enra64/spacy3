@@ -20,7 +20,10 @@ local common_value_dictionary = {
     hull_upgrade_costs = {250, 400, 500},
     heat_diffuser_resulting_speeds = {0.3, 0.4, 0.5},
     player_start_money = 0,
-    asteroid_drop_credits = 50
+    asteroid_drop_credits = 50,
+    health_player_ship_upgrade_0 = 1,
+    health_player_ship_upgrade_1 = 2,
+    health_player_ship_upgrade_2 = 3
 }
 
 function difficulty.get(value, level)

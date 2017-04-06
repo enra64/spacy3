@@ -143,7 +143,9 @@ local function get_index_of_asteroid_by_shape(shape)
     end
 end
 
-asteroids.update = function(dt)
+
+
+asteroids.update = function(dt, player_hit_callback)
     for i, asteroid in ipairs(asteroid_storage) do
         move(asteroid, dt * asteroid.speed)
         asteroid.rotation = asteroid.rotation + asteroid.rotation_speed
@@ -164,7 +166,20 @@ asteroids.update = function(dt)
         
         --- remove asteroids that collided with an enemy or another asteroid
         for other, collision_vector in pairs(hc.collisions(asteroid.shape)) do
-            if other.object_type == "enemy" or other.object_type == "asteroid" then
+            if other.object_type == "player" then
+                player_hit_callback(
+                    asteroid.x + asteroid.width / 2,
+                    asteroid.y + asteroid.height / 2
+                )
+                flyapartomatic.spawn(
+                    asteroid.fragments, 
+                    asteroid.x, 
+                    asteroid.y, 
+                    FRAGMENT_SCALE, 
+                    FRAGMENT_SPEED)
+                table.remove(asteroid_storage, i)
+                hc.remove(asteroid.shape)
+            elseif other.object_type == "enemy" or other.object_type == "asteroid" then
                 local ast_bbox = {}
                 local oth_bbox = {}
                 ast_bbox.x1, ast_bbox.y1, ast_bbox.x2, ast_bbox.y2 = asteroid.shape:bbox()

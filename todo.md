@@ -20,7 +20,6 @@
 * (Pvp) nes controller
 * asteroids dropping ingame currency -> store on the left
   * asteroid warner item
-  * make better hulls actually better
 * asteroids
     - labyrinth
 
