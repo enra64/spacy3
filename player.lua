@@ -12,7 +12,7 @@ local enemies = require("enemies")
 local weaponry = require("weapons")
 local control = require("player_control")
 local hc = require("hc")
-local difficulty_handler = require("difficulty_handler")
+require("difficulty_handler")
 require("asteroids")
 require("drops")
 require("scaling")
@@ -88,7 +88,7 @@ local function update_player()
     
     -- check for drop collisions
     if drops.remove_colliding_drops(player.shape) then
-        player_ship_upgrade_state.increase_credits(300)
+        player_ship_upgrade_state.increase_credits(difficulty.get("asteroid_drop_credits"))
     end
     
     -- check store trigger
@@ -182,7 +182,7 @@ local function create_ship_hull()
     player.shape:moveTo(player.x, player.y)
 
     --- scale shape to player size
-    player.shape:scale(player.scale)
+    player.shape:scale(player.scale * 0.95)
 
     -- adjust stored player size for scaling
     player.width, player.height = player.texture:getDimensions()

@@ -147,6 +147,7 @@ end
 
 function game:leave()
     bg.leave()
+    player_ship_upgrade_state.leave()
     enemies.leave()
     weapons.leave()
     explosions.leave()

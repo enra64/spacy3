@@ -14,8 +14,10 @@ local state_maximum = {
 
 player_ship_upgrade_state.init = function()
     player_ship_upgrade_state.state = default_state
-    player_ship_upgrade_state.credits = 330
+    player_ship_upgrade_state.credits = difficulty.get("player_start_money")
 end
+
+player_ship_upgrade_state.leave = player_ship_upgrade_state.init
 
 player_ship_upgrade_state.increase_credits = function(amount)
     player_ship_upgrade_state.credits = player_ship_upgrade_state.credits + amount
