@@ -101,7 +101,7 @@ drops.draw = function()
         texture:getWidth() / 2, 
         texture:getHeight() / 2
     )
-    drop.shape:draw()
+    --drop.shape:draw()
   end
 end
 
