@@ -8,24 +8,24 @@ local vga = {
 }
 
 local thirteen_sixtysix = {
-    ship_scale = 0.3,
+    ship_scale = 0.28,
     enemy_simple_scale = 1,
     asteroid_base_scale = 0.7,
-    planet_scale = .35
+    planet_scale = .45
 }
 
 local fhd = {
     ship_scale = 0.4,
     enemy_simple_scale = 1.7,
     asteroid_base_scale = 1,
-    planet_scale = .5
+    planet_scale = .65
 }
 
 local wqhd = {
     ship_scale = 0.3,
     enemy_simple_scale = 1,
     asteroid_base_scale = 1.2,
-    planet_scale = .7
+    planet_scale = .8
 }
 
 local uhd = {

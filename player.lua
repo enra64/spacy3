@@ -144,6 +144,9 @@ functions.draw = function()
                 player.propulsion_texture[direction]:getHeight() / 2)
         end
     end
+    
+    -- draw player shape for testing
+    --player.shape:draw()
 end
 
 -- Convert from CSV string to table (converts a single line of a CSV file)
