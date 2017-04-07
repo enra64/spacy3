@@ -73,4 +73,10 @@ function this:mousepressed(x, y)
     end
 end 
 
+function this:keypressed(key)
+    if key == "escape" then
+        gamestate.pop()
+    end
+end
+
 return this

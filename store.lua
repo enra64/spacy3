@@ -294,4 +294,10 @@ function store:mousepressed(x, y)
     self.hc_world:remove(mouse_point)
 end
 
+function store:keypressed(key)
+    if key == "escape" then
+        gamestate.pop()
+    end
+end
+
 return store

@@ -125,12 +125,13 @@ function game:init()
     pause_menu:add_button("resume")
     pause_menu:add_button("back to main menu")
     pause_menu:add_button("quit game")
+    pause_menu:set_title("paused")
 
     --- set pause menu callback handler
     pause_menu.on_button_clicked = function(button_text)
         print(function_location()..": "..button_text)
         if button_text == "resume" then
-            gamestate.pop() -- pop pause only
+            gamestate.pop() -- pop pause
         elseif button_text == "back to main menu" then
             gamestate.pop() -- pop pause
             player_wants_back_to_main(score)
@@ -138,6 +139,9 @@ function game:init()
             gamestate.pop()-- pop pause
             player_wants_to_quit(score)
         end
+    end
+    pause_menu.on_escape_pressed = function()
+        gamestate.pop()
     end
 end
 

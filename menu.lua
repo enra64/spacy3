@@ -119,4 +119,10 @@ function menu:resume()
     self:invalidate_buttons()
 end
 
+function menu:keypressed(key)
+    if key == "escape" and self.on_escape_pressed then
+        self.on_escape_pressed()
+    end
+end
+
 return menu

@@ -68,6 +68,9 @@ function player_wants_to_quit(score)
             gamestate.pop()
         end
     end
+    quit_confirmation.on_escape_pressed = function()
+        gamestate.pop()
+    end
 end
 
 function player_wants_back_to_main(score)
@@ -83,6 +86,9 @@ function player_wants_back_to_main(score)
         elseif button_txt == "abort going to main" then
             gamestate.pop()
         end
+    end
+    quit_confirmation.on_escape_pressed = function()
+        gamestate.pop()
     end
 end
 
@@ -117,6 +123,9 @@ function player_died(score)
             love.event.push("quit")
         end
     end
+    quit_confirmation.on_escape_pressed = function()
+        love.event.push("exit")
+    end
 end
 
 function love.load(arg)
@@ -143,7 +152,7 @@ function love.load(arg)
     main_menu:add_button("view highscores")
     main_menu:add_button("settings")
     main_menu:add_button("quit")
-    main_menu:set_title("main menu")
+    main_menu:set_title("spacy3")
 
     --- set main menu callback
     main_menu.on_button_clicked = on_pause_button_clicked
