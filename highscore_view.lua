@@ -32,13 +32,15 @@ function this:init()
     local list_y = 70
     local highscores = persistent_storage.get("highscores", {})
     
+    local position = 1
     for i, score in spairs(highscores, function(t,a,b) return t[b][2] < t[a][2] end) do
         local new = {}
         new.x = 0
-        new.y = (i - 1) * (self.font:getHeight() * 1.5) + list_y
+        new.y = (position - 1) * (self.font:getHeight() * 1.5) + list_y
         new.width = love.graphics.getWidth()
         new.text = score[2].." points : "..score[1]
         table.insert(self.highscore_labels, new)
+        position = position + 1
     end 
 
     -- back button

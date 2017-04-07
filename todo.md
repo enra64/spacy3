@@ -2,7 +2,6 @@
 ## general
 * highscores
     * online
-    * sorted
 * story
 * fonts must be changed depending on the resolution
 * find a solution to values depending on both the resolution and the difficulty, like enemy or ship speed. maybe resolution-based base value? or factor?
@@ -14,7 +13,6 @@
 * long-term motivation
 * increase game duration by lowering difficulty, generally better curve
 * possibility of achieving victory
-* fix the balancing...
 
 ## enemies
 * more types
@@ -24,6 +22,7 @@
 - background music
 - improve timings etc
 - blinking etc on ships
+- fix weapon spawn position
 
 ## store
 * improve user discoverability of store
