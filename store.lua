@@ -165,10 +165,14 @@ function store:draw()
             scale = math.scale_from_to(image:getHeight(), button.image.height)
         end
         
+        local w, h = image:getWidth() * scale, image:getHeight() * scale
+        local x = button.image.x + (button.image.width - w) / 2
+        local y = button.image.y + (button.image.height - h) / 2
+        
         love.graphics.draw(
             image,
-            button.image.x, 
-            button.image.y, 
+            x,
+            y,
             NO_ROTATION, 
             scale
         )
