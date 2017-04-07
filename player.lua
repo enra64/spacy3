@@ -12,7 +12,7 @@ local enemies = require("enemies")
 local weaponry = require("weapons")
 local control = require("player_control")
 local hc = require("hc")
-local difficulty_handler = require("difficulty_handler")
+require("difficulty_handler")
 require("asteroids")
 require("drops")
 require("scaling")
@@ -25,9 +25,12 @@ local b_button_lock = false
 local speed = difficulty.get("player_speed")
 local store_trigger_shape = nil
 
+local last_ship_hull_state = 1
+local ship_life
+
 local station
 
-local function move_player(dx, dy) 
+local function move_player(dx, dy)
     player.x = player.x + dx
     player.y = player.y + dy
     player.shape:move(dx, dy)
@@ -88,12 +91,16 @@ local function update_player()
     
     -- check for drop collisions
     if drops.remove_colliding_drops(player.shape) then
-        player_ship_upgrade_state.increase_credits(300)
+        player_ship_upgrade_state.increase_credits(difficulty.get("asteroid_drop_credits"))
     end
+    
+    -- check for enemy collisions
+    enemies.remove_colliding_enemies(player.shape, functions.enemy_hit)
     
     -- check store trigger
     if player.shape:collidesWith(store_trigger_shape) then
         if not player.store_lock then
+            last_ship_hull_state = player_ship_upgrade_state.get_state("ship_hull")
             love.audio.stop(player.thruster_sound)
             gamestate.push(dofile("store.lua"))
             player.store_lock = true
@@ -105,7 +112,7 @@ end
 functions.update = update_player
 
 functions.player_is_alive = function()
-    return not enemies.has_enemy_collision(player) and not asteroids.has_collision(player.shape)
+    return ship_life > 0
 end
 
 functions.draw = function()
@@ -137,6 +144,9 @@ functions.draw = function()
                 player.propulsion_texture[direction]:getHeight() / 2)
         end
     end
+    
+    -- draw player shape for testing
+    --player.shape:draw()
 end
 
 -- Convert from CSV string to table (converts a single line of a CSV file)
@@ -154,6 +164,15 @@ function read_csv(path)
     fieldstart = nexti + 1
     until fieldstart > string.len(s)
     return t
+end
+
+
+functions.asteroid_hit = function(x, y)
+    ship_life = ship_life - 1
+end
+
+functions.enemy_hit = function()
+    ship_life = ship_life - 1
 end
 
 local function create_ship_hull()
@@ -177,12 +196,13 @@ local function create_ship_hull()
     -- load collision polygon
     local polygon_table = read_csv(path.."collision_polygon.csv")
     player.shape = hc.polygon(unpack(polygon_table))
+    player.shape.object_type = "player"
     
     --- move player collision shape so that it is above the ships coordinates
     player.shape:moveTo(player.x, player.y)
 
     --- scale shape to player size
-    player.shape:scale(player.scale)
+    player.shape:scale(player.scale * 0.95)
 
     -- adjust stored player size for scaling
     player.width, player.height = player.texture:getDimensions()
@@ -202,15 +222,21 @@ local function create_ship_hull()
 end
 
 functions.resume = function()
+    local new_state = player_ship_upgrade_state.get_state("ship_hull")
+    if last_ship_hull_state ~= new_state then
+        ship_life = difficulty.get("health_player_ship_upgrade_"..(new_state-1))
+    end
     create_ship_hull()
 end
 
 functions.load = function()
+    --print("init player")
     player.x = 100
     player.y = love.graphics.getHeight() / 2
     
     player.scale = scaling.get("ship_scale")
     
+    ship_life = difficulty.get("health_player_ship_upgrade_0")
     create_ship_hull()
 
     --- player audio file

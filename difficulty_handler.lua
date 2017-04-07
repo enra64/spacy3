@@ -10,15 +10,21 @@ local desktop_value_dictionary = {
 
 local common_value_dictionary = {
     player_speed = 400,
-    enemy_simple_speed = {200, 250, 300, 325, 350},
-    enemy_simple_score = {2, 4, 8, 16, 32},
-    level_threshold = {10, 45, 150, 300, 700},
-    enemy_simple_count = {3, 4, 5, 5, 6},
-    asteroid_period = {4, 3, 2.8, 2.6, 2.2},
-    asteroid_speed = {100, 120, 150, 180, 220},
+    enemy_simple_speed = {200, 250, 300, 325, 350, 375, 500},
+    enemy_simple_score = {2, 4, 8, 16, 32, 48, 64},
+    level_threshold = {10, 45, 150, 300, 700, 1200, 1500},
+    enemy_simple_count = {3, 4, 5, 5, 6, 7, 8},
+    asteroid_period = {4, 3, 2.8, 2.6, 2.2, 2, 1.8},
+    asteroid_speed = {100, 120, 150, 180, 220, 250, 300},
+    
     heat_diffuser_upgrade_costs = {100, 200, 300},
+    hull_upgrade_costs = {250, 400, 500},
     heat_diffuser_resulting_speeds = {0.3, 0.4, 0.5},
-    hull_upgrade_costs = {10, 20, 30}
+    player_start_money = 0,
+    asteroid_drop_credits = 50,
+    health_player_ship_upgrade_0 = 1,
+    health_player_ship_upgrade_1 = 2,
+    health_player_ship_upgrade_2 = 3
 }
 
 function difficulty.get(value, level)

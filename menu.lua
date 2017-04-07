@@ -68,13 +68,13 @@ function menu:clear_buttons()
 
     --- clear the collider spatial hash
     self.hc_world = require("hc").new()
-end     
+end
 
 function menu:enter()
-    love.graphics.setFont(self.font_config.get_font("menu"))
 end
 
 function menu:draw()
+    love.graphics.setFont(self.font_config.get_font("menu_title"))
     --- draw title in white
     love.graphics.setColor(255, 255, 255)
     love.graphics.printf(self.title,
@@ -84,6 +84,7 @@ function menu:draw()
         "center",
         0, 1)
 
+    love.graphics.setFont(self.font_config.get_font("menu"))
     --- draw buttons
     for i, button_rect in ipairs(self.button_rectangles) do
         love.graphics.setColor(255, 255, 255)
@@ -112,6 +113,16 @@ end
 
 function menu:set_title(title)
     self.title = title
+end
+
+function menu:resume()
+    self:invalidate_buttons()
+end
+
+function menu:keypressed(key)
+    if key == "escape" and self.on_escape_pressed then
+        self.on_escape_pressed()
+    end
 end
 
 return menu

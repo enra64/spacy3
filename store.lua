@@ -5,6 +5,7 @@ store = {}
 
 local vertical_margin = 20
 local item_count = 0
+local credits
 
 function store:update()
     
@@ -89,6 +90,14 @@ function store:create_buttons()
         
         i = i + 1
     end
+    
+    --- add current credits display
+    local title_font = self.font_config.get_font("store_title")
+    self.current_credits = {}
+    self.current_credits.x = menu_x + menu_width - title_font:getWidth("$400000")
+    self.current_credits.y = 15 -- hardcoded, see title
+    self.current_credits.width = title_font:getWidth("$400000")
+    self.current_credits.height = title_font:getHeight()
 
     --- add exit button
     self.exit_button = {}
@@ -110,7 +119,7 @@ function store:draw()
     love.graphics.clear()
     
     --- draw title in white
-    love.graphics.setFont(self.font_config.get_font("store_title"))
+    love.graphics.setFont(self.font_config.get_font("menu_title"))
     love.graphics.setColor(255, 255, 255)
     love.graphics.printf(self.title,
         0,
@@ -118,6 +127,15 @@ function store:draw()
         love.graphics.getWidth(),
         "center",
         0, 
+        1)
+    
+    -- draw current player credits
+    love.graphics.printf("$"..credits,
+        self.current_credits.x,
+        self.current_credits.y,
+        self.current_credits.width,
+        "right",
+        0,
         1)
 
     --- draw buttons
@@ -134,7 +152,7 @@ function store:draw()
         -- draw image
         local image
         if item.has_reached_max_state then
-            image = item.images[item.state]
+            image = love.graphics.newImage("img/store_no_further_upgrade.png")
         else
             image = item.images[item.state + 1]
         end
@@ -166,9 +184,14 @@ function store:draw()
         if item.has_reached_max_state then
             price_text = "max"
         else
+            -- red only if not at max, and not enough credits
+            if credits < item.prices[item.state] then
+                love.graphics.setColor(150, 0, 0)
+            end
             price_text = item.prices[item.state]
         end
         
+        -- draw price
         love.graphics.printf(
             price_text, 
             button.price.x, 
@@ -176,13 +199,18 @@ function store:draw()
             button.price.width, 
             'right')
         
+        love.graphics.setColor(0, 0, 0)
+        
         -- draw description
         love.graphics.setFont(self.font_config.get_font("store_description"))
         love.graphics.printf(item.description, button.description.x, button.description.y, button.description.width)
     end
     
-    -- reset font color
+    
+    --- draw exit button...
     love.graphics.setColor(255, 255, 255)
+    
+    -- draw exit button texture
     love.graphics.draw(
         self.button_texture, 
         self.exit_button.x,
@@ -195,6 +223,7 @@ function store:draw()
     local font = self.font_config.get_font("store_description")
     love.graphics.setFont(font)
     
+    -- print "exit"
     love.graphics.printf(
         "exit", 
         self.exit_button.x,
@@ -245,6 +274,7 @@ function store:init()
 end
 
 function store:enter()
+    credits = player_ship_upgrade_state.get_credits()
     love.graphics.setFont(self.font_config.get_font("menu"))
 end
 
@@ -258,9 +288,16 @@ function store:mousepressed(x, y)
             player_ship_upgrade_state.upgrade(item_key)
             self.items[item_key].state = player_ship_upgrade_state.get_state(item_key)
             self:create_buttons()
+            credits = player_ship_upgrade_state.get_credits()
         end
     end
     self.hc_world:remove(mouse_point)
+end
+
+function store:keypressed(key)
+    if key == "escape" then
+        gamestate.pop()
+    end
 end
 
 return store
