@@ -119,7 +119,7 @@ function store:draw()
     love.graphics.clear()
     
     --- draw title in white
-    love.graphics.setFont(self.font_config.get_font("store_title"))
+    love.graphics.setFont(self.font_config.get_font("menu_title"))
     love.graphics.setColor(255, 255, 255)
     love.graphics.printf(self.title,
         0,

@@ -8,6 +8,7 @@
 gamestate = require "hump.gamestate"
 require("persistent_storage")
 require("common")
+require("scaling")
 
 function on_pause_button_clicked(button_text)
     -- for when i get confused: print(function_location() .. ": " .. button_text)
@@ -129,9 +130,6 @@ function love.load(arg)
     settings = dofile("settings.lua")
     settings:init()
     settings:graphics_mode_changed()
-
-    --- initialise all fonts
-    require("font_config").init()
 
     --- register event callbacks
     gamestate.registerEvents()

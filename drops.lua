@@ -1,5 +1,6 @@
 local timer = require("hump.timer")
 local hc = require("hc")
+require("scaling")
 
 drops = {}
 
@@ -16,7 +17,7 @@ drops.make_drop = function(type, x, y)
   drop.x = x
   drop.y = y
   drop.rotation = math.rad(math.random(360))
-  drop.x_scale = 0.3
+  drop.x_scale = scaling.get("drop_scale")
   drop.y_scale = drop.x_scale--keep square
   drop.width = drop.texture:getWidth() * drop.x_scale
   drop.height = drop.texture:getHeight() * drop.y_scale
@@ -26,12 +27,19 @@ drops.make_drop = function(type, x, y)
   -- create hc shape, align to texture
   drop.shape = hc.rectangle(0, 0, drop.width, drop.height)
   -- since we draw centered, we can easily use these functions, which work with regard to the shape center
-  drop.shape:moveTo(drop.x, drop.y)
   drop.shape:rotate(drop.rotation)
+  drop.shape:moveTo(drop.x, drop.y)
+  
+  print("new drop at "..drop.x..","..drop.y..", w/h: "..drop.width..","..drop.height)
   
   timer.tween(.5, drop, {x = drop.x - math.random(50, 70)}, 'out-quad', 
       -- adjust the drop shape position after tweening
-      function() if not drop.is_removed then drop.shape:moveTo(drop.x, drop.y) end end)
+      function() 
+          if not drop.is_removed then 
+            drop.shape:moveTo(drop.x, drop.y) 
+          end 
+      end
+  )
   
   -- tween every "tween_duration", begin tweening manually
   drop.illuminated = false
@@ -62,8 +70,6 @@ local function get_index_of_shape(shape)
   return 0
 end
 
-
-
 drops.remove_colliding_drops = function(shape)
   for i, drop in ipairs(drops.drop_list) do
       if shape:collidesWith(drop.shape) then
@@ -85,7 +91,17 @@ drops.draw = function()
     else
       texture = drop.illuminated_texture
     end
-    love.graphics.draw(texture, drop.x, drop.y, drop.rotation, drop.x_scale, drop.y_scale, drop.width / 2, drop.height / 2)
+    love.graphics.draw(
+        texture, 
+        drop.x, 
+        drop.y, 
+        drop.rotation, 
+        drop.x_scale,
+        drop.y_scale,
+        texture:getWidth() / 2, 
+        texture:getHeight() / 2
+    )
+    drop.shape:draw()
   end
 end
 

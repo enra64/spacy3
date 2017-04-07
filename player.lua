@@ -177,7 +177,6 @@ end
 
 local function create_ship_hull()
     local state = player_ship_upgrade_state.get_state("ship_hull")
-    print("csh: state "..state)
     local path = "img/player_ships/upgrade_"..(state - 1).."/"
     
     --- load all textures
@@ -231,7 +230,7 @@ functions.resume = function()
 end
 
 functions.load = function()
-    print("init player")
+    --print("init player")
     player.x = 100
     player.y = love.graphics.getHeight() / 2
     

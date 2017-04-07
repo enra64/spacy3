@@ -109,7 +109,7 @@ function game:init()
     --- load background textures
     bg.load()
 
-    print("init game")
+    --print("init game")
 
     --- init all
     player_ship_upgrade_state.init()

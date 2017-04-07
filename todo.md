@@ -3,7 +3,6 @@
 * highscores
     * online
 * story
-* fonts must be changed depending on the resolution
 * find a solution to values depending on both the resolution and the difficulty, like enemy or ship speed. maybe resolution-based base value? or factor?
 * ads?
 * better controller support, probably with nes->gamepad mapping
@@ -19,14 +18,16 @@
 * formations
 
 ## polishing
-- background music
-- improve timings etc
-- blinking etc on ships
-- fix weapon spawn position
+* scaling values for resolutions i dont have
+* background music
+* improve timings etc
+* blinking etc on ships
+* fix weapon spawn position
 
 ## store
 * improve user discoverability of store
 * asteroid warner item
+* max upgrade better image
 * repair?
 * better descriptions
     

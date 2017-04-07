@@ -7,25 +7,9 @@
 --
 
 local functions = {}
-local is_touch = require("is_touch")()
+require("scaling")
 
-local fonts = {}
-
-functions.init = function()
-    --- load custom fonts in different sizes
-    if is_touch then
-        fonts.ingame = love.graphics.newFont("spacy3font.otf", 40)
-        fonts.menu = love.graphics.newFont("spacy3font.otf", 80)
-        fonts.store_description = love.graphics.newFont("spacy3font.otf", 30)
-        fonts.store_title = love.graphics.newFont("spacy3font.otf", 50)
-    else
-        fonts.ingame = love.graphics.newFont("spacy3font.otf", 40)
-        fonts.menu = love.graphics.newFont("spacy3font.otf", 40)
-        fonts.store_description = love.graphics.newFont("spacy3font.otf", 40)
-        fonts.store_title = love.graphics.newFont("spacy3font.otf", 50)
-    end
-end
-
-functions.get_font = function(font_type) return fonts[font_type] end
+-- values are stored in scaling.lua
+functions.get_font = function(font_type) return scaling.get("fonts_"..font_type) end
 
 return functions
