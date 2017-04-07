@@ -13,6 +13,7 @@ local pause_menu = dofile "menu.lua"
 local ingame_status = require("ingame_status")
 local difficulty_handler = require("difficulty_handler")
 require("asteroids")
+require("common")
 local timer = require("hump.timer")
 require("flyapartomatic")
 require("player_ship_upgrade_state")
@@ -69,7 +70,7 @@ function game:update(dt)
     end
 
     if not player.player_is_alive() then
-        --- stop all sounds
+        --- stop all sound effects
         love.audio.stop()
 
         --- play one last explosion sound

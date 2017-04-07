@@ -53,11 +53,6 @@ local function highscore_dialog_finished(result, entered_text, score)
 
     -- pop highscore entering dialog
     gamestate.pop()
-end     
-
-function function_location()
-    local w = debug.getinfo(2, "S")
-    return w.short_src .. ":" .. w.linedefined
 end
 
 function player_wants_to_quit(score)
@@ -99,8 +94,13 @@ end
 
 function player_died(score)
     local quit_confirmation = dofile("menu.lua")
+    --pop game now, will remove music from stack
+    gamestate.pop()
     gamestate.push(quit_confirmation)
     quit_confirmation:add_button("back to main")
+
+    -- push fallback music for returning to main menu
+    background_music.push("main_menu")
 
     -- play u dead music
     background_music.push("killscreen")
@@ -115,10 +115,9 @@ function player_died(score)
     quit_confirmation.on_button_clicked = function(button_txt)
         if button_txt == "back to main" then
             gamestate.pop() -- pop warning
-            gamestate.pop() -- pop game
+            background_music.pop() -- pop u dead music
         elseif button_txt == "enter highscore" then
             gamestate.pop() -- pop warning
-            gamestate.pop() -- pop game
             
             -- show highscore entry thingy
             local highscore_entry = dofile("highscore_entry.lua")
@@ -131,7 +130,8 @@ function player_died(score)
         end
     end
     quit_confirmation.on_escape_pressed = function()
-        love.event.push("exit")
+        gamestate.pop() -- pop warning
+        background_music.pop()
     end
 end
 

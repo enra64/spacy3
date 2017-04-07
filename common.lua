@@ -3,13 +3,29 @@ require("random")
 --- remove annoying 0 parameter in draw calls
 NO_ROTATION = 0
 
---- overwrite luas "dofile" to work on android
+
+function function_location()
+    --- return name and location of the calling function
+    local w = debug.getinfo(2, "S")
+    return w.short_src .. ":" .. w.linedefined
+end
+
 function dofile(file)
+    --- overwrite luas "dofile" to work on android
     return love.filesystem.load(file)()
+end
+
+function table.truncate(tbl, count)
+    --- reduce number of items in tbl to count
+    for i=1,#tbl - count do
+        table.remove(tbl, #tbl)
+    end
+    return tbl
 end
 
 --http://stackoverflow.com/a/15706820
 function spairs(t, order)
+    --- ordered iteration through a table
     -- collect the keys
     local keys = {}
     for k in pairs(t) do keys[#keys+1] = k end

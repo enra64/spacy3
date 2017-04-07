@@ -9,7 +9,8 @@
 local functions = {}
 
 -- contains "return function() return <false|true> end"
-local is_touch = require("is_touch")
+local is_touch = require("is_touch")()
+require("common")
 
 --- touch only stuff
 local touch_collider
@@ -153,7 +154,7 @@ functions.joystickremoved = function(joystick)
 end
 
 local function draw()
-    if is_touch() then
+    if is_touch then
         love.graphics.setColor(255, 255, 255, dpad_background.opacity)
         love.graphics.draw(dpad_background.texture, dpad_background.x, dpad_background.y)
 
@@ -202,7 +203,7 @@ local function load()
     -- initialise control state
     reset_control_state()
 
-    if is_touch() then
+    if is_touch then
         touch_collider = require("hc").new()
         
         dpad_background.texture = love.graphics.newImage("img/touch_controls/dpad_background.png")

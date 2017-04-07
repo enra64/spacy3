@@ -44,9 +44,7 @@ flyapartomatic.spawn = function(list_of_texture_paths, x, y, speed, scale)
     local list_of_texture_paths = random.shuffle(list_of_texture_paths)
     
     local number_of_textures_to_be_spawned = math.random(#list_of_texture_paths / 3, #list_of_texture_paths)
-    for i=1,#list_of_texture_paths - number_of_textures_to_be_spawned do
-        table.remove(list_of_texture_paths, #list_of_texture_paths)
-    end
+    table.truncate(list_of_texture_paths, number_of_textures_to_be_spawned)
     
     local directions = get_flying_directions(#list_of_texture_paths)
     local screen_size = math.max(love.graphics.getHeight(), love.graphics.getWidth())

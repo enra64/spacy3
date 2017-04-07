@@ -13,13 +13,16 @@ local stars = {}
 local collider = require("hc").new()
 local star_image_paths = { "img/star_1.png", "img/star_2.png", "img/star_3.png", "img/star_4.png", "img/star_5.png" }
 local random = require("random")
+require("common")
 local planet_base_scale
 
 local function load_planets()
-    local planet_image_paths = { "img/blue_planet_1.png", "img/blue_planet_2.png", "img/yellow_planet.png" }
+    local planet_image_paths = { "img/blue_planet_1.png", "img/blue_planet_2.png", "img/yellow_planet.png", "img/grey_planet.png", "img/brown_planet.png"}
 
     --- make the planets appear in a random order
     planet_image_paths = random.shuffle(planet_image_paths)
+    
+    planet_image_paths = table.truncate(planet_image_paths, 3)
 
     local planet_count = #planet_image_paths
     local g_width = love.graphics.getWidth()
