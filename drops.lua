@@ -30,7 +30,7 @@ drops.make_drop = function(type, x, y)
   drop.shape:rotate(drop.rotation)
   drop.shape:moveTo(drop.x, drop.y)
   
-  print("new drop at "..drop.x..","..drop.y..", w/h: "..drop.width..","..drop.height)
+  --print("new drop at "..drop.x..","..drop.y..", w/h: "..drop.width..","..drop.height)
   
   timer.tween(.5, drop, {x = drop.x - math.random(50, 70)}, 'out-quad', 
       -- adjust the drop shape position after tweening

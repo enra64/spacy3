@@ -20,6 +20,8 @@ menu.button_texture = love.graphics.newImage("img/ui/button_texture.png")
 --- store possible title
 menu.title = ""
 
+local click_sound = love.audio.newSource("sounds/button_click.ogg")
+
 --- store the target menu size and position
 menu.menu_width = love.graphics.getWidth() / 2
 menu.menu_height = 2 * love.graphics.getHeight() / 4
@@ -71,6 +73,7 @@ function menu:clear_buttons()
 end
 
 function menu:enter()
+    click_sound:setVolume(1.5)
 end
 
 function menu:draw()
@@ -106,6 +109,7 @@ end
 function menu:mousepressed(x, y)
     local mouse_point = self.hc_world:point(x, y) 
     for button, _ in pairs(self.hc_world:collisions(mouse_point)) do
+        click_sound:play()
         self.on_button_clicked(button.text)
     end
     self.hc_world:remove(mouse_point)

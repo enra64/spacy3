@@ -6,6 +6,7 @@ store = {}
 local vertical_margin = 20
 local item_count = 0
 local credits
+local click_sound = love.audio.newSource("sounds/button_click.ogg")
 
 function store:update()
     
@@ -237,6 +238,7 @@ function store:draw()
 end
 
 function store:init()
+    click_sound:setVolume(1.5)
     self.button_texture = love.graphics.newImage("img/ui/button_texture.png")
     self.font_config = require("font_config")
     self.title = "store"
@@ -282,6 +284,7 @@ function store:mousepressed(x, y)
     local mouse_point = self.hc_world:point(x, y) 
     for button, _ in pairs(self.hc_world:collisions(mouse_point)) do
         local item_key = button.item_key
+        click_sound:play()
         if item_key == "exit_button" then
             gamestate.pop()
         else

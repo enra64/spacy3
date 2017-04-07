@@ -29,6 +29,8 @@ local last_ship_hull_state = 1
 local ship_life
 
 local station
+local drop_collect_sound = love.audio.newSource("sounds/drop_collect.ogg")
+drop_collect_sound:setVolume(2)
 
 local function move_player(dx, dy)
     player.x = player.x + dx
@@ -92,6 +94,7 @@ local function update_player()
     -- check for drop collisions
     if drops.remove_colliding_drops(player.shape) then
         player_ship_upgrade_state.increase_credits(difficulty.get("asteroid_drop_credits"))
+        drop_collect_sound:play()
     end
     
     -- check for enemy collisions
