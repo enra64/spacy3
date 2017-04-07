@@ -43,7 +43,7 @@ drops.make_drop = function(type, x, y)
   
   -- tween every "tween_duration", begin tweening manually
   drop.illuminated = false
-  timer.every(1, function() drop.illuminated = not drop.illuminated end)
+  timer.every(.5, function() drop.illuminated = not drop.illuminated end)
   
   drop.remove_flag = false
   timer.after(5, function() drop.remove_flag = true end)
