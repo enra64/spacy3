@@ -106,6 +106,7 @@ local function update_player()
             last_ship_hull_state = player_ship_upgrade_state.get_state("ship_hull")
             love.audio.stop(player.thruster_sound)
             gamestate.push(dofile("store.lua"))
+            signal.emit('backgrounded')
             player.store_lock = true
         end
     else

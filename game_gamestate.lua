@@ -16,6 +16,7 @@ require("asteroids")
 local timer = require("hump.timer")
 require("flyapartomatic")
 require("player_ship_upgrade_state")
+require("background_music")
 
 local level_thresholds = difficulty.get("level_threshold")
 local level = 1
@@ -64,6 +65,7 @@ function game:update(dt)
 
     if control.is_button_pressed("button_escape") then
         gamestate.push(pause_menu)
+        signal.emit('backgrounded')
     end
 
     if not player.player_is_alive() then
@@ -129,7 +131,7 @@ function game:init()
 
     --- set pause menu callback handler
     pause_menu.on_button_clicked = function(button_text)
-        print(function_location()..": "..button_text)
+        --print(function_location()..": "..button_text)
         if button_text == "resume" then
             gamestate.pop() -- pop pause
         elseif button_text == "back to main menu" then
@@ -143,12 +145,21 @@ function game:init()
     pause_menu.on_escape_pressed = function()
         gamestate.pop()
     end
+    
+    background_music.push("ingame")
+    
+    -- register a signal for returning to the running game state
+    signal.register('backgrounded', game.backgrounded)
 end
 
 function game:enter()
     ingame_status.enter()
     asteroids.enter()
     bg.enter()
+end
+
+function game.backgrounded()
+    
 end
 
 function game:leave()
@@ -158,6 +169,9 @@ function game:leave()
     weapons.leave()
     explosions.leave()
     asteroids.leave()
+    
+    -- pop ingame music
+    background_music.pop()
 end
 
 --- forward relevant input events

@@ -6,9 +6,11 @@
 -- To change this template use File | Settings | File Templates.
 --
 gamestate = require "hump.gamestate"
+signal = require("hump.signal")
 require("persistent_storage")
 require("common")
 require("scaling")
+require("background_music")
 
 function on_pause_button_clicked(button_text)
     -- for when i get confused: print(function_location() .. ": " .. button_text)
@@ -26,6 +28,9 @@ end
 
 local function highscore_dialog_finished(result, entered_text, score)
     local highscores = persistent_storage.get("highscores", {})
+    
+    -- pop the "killed" music
+    background_music.pop()
     
     -- insert new table with name and score in highscores table
     table.insert(highscores, {entered_text, score})
@@ -97,6 +102,8 @@ function player_died(score)
     gamestate.push(quit_confirmation)
     quit_confirmation:add_button("back to main")
 
+    -- play u dead music
+    background_music.push("killscreen")
 
     local hs_entry_ok = #persistent_storage.get("highscores", {}) < 10 or score > persistent_storage.get("lowest_highscore", {"", 0})[2]
     if hs_entry_ok then
@@ -112,7 +119,7 @@ function player_died(score)
         elseif button_txt == "enter highscore" then
             gamestate.pop() -- pop warning
             gamestate.pop() -- pop game
-
+            
             -- show highscore entry thingy
             local highscore_entry = dofile("highscore_entry.lua")
             gamestate.push(highscore_entry)
@@ -139,6 +146,7 @@ function love.load(arg)
     settings = dofile("settings.lua")
     settings:init()
     settings:graphics_mode_changed()
+    settings:audio_mode_changed()
 
     --- register event callbacks
     gamestate.registerEvents()
@@ -153,6 +161,9 @@ function love.load(arg)
     main_menu:add_button("settings")
     main_menu:add_button("quit")
     main_menu:set_title("spacy3")
+    
+    -- make background music
+    background_music.push("main_menu")
 
     --- set main menu callback
     main_menu.on_button_clicked = on_pause_button_clicked

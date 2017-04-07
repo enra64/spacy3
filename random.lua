@@ -57,4 +57,9 @@ local function shuffle(array)
 end
 functions.shuffle = shuffle
 
+random = {}
+function random.choose(tbl)
+    return tbl[math.random(#tbl)]
+end
+
 return functions

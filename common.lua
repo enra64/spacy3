@@ -1,3 +1,5 @@
+require("random")
+
 --- remove annoying 0 parameter in draw calls
 NO_ROTATION = 0
 

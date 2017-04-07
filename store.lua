@@ -278,6 +278,11 @@ end
 function store:enter()
     credits = player_ship_upgrade_state.get_credits()
     love.graphics.setFont(self.font_config.get_font("menu"))
+    background_music.push("store")
+end
+
+function store:leave()
+    background_music.pop()
 end
 
 function store:mousepressed(x, y)

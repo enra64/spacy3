@@ -7,24 +7,37 @@ local avl_settings = {
     fullscreen = {"yes", "borderless", "no"},
     resolution = {"640x480", "1366x768", "1920x1080", "2560x1440", "3840x2160"},
     vsync = {"yes", "no"},
+    sound = {"on", "off"}
 }
 
 local default_state = {
     fullscreen = 3,
     resolution = 1,
-    vsync = 1
+    vsync = 1,
+    sound = 1
 }
 
 local avl_settings_touch = {
-    fullscreen = {"yes", "no"}
+    fullscreen = {"yes", "no"},
+    sound = {"on", "off"}
 }
 
 local default_state_touch = {
-    fullscreen = 2
+    fullscreen = 2,
+    sound = 1
 }
 
 function this:get_current_value(key)
     return self.available_settings[key][self.state[key]]
+end
+
+function this:audio_mode_changed()
+    local sound_enabled = self:get_current_value("sound")
+    if sound_enabled == "on" then
+        love.audio.setVolume(1)
+    else
+        love.audio.setVolume(0)
+    end
 end
 
 function this:graphics_mode_changed()
@@ -76,6 +89,8 @@ function this:on_button_clicked(text)
 
             if setting == "vsync" or setting == "fullscreen" or setting == "resolution" then
                 self:graphics_mode_changed()
+            elseif setting == "sound" then
+                self:audio_mode_changed()
             end
         end 
     end
@@ -85,11 +100,6 @@ function this:on_button_clicked(text)
     end 
 
     self:generate_buttons()
-end
-
--- this function should be usable to apply all settings given
-function this:apply_settings()
-    self:graphics_mode_changed()
 end
 
 -- redirection
@@ -102,7 +112,7 @@ function this:init()
     self.menu:set_title("settings")
     self.menu.on_button_clicked = on_button_clicked
 
-    if is_touch then 
+    if is_touch then
         self.available_settings = avl_settings_touch
         self.state = persistent_storage.get("settings", default_state_touch)
     else

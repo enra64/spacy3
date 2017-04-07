@@ -20,6 +20,8 @@
 ## polishing
 * scaling values for resolutions i dont have
 * background music
+    * more
+    * fading in/out
 * improve timings etc
 * blinking etc on ships
 * fix weapon spawn position
