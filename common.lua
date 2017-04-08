@@ -23,6 +23,14 @@ function table.truncate(tbl, count)
     return tbl
 end
 
+function table.foreach(tbl, func)
+    --- replace each value in tbl with the return value of func(value, key)
+    for k, v in pairs(tbl) do
+        tbl[k] = func(v, k)
+    end
+    return tbl
+end
+
 --http://stackoverflow.com/a/15706820
 function spairs(t, order)
     --- ordered iteration through a table

@@ -10,7 +10,12 @@ local vga = {
     fonts_menu_title = love.graphics.newFont("spacy3font.otf", 45),
     fonts_menu = love.graphics.newFont("spacy3font.otf", 30),
     fonts_store_description = love.graphics.newFont("spacy3font.otf", 17),
-    fonts_store_title = love.graphics.newFont("spacy3font.otf", 22)
+    fonts_store_title = love.graphics.newFont("spacy3font.otf", 22),
+    speed_player_ship_upgrade_0 = 300,
+    speed_player_ship_upgrade_1 = 350,
+    speed_player_ship_upgrade_2 = 400,
+    enemy_simple_speed = table.foreach({200, 250, 300, 325, 350, 375, 500}, function(val) return val * 0.7 end),
+    asteroid_speed = table.foreach({100, 120, 150, 180, 220, 250, 300}, function(val) return val * 0.7 end)
 }
 
 local thirteen_sixtysix = {
@@ -23,7 +28,12 @@ local thirteen_sixtysix = {
     fonts_menu_title = love.graphics.newFont("spacy3font.otf", 60),
     fonts_menu = love.graphics.newFont("spacy3font.otf", 40),
     fonts_store_description = love.graphics.newFont("spacy3font.otf", 25),
-    fonts_store_title = love.graphics.newFont("spacy3font.otf", 50)
+    fonts_store_title = love.graphics.newFont("spacy3font.otf", 50),
+    speed_player_ship_upgrade_0 = 400,
+    speed_player_ship_upgrade_1 = 450,
+    speed_player_ship_upgrade_2 = 500,
+    enemy_simple_speed = table.foreach({200, 250, 300, 325, 350, 375, 500}, function(val) return val * 1 end),
+    asteroid_speed = table.foreach({100, 120, 150, 180, 220, 250, 300}, function(val) return val * 1 end)
 }
 
 local fhd = {
@@ -33,10 +43,15 @@ local fhd = {
     planet_scale = .65,
     drop_scale = .3,
     fonts_ingame = love.graphics.newFont("spacy3font.otf", 60),
-    fonts_menu_title = love.graphics.newFont("spacy3font.otf", 120),
+    fonts_menu_title = love.graphics.newFont("spacy3font.otf", 90),
     fonts_menu = love.graphics.newFont("spacy3font.otf", 60),
     fonts_store_description = love.graphics.newFont("spacy3font.otf", 50),
-    fonts_store_title = love.graphics.newFont("spacy3font.otf", 70)
+    fonts_store_title = love.graphics.newFont("spacy3font.otf", 70),
+    speed_player_ship_upgrade_0 = 600,
+    speed_player_ship_upgrade_1 = 650,
+    speed_player_ship_upgrade_2 = 700,
+    enemy_simple_speed = table.foreach({200, 250, 300, 325, 350, 375, 500}, function(val) return val * 1.2 end),
+    asteroid_speed = table.foreach({100, 120, 150, 180, 220, 250, 300}, function(val) return val * 1.2 end)
 }
 
 local wqhd = {
@@ -49,7 +64,12 @@ local wqhd = {
     fonts_menu_title = love.graphics.newFont("spacy3font.otf", 120),
     fonts_menu = love.graphics.newFont("spacy3font.otf", 80),
     fonts_store_description = love.graphics.newFont("spacy3font.otf", 40),
-    fonts_store_title = love.graphics.newFont("spacy3font.otf", 50)
+    fonts_store_title = love.graphics.newFont("spacy3font.otf", 50),
+    speed_player_ship_upgrade_0 = 500,
+    speed_player_ship_upgrade_1 = 550,
+    speed_player_ship_upgrade_2 = 600,
+    enemy_simple_speed = table.foreach({200, 250, 300, 325, 350, 375, 500}, function(val) return val * 1.5 end),
+    asteroid_speed = table.foreach({100, 120, 150, 180, 220, 250, 300}, function(val) return val * 1.5 end)
 }
 
 local uhd = {
@@ -62,7 +82,12 @@ local uhd = {
     fonts_menu_title = love.graphics.newFont("spacy3font.otf", 200),
     fonts_menu = love.graphics.newFont("spacy3font.otf", 120),
     fonts_store_description = love.graphics.newFont("spacy3font.otf", 40),
-    fonts_store_title = love.graphics.newFont("spacy3font.otf", 60)
+    fonts_store_title = love.graphics.newFont("spacy3font.otf", 60),
+    speed_player_ship_upgrade_0 = 600,
+    speed_player_ship_upgrade_1 = 650,
+    speed_player_ship_upgrade_2 = 700,
+    enemy_simple_speed = table.foreach({200, 250, 300, 325, 350, 375, 500}, function(val) return val * 1.7 end),
+    asteroid_speed = table.foreach({100, 120, 150, 180, 220, 250, 300}, function(val) return val * 1.7 end)
 }
 
 scaling.get = function(value)

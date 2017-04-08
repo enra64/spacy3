@@ -22,7 +22,6 @@ local player = {}
 local a_button_lock = false
 local b_button_lock = false
 
-local speed = difficulty.get("player_speed")
 local store_trigger_shape = nil
 
 local last_ship_hull_state = 1
@@ -63,16 +62,16 @@ local function update_player()
     -- move player horizontally
     local dir = control.get_direction()
     if player.x > player.width / 2 and dir.x < -.0001 then
-        move_player(dir.x * speed, 0)
+        move_player(dir.x * player.speed, 0)
     elseif player.x + player.width / 2< love.graphics.getWidth() and dir.x > .0001 then
-        move_player(dir.x * speed, 0)
+        move_player(dir.x * player.speed, 0)
     end
     
     -- move player vertically
     if player.y > player.height / 2 and dir.y < -.0001 then
-        move_player(0, dir.y * speed)
+        move_player(0, dir.y * player.speed)
     elseif player.y + player.height / 2 < love.graphics.getHeight() and dir.y > .0001 then
-        move_player(0, dir.y * speed)
+        move_player(0, dir.y * player.speed)
     end
 
     --- adjust thruster sound volume
@@ -196,6 +195,9 @@ local function create_ship_hull()
     if player.shape then
         hc.remove(player.shape)
     end
+    
+    --- load speed according to ship lvl
+    player.speed = scaling.get("speed_player_ship_upgrade_"..(state-1))
     
     -- load collision polygon
     local polygon_table = read_csv(path.."collision_polygon.csv")
