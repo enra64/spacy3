@@ -29,7 +29,6 @@
 
 ## store
 * improve user discoverability of store
-* better descriptions
 * items
     * asteroid warner item
     * repair?
