@@ -77,7 +77,7 @@ local function add_asteroid()
     end
     
     --- set random speed -- "speed" should be horizontal speed
-    new.speed = difficulty.get("asteroid_speed", current_level())
+    new.speed = scaling.get("asteroid_speed")[current_level()]
     new.speed = -(new.speed + math.random(0, new.speed / 10))
     
     -- if the asteroid is going left, the gradient value need to be inverted to avoid sending it into nirvana
