@@ -153,7 +153,8 @@ function store:draw()
         -- draw image
         local image
         if item.has_reached_max_state then
-            image = love.graphics.newImage("img/store_no_further_upgrade.png")
+            image = item.images[item.state]
+            love.graphics.setColor(0, 0, 0)
         else
             image = item.images[item.state + 1]
         end

@@ -29,7 +29,6 @@
 
 ## store
 * improve user discoverability of store
-* max upgrade better image
 * better descriptions
 * items
     * asteroid warner item
