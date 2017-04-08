@@ -147,6 +147,7 @@ function game:init()
         gamestate.pop()
     end
     
+    --print("push ingame music")
     background_music.push("ingame")
     
     -- register a signal for returning to the running game state
@@ -172,6 +173,7 @@ function game:leave()
     asteroids.leave()
     
     -- pop ingame music
+    --print("pop ingame music")
     background_music.pop()
 end
 

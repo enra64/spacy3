@@ -3,7 +3,6 @@
 * highscores
     * online
 * story
-* find a solution to values depending on both the resolution and the difficulty, like enemy or ship speed. maybe resolution-based base value? or factor?
 * ads?
 * better controller support, probably with nes->gamepad mapping
 * asteroid labyrinth
