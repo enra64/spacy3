@@ -36,4 +36,10 @@
     * repair?
 * [build this shit](https://www.google.de/imgres?imgurl=https%3A%2F%2Fi.stack.imgur.com%2FeUSYe.png&imgrefurl=http%3A%2F%2Fgaming.stackexchange.com%2Fquestions%2F269628%2Fin-sky-force-reloaded-what-are-the-maximum-upgrade-levels-of-your-ship-hardwar&docid=3j_fk_N0L53cRM&tbnid=acTdOXoMZbaqRM%3A&vet=10ahUKEwiouo2R-5LTAhVCWxQKHaKUDm4QMwgbKAEwAQ..i&w=1080&h=1920&bih=1781&biw=1080&q=maximum%20upgrade&ved=0ahUKEwiouo2R-5LTAhVCWxQKHaKUDm4QMwgbKAEwAQ&iact=mrc&uact=8)
 
+## windows
+* fix csv access error in packaged game
+
+## bugs
+* store pops too many background music items
+
 ## mobile
