@@ -23,6 +23,10 @@ function table.truncate(tbl, count)
     return tbl
 end
 
+function table.multeach(tbl, factor)
+    return table.foreach(tbl, function(key) return key * factor end)
+end
+
 function table.foreach(tbl, func)
     --- replace each value in tbl with the return value of func(value, key)
     for k, v in pairs(tbl) do

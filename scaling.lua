@@ -16,8 +16,8 @@ local vga = {
     speed_player_ship_upgrade_0 = 300,
     speed_player_ship_upgrade_1 = 350,
     speed_player_ship_upgrade_2 = 400,
-    enemy_simple_speed = table.foreach({200, 250, 300, 325, 350, 375, 500}, function(val) return val * 0.7 end),
-    asteroid_speed = table.foreach({100, 120, 150, 180, 220, 250, 300}, function(val) return val * 0.7 end)
+    enemy_simple_speed = table.multeach({200, 250, 300, 325, 350, 375, 500}, 0.7),
+    asteroid_speed = table.multeach({100, 120, 150, 180, 220, 250, 300}, 0.7)
 }
 
 local thirteen_sixtysix = {
@@ -34,14 +34,14 @@ local thirteen_sixtysix = {
     speed_player_ship_upgrade_0 = 400,
     speed_player_ship_upgrade_1 = 450,
     speed_player_ship_upgrade_2 = 500,
-    enemy_simple_speed = table.foreach({200, 250, 300, 325, 350, 375, 500}, function(val) return val * 1 end),
-    asteroid_speed = table.foreach({100, 120, 150, 180, 220, 250, 300}, function(val) return val * 1 end)
+    enemy_simple_speed = table.multeach({200, 250, 300, 325, 350, 375, 500}, 1),
+    asteroid_speed = table.multeach({100, 120, 150, 180, 220, 250, 300}, 1)
 }
 
 local fhd = {
     ship_scale = 0.4,
     enemy_simple_scale = 1.7,
-    asteroid_base_scale = 1,
+    asteroid_base_scale = 0.8,
     planet_scale = .65,
     drop_scale = .3,
     fonts_ingame = love.graphics.newFont("spacy3font.otf", 60),
@@ -52,8 +52,8 @@ local fhd = {
     speed_player_ship_upgrade_0 = 600,
     speed_player_ship_upgrade_1 = 650,
     speed_player_ship_upgrade_2 = 700,
-    enemy_simple_speed = table.foreach({200, 250, 300, 325, 350, 375, 500}, function(val) return val * 1.2 end),
-    asteroid_speed = table.foreach({100, 120, 150, 180, 220, 250, 300}, function(val) return val * 1.2 end)
+    enemy_simple_speed = table.multeach({200, 250, 300, 325, 350, 375, 500}, 1.2),
+    asteroid_speed = table.multeach({100, 120, 150, 180, 220, 250, 300}, 1.2)
 }
 
 local wqhd = {
@@ -70,8 +70,8 @@ local wqhd = {
     speed_player_ship_upgrade_0 = 500,
     speed_player_ship_upgrade_1 = 550,
     speed_player_ship_upgrade_2 = 600,
-    enemy_simple_speed = table.foreach({200, 250, 300, 325, 350, 375, 500}, function(val) return val * 1.5 end),
-    asteroid_speed = table.foreach({100, 120, 150, 180, 220, 250, 300}, function(val) return val * 1.5 end)
+    enemy_simple_speed = table.multeach({200, 250, 300, 325, 350, 375, 500}, 1.5),
+    asteroid_speed = table.multeach({100, 120, 150, 180, 220, 250, 300}, 1.5)
 }
 
 local uhd = {
@@ -88,8 +88,8 @@ local uhd = {
     speed_player_ship_upgrade_0 = 600,
     speed_player_ship_upgrade_1 = 650,
     speed_player_ship_upgrade_2 = 700,
-    enemy_simple_speed = table.foreach({200, 250, 300, 325, 350, 375, 500}, function(val) return val * 1.7 end),
-    asteroid_speed = table.foreach({100, 120, 150, 180, 220, 250, 300}, function(val) return val * 1.7 end)
+    enemy_simple_speed = table.multeach({200, 250, 300, 325, 350, 375, 500}, 1.7),
+    asteroid_speed = table.multeach({100, 120, 150, 180, 220, 250, 300}, 1.7)
 }
 
 scaling.get = function(value)

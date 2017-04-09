@@ -155,9 +155,7 @@ end
 -- Convert from CSV string to table (converts a single line of a CSV file)
 -- from http://lua-users.org/wiki/CsvUtils
 function read_csv(path)
-    local f = io.open(path, "rb")
-    local s = f:read("*all")
-    f:close()
+    local s, _ = love.filesystem.read(path)
     s = s .. ','        -- ending comma
     local t = {}        -- table to collect fields
     local fieldstart = 1

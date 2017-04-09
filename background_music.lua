@@ -17,12 +17,12 @@ local track_objects = {
 }
 
 local track_volumes = {
-    through_space = 0.5,
-    crystal_space = 0.7,
-    i_wouldnt = 0.3,
-    the_rush = 0.3,
-    nebula = 0.7,
-    thumper = 0.7
+    through_space = 0.4,
+    crystal_space = 0.6,
+    i_wouldnt = 0.25,
+    the_rush = 0.25,
+    nebula = 0.6,
+    thumper = 0.6
 }
 
 local tracks = {
