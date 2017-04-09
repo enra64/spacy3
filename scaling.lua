@@ -1,5 +1,3 @@
-require("common")
-
 scaling = {}
 
 local vga = {
@@ -29,7 +27,7 @@ local thirteen_sixtysix = {
     fonts_ingame = love.graphics.newFont("spacy3font.otf", 40),
     fonts_menu_title = love.graphics.newFont("spacy3font.otf", 60),
     fonts_menu = love.graphics.newFont("spacy3font.otf", 40),
-    fonts_store_description = love.graphics.newFont("spacy3font.otf", 40),
+    fonts_store_description = love.graphics.newFont("spacy3font.otf", 25),
     fonts_store_title = love.graphics.newFont("spacy3font.otf", 50),
     speed_player_ship_upgrade_0 = 400,
     speed_player_ship_upgrade_1 = 450,
