@@ -48,8 +48,8 @@ local function handle_dpad_touch(x, y)
     y = y - dpad_background.y - dpad_background.height / 2
 
     --- scale to dt, update control state
-    control_state.x = math.min((x / dpad_background.width) * 0.06, .05)
-    control_state.y = math.min((y / dpad_background.height) * 0.06, .05)
+    control_state.x = math.min((x / dpad_background.width) * 0.04, .05)
+    control_state.y = math.min((y / dpad_background.height) * 0.04, .05)
 
     --- set control knob position
     set_dpad_position(x, y)
