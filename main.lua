@@ -164,6 +164,9 @@ function love.load(arg)
     
     -- make background music
     background_music.push("main_menu")
+    
+    local splash_screen = dofile("splashscreen.lua")
+    gamestate.push(splash_screen)
 
     --- set main menu callback
     main_menu.on_button_clicked = on_pause_button_clicked
