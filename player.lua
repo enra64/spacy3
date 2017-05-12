@@ -22,12 +22,9 @@ local player = {}
 local a_button_lock = false
 local b_button_lock = false
 
-local store_trigger_shape = nil
-
 local last_ship_hull_state = 1
 local ship_life
 
-local station
 local drop_collect_sound = love.audio.newSource("sounds/drop_collect.ogg")
 drop_collect_sound:setVolume(2)
 
@@ -98,19 +95,6 @@ local function update_player()
     
     -- check for enemy collisions
     enemies.remove_colliding_enemies(player.shape, functions.enemy_hit)
-    
-    -- check store trigger
-    if player.shape:collidesWith(store_trigger_shape) then
-        if not player.store_lock then
-            last_ship_hull_state = player_ship_upgrade_state.get_state("ship_hull")
-            love.audio.stop(player.thruster_sound)
-            gamestate.push(dofile("store.lua"))
-            signal.emit('backgrounded')
-            player.store_lock = true
-        end
-    else
-        player.store_lock = false
-    end
 end
 functions.update = update_player
 
@@ -119,9 +103,6 @@ functions.player_is_alive = function()
 end
 
 functions.draw = function()
-    -- draw station
-    love.graphics.draw(station.texture, 0, 0, NO_ROTATION, station.scale)
-    
     -- draw ship
         love.graphics.draw(
         player.texture, 
@@ -247,19 +228,19 @@ functions.load = function()
     player.thruster_sound = love.audio.newSource("sounds/thrusters2.ogg")
     player.thruster_sound:setLooping(true)
     
-    -- define area where store is triggered
-    station = {}
-    station.texture = love.graphics.newImage("img/station.png")
-    station.scale = math.scale_from_to(station.texture:getHeight(), love.graphics.getHeight())
-    store_trigger_shape = hc.polygon(57,476,119,490,176,279,108,265)
-    
-    local inverse_scale = 1 - station.scale
-    local x_off, y_off = inverse_scale * station.texture:getWidth(), inverse_scale * station.texture:getHeight()
-    store_trigger_shape:move(-x_off / 4, -y_off / 4)
-    store_trigger_shape:scale(station.scale)
-    
-    store_trigger_shape.object_type = "store_trigger"
-    player.store_lock = false
+    -- handle being backgrounded
+    signal.register("backgrounded", 
+        function() 
+            -- save current ship hull
+            last_ship_hull_state = player_ship_upgrade_state.get_state("ship_hull")
+            
+            -- avoid thruster sound in store
+            love.audio.stop(player.thruster_sound)
+        end)
+end
+
+functions.get_player_shape = function()
+    return player.shape
 end
 
 return functions
