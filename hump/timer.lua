@@ -80,6 +80,33 @@ function Timer:every(delay, after, count)
 	return handle
 end
 
+function Timer:yoyo_tween(delay, obj, attribute_table_a, attribute_table_b, tween_method)
+    -- start tweening in the first two delay periods
+    self:tween(delay, obj, attribute_table_a, tween_method)
+    self:after(delay, function() self:tween(delay, obj, attribute_table_b, tween_method) end)
+    
+    -- every even delay period, tween to b
+    self:after(
+        delay,
+        function()
+            self:every(
+                2 * delay,
+                function()
+                    self:tween(delay, obj, attribute_table_b, tween_method)
+                end
+            )
+        end
+    )
+    
+    -- every odd delay period, tween to a
+    self:every(
+        2 * delay,
+        function()
+            self:tween(delay, obj, attribute_table_a, tween_method)
+        end
+    )
+end
+
 function Timer:cancel(handle)
 	self.functions[handle] = nil
 end
