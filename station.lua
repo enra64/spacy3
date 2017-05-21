@@ -66,27 +66,25 @@ function station:init()
     self.store_lock = false
     
     timer.yoyo_tween(
-        1.5,
+        0.75,
         self.green_light,
         {opacity = 255},
-        {opacity = 0},
+        {opacity = 50},
         'in-linear'
     )
-    
-    timer.yoyo_tween(
-        4,
+        
+    timer.yoyo_toggle(
+        1,
         self.upper_red_light,
         {opacity = 255},
-        {opacity = 0},
-        'in-linear'
+        {opacity = 0}
     )
     
-    timer.yoyo_tween(
-        4,
+    timer.yoyo_toggle(
+        1,
         self.lower_red_light,
         {opacity = 255},
-        {opacity = 0},
-        'in-linear'
+        {opacity = 0}
     )
 end
 

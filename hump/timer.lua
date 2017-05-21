@@ -80,6 +80,21 @@ function Timer:every(delay, after, count)
 	return handle
 end
 
+function Timer:yoyo_toggle(delay, obj, attribute_table_a, attribute_table_b)
+    --- every delay seconds, switch all attributes of obj from the values in table a to the ones in table b
+    local apply_table = function(obj, tbl) for k, v in pairs(tbl) do obj[k] = v end end
+    
+    -- start with the attributes from table a, switch to table b in one "delay"
+    apply_table(obj, attribute_table_a)
+    self:after(delay, function() apply_table(obj, attribute_table_b) end)
+    
+    -- every even delay period, switch to b
+    self:after(delay, function() self:every(2 * delay, function() apply_table(obj, attribute_table_b) end) end)
+    
+    -- every odd delay period, switch to a
+    self:every(2 * delay, function() apply_table(obj, attribute_table_a) end )
+end
+
 function Timer:yoyo_tween(delay, obj, attribute_table_a, attribute_table_b, tween_method)
     -- start tweening in the first two delay periods
     self:tween(delay, obj, attribute_table_a, tween_method)
