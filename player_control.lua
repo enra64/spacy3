@@ -69,10 +69,10 @@ local function touchreleased(id)
     elseif id == touch_controls.button_b.touch_id then
         control_state.button_b_pressed = false
         touch_controls.button_b.touch_id = nil
-    elseif id == touch_controls.button_b.touch_id then
+    elseif id == touch_controls.button_escape.touch_id then
         control_state.button_escape_pressed = false
         touch_controls.button_escape.touch_id = nil
-    elseif id == touch_controls.button_b.touch_id then
+    elseif id == touch_controls.button_store.touch_id then
         control_state.button_store_pressed = false
         store_button.touch_id = nil
     elseif id == touch_controls.dpad.touch_id then
@@ -165,40 +165,6 @@ functions.joystickremoved = function(joystick)
     end
 end
 
-local function draw()
-    if is_touch then
-        love.graphics.setColor(255, 255, 255, dpad_background.opacity)
-        love.graphics.draw(dpad_background.texture, dpad_background.x, dpad_background.y)
-
-        if functions.store_triggered then
-            love.graphics.setColor(255, 255, 255, store_button.opacity)
-            love.graphics.draw(store_button.texture, store_button.x, store_button.y)
-        end
-            
-        for _, control in pairs(touch_controls) do
-            local opacity_touch = control.opacity
-            if not control.touch_id == nil then
-                opacity_touch = 230
-            end
-            love.graphics.setColor(255, 255, 255, opacity_touch)
-            love.graphics.draw(control.texture, control.x, control.y)
-        end
-        love.graphics.setColor(255, 255, 255, 255)
-    elseif functions.store_triggered then
-        love.graphics.printf(store_button_help.text, 0, store_button_help.y, love.graphics.getWidth(), "center")
-    end
-end
-functions.draw = draw
-
-local function reset_control_state()
-    control_state.button_a_pressed = false
-    control_state.button_b_pressed = false
-    control_state.button_escape_pressed = false
-    control_state.button_store_pressed = false
-    control_state.x = 0
-    control_state.y = 0
-end
-
 functions.joystickpressed = function(joystick, button)
     if button == 2 then
         control_state.button_a_pressed = true
@@ -221,6 +187,41 @@ functions.joystickreleased = function(joystick, button)
     elseif button == 10 then
         control_state.button_escape_pressed = false
     end
+end
+
+local function draw()
+    if is_touch then
+        love.graphics.setColor(255, 255, 255, dpad_background.opacity)
+        love.graphics.draw(dpad_background.texture, dpad_background.x, dpad_background.y)
+
+        for control_type, control in pairs(touch_controls) do
+            local opacity_touch = control.opacity
+            if not control.touch_id == nil then
+                opacity_touch = 230
+            end
+            
+            -- if the store button is not triggered, do not show it by setting opacity to zero
+            if control_type == "button_store" and not functions.store_triggered then
+                opacity_touch = 0
+            end
+            
+            love.graphics.setColor(255, 255, 255, opacity_touch)
+            love.graphics.draw(control.texture, control.x, control.y)
+        end
+        love.graphics.setColor(255, 255, 255, 255)
+    elseif functions.store_triggered then
+        love.graphics.printf(store_button_help.text, 0, store_button_help.y, love.graphics.getWidth(), "center")
+    end
+end
+functions.draw = draw
+
+local function reset_control_state()
+    control_state.button_a_pressed = false
+    control_state.button_b_pressed = false
+    control_state.button_escape_pressed = false
+    control_state.button_store_pressed = false
+    control_state.x = 0
+    control_state.y = 0
 end
 
 local function load()
@@ -248,16 +249,17 @@ local function load()
         dpad_background.shape.control_type = "dpad"
 
         local control_textures = {
-            dpad = "img/touch_controls/dpad_knob.png",
-            button_a = "img/touch_controls/button_a.png",
-            button_b = "img/touch_controls/button_b.png",
-            button_escape = "img/touch_controls/button_escape.png"
+            dpad = love.graphics.newImage("img/touch_controls/dpad_knob.png"),
+            button_a = love.graphics.newImage("img/touch_controls/button_a.png"),
+            button_b = love.graphics.newImage("img/touch_controls/button_b.png"),
+            button_escape = love.graphics.newImage("img/touch_controls/button_escape.png"),
+            button_store = love.graphics.newImage("img/touch_controls/button_store.png")
         }
 
-        for control_type, texture_location in pairs(control_textures) do
+        for control_type, texture in pairs(control_textures) do
             local new_control = {}
             new_control.touch_id = nil
-            new_control.texture = love.graphics.newImage(texture_location)
+            new_control.texture = texture
             new_control.width = new_control.texture:getWidth()
             new_control.height = new_control.texture:getHeight()
             new_control.opacity = 150
@@ -275,6 +277,10 @@ local function load()
             elseif control_type == "button_escape" then
                 new_control.x = love.graphics.getWidth() - new_control.width
                 new_control.y = 0
+            elseif control_type == "button_store" then
+                -- note: this is, sadly, highly dependent on not changing the above formulas because pairs is not guaranteed to iterate in input order
+                new_control.x = love.graphics.getWidth() - 2 * control_textures["button_a"]:getHeight()
+                new_control.y = love.graphics.getHeight() - 2 * control_textures["button_b"]:getHeight()
             else
                 print("unknown control type")
             end
@@ -282,16 +288,6 @@ local function load()
             new_control.shape = touch_collider:rectangle(new_control.x, new_control.y, new_control.width, new_control.height)
             new_control.shape.control_type = control_type
         end
-        
-        store_button.texture = love.graphics.newImage("img/touch_controls/button_store.png")
-        store_button.touch_id = nil
-        store_button.width = store_button.texture:getWidth()
-        store_button.height = store_button.texture:getHeight()
-        store_button.x = touch_controls["button_a"].x
-        store_button.y = touch_controls["button_b"].y
-        store_button.opacity = 150
-        store_button.shape = touch_collider:polygon(store_button.x, store_button.y, store_button.x + store_button.width, store_button.y, store_button.x, store_button.y + store_button.height)
-        store_button.shape.control_type = "button_store"
     else
         store_button_help.text = "e for store"
         store_button_help.y = love.graphics.getHeight() - love.graphics.getFont():getHeight()
