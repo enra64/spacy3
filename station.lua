@@ -3,17 +3,22 @@ local station = {}
 local timer = require("hump.timer")
 local hc = require("hc")
 
+station.store_button_pressed = false
+
 function station:update(player_shape, dt)
     if player_shape:collidesWith(self.store_trigger_shape) then
-        if not self.store_lock then
+        signal.emit('store_trigger_area_reached')
+        if not self.store_lock and self.store_button_pressed then
+            -- notify that the game is no longer primary gamestate
+            signal.emit('backgrounded')
+            
             -- load store
             gamestate.push(dofile("store.lua"))
             
-            -- notify that the game is no longer primary gamestate
-            signal.emit('backgrounded')
             self.store_lock = true
         end
     else
+        signal.emit('store_trigger_area_left')
         self.store_lock = false
     end    
 end

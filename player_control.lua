@@ -8,6 +8,8 @@
 
 local functions = {}
 
+functions.store_triggered = false
+
 -- contains "return function() return <false|true> end"
 local is_touch = require("is_touch")()
 require("common")
@@ -16,6 +18,10 @@ require("common")
 local touch_collider
 local touch_controls = {}
 local dpad_background = {}
+local store_button = {}
+
+-- non-touch only
+local store_button_help = {}
 
 --- the current control state
 local control_state = {}
@@ -66,6 +72,9 @@ local function touchreleased(id)
     elseif id == touch_controls.button_b.touch_id then
         control_state.button_escape_pressed = false
         touch_controls.button_escape.touch_id = nil
+    elseif id == touch_controls.button_b.touch_id then
+        control_state.button_store_pressed = false
+        store_button.touch_id = nil
     elseif id == touch_controls.dpad.touch_id then
         control_state.x = 0
         control_state.y = 0
@@ -100,6 +109,8 @@ local function touchpressed(id, x, y)
             control_state.button_b_pressed = true
         elseif ctrl_type == "button_escape" then
             control_state.button_escape_pressed = true
+        elseif ctrl_type == "button_store" then
+            control_state.button_store_pressed = true
         end
     end
 end
@@ -128,6 +139,7 @@ local function update_keyboard(dt)
     control_state.button_a_pressed = love.keyboard.isDown("q")
     control_state.button_b_pressed = love.keyboard.isDown("space")
     control_state.button_escape_pressed = love.keyboard.isDown("escape")
+    control_state.button_store_pressed = love.keyboard.isDown("e")
 end
 functions.update_keyboard = update_keyboard
 
@@ -158,6 +170,11 @@ local function draw()
         love.graphics.setColor(255, 255, 255, dpad_background.opacity)
         love.graphics.draw(dpad_background.texture, dpad_background.x, dpad_background.y)
 
+        if functions.store_triggered then
+            love.graphics.setColor(255, 255, 255, store_button.opacity)
+            love.graphics.draw(store_button.texture, store_button.x, store_button.y)
+        end
+            
         for _, control in pairs(touch_controls) do
             local opacity_touch = control.opacity
             if not control.touch_id == nil then
@@ -167,6 +184,8 @@ local function draw()
             love.graphics.draw(control.texture, control.x, control.y)
         end
         love.graphics.setColor(255, 255, 255, 255)
+    elseif functions.store_triggered then
+        love.graphics.printf(store_button_help.text, 0, store_button_help.y, love.graphics.getWidth(), "center")
     end
 end
 functions.draw = draw
@@ -175,6 +194,7 @@ local function reset_control_state()
     control_state.button_a_pressed = false
     control_state.button_b_pressed = false
     control_state.button_escape_pressed = false
+    control_state.button_store_pressed = false
     control_state.x = 0
     control_state.y = 0
 end
@@ -184,7 +204,9 @@ functions.joystickpressed = function(joystick, button)
         control_state.button_a_pressed = true
     elseif button == 1 then
         control_state.button_b_pressed = true
-    elseif button == 10 or button == 9 then
+    elseif button == 9 then
+        control_state.button_store_pressed = true
+    elseif button == 10 then
         control_state.button_escape_pressed = true
     end
 end
@@ -194,7 +216,9 @@ functions.joystickreleased = function(joystick, button)
         control_state.button_a_pressed = false
     elseif button == 1 then
         control_state.button_b_pressed = false
-    elseif button == 10 or button == 9 then
+    elseif button == 9 then
+        control_state.button_store_pressed = false
+    elseif button == 10 then
         control_state.button_escape_pressed = false
     end
 end
@@ -203,8 +227,14 @@ local function load()
     -- initialise control state
     reset_control_state()
 
+    signal.register("store_trigger_area_reached", function() functions.store_triggered = true end)
+    signal.register("store_closed", function() functions.store_triggered = false end)
+    signal.register("store_trigger_area_left", function() functions.store_triggered = false end)
+
     if is_touch then
         touch_collider = require("hc").new()
+        
+        
         
         dpad_background.texture = love.graphics.newImage("img/touch_controls/dpad_background.png")
         dpad_background.x = 50
@@ -252,6 +282,19 @@ local function load()
             new_control.shape = touch_collider:rectangle(new_control.x, new_control.y, new_control.width, new_control.height)
             new_control.shape.control_type = control_type
         end
+        
+        store_button.texture = love.graphics.newImage("img/touch_controls/button_store.png")
+        store_button.touch_id = nil
+        store_button.width = store_button.texture:getWidth()
+        store_button.height = store_button.texture:getHeight()
+        store_button.x = touch_controls["button_a"].x
+        store_button.y = touch_controls["button_b"].y
+        store_button.opacity = 150
+        store_button.shape = touch_collider:polygon(store_button.x, store_button.y, store_button.x + store_button.width, store_button.y, store_button.x, store_button.y + store_button.height)
+        store_button.shape.control_type = "button_store"
+    else
+        store_button_help.text = "e for store"
+        store_button_help.y = love.graphics.getHeight() - love.graphics.getFont():getHeight()
     end
 end
 
@@ -264,6 +307,8 @@ local function is_button_pressed(button)
         return control_state.button_b_pressed
     elseif button == "button_escape" then
         return control_state.button_escape_pressed
+    elseif button == "button_store" then
+        return control_state.button_store_pressed
     else
         print("bad button identifier: " .. button .. " in " .. function_location())
     end

@@ -21,6 +21,7 @@ local player = {}
 
 local a_button_lock = false
 local b_button_lock = false
+local store_button_lock = false
 
 local last_ship_hull_state = 1
 local ship_life
@@ -34,7 +35,7 @@ local function move_player(dx, dy)
     player.shape:move(dx, dy)
 end
 
-local function update_player()
+functions.update = function(dt, station)
     player.movement = control.get_movement_table()
 
     -- fire weapons
@@ -54,6 +55,14 @@ local function update_player()
         b_button_lock = true
     elseif not control.is_button_pressed("b_button") then
         b_button_lock = false
+    end
+    
+    if control.is_button_pressed("button_store") and not store_button_lock then
+        station.store_button_pressed = true
+        store_button_lock = true
+    elseif not control.is_button_pressed("button_store") then
+        station.store_button_pressed = false
+        store_button_lock = false
     end
 
     -- move player horizontally
@@ -96,7 +105,6 @@ local function update_player()
     -- check for enemy collisions
     enemies.remove_colliding_enemies(player.shape, functions.enemy_hit)
 end
-functions.update = update_player
 
 functions.player_is_alive = function()
     return ship_life > 0

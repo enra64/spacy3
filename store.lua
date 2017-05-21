@@ -305,6 +305,7 @@ end
 function store:leave()
     --print("pop store music")
     background_music.pop()
+    signal.emit("store_closed")
 end
 
 function store:mousepressed(x, y)
