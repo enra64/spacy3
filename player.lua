@@ -12,6 +12,7 @@ local enemies = require("enemies")
 local weaponry = require("weapons")
 local control = require("player_control")
 local hc = require("hc")
+local timer = require("hump.timer")
 require("difficulty_handler")
 require("asteroids")
 require("drops")
@@ -67,18 +68,51 @@ functions.update = function(dt, station)
 
     -- move player horizontally
     local dir = control.get_direction()
-    if player.x > player.width / 2 and dir.x < -.0001 then
+    local EPSILON = 0.0001
+    local is_moving = false
+    if player.x > player.width / 2 and dir.x < -EPSILON then
         move_player(dir.x * player.speed, 0)
-    elseif player.x + player.width / 2< love.graphics.getWidth() and dir.x > .0001 then
+        is_moving = true
+    elseif player.x + player.width / 2< love.graphics.getWidth() and dir.x > EPSILON then
         move_player(dir.x * player.speed, 0)
+        is_moving = true
     end
     
     -- move player vertically
-    if player.y > player.height / 2 and dir.y < -.0001 then
+    if player.y > player.height / 2 and dir.y < -EPSILON then
         move_player(0, dir.y * player.speed)
-    elseif player.y + player.height / 2 < love.graphics.getHeight() and dir.y > .0001 then
+        is_moving = true
+    elseif player.y + player.height / 2 < love.graphics.getHeight() and dir.y > EPSILON then
         move_player(0, dir.y * player.speed)
+        is_moving = true
     end
+    
+    local SWITCH_DURATION = 0.08
+    -- turn on engine
+    if not player.engine_switch_locked and is_moving and not player.previous_moving then
+        player.engine_switch_locked = true
+        print("turning on engine")
+        timer.tween(
+            SWITCH_DURATION, 
+            player, 
+            {engine_opacity = 100}, 
+            'in-linear',
+            function() player.engine_switch_locked = false end
+        )
+    -- turn off engine
+    elseif not player.engine_switch_locked and not is_moving and player.previous_moving then
+        player.engine_switch_locked = true
+        print("turning off engine")
+        timer.tween(
+            SWITCH_DURATION, 
+            player, 
+            {engine_opacity = 0}, 
+            'in-linear',
+            function() player.engine_switch_locked = false end
+        )
+    end
+    
+    player.previous_moving = is_moving
 
     --- adjust thruster sound volume
     local thruster_count = 0
@@ -112,7 +146,7 @@ end
 
 functions.draw = function()
     -- draw ship
-        love.graphics.draw(
+    love.graphics.draw(
         player.texture, 
         player.x, 
         player.y, 
@@ -136,6 +170,19 @@ functions.draw = function()
                 player.propulsion_texture[direction]:getHeight() / 2)
         end
     end
+    
+    -- draw engine
+    love.graphics.setColor(255, 255, 255, player.engine_opacity)
+    love.graphics.draw(
+        player.engine_activated_texture, 
+        player.x, 
+        player.y, 
+        NO_ROTATION, 
+        player.scale,
+        player.scale,
+        player.texture:getWidth() / 2,
+        player.texture:getHeight() / 2)
+    love.graphics.setColor(255, 255, 255, 255)
     
     -- draw player shape for testing
     --player.shape:draw()
@@ -169,8 +216,12 @@ local function create_ship_hull()
     local state = player_ship_upgrade_state.get_state("ship_hull")
     local path = "img/player_ships/upgrade_"..(state - 1).."/"
     
+    -- for turning the engine on/off
+    player.previous_moving = false
+    
     --- load all textures
     player.texture = love.graphics.newImage(path.."main.png")
+    player.engine_activated_texture = love.graphics.newImage(path.."engine_activated.png")
     player.propulsion_texture = {
         right = love.graphics.newImage(path.."left_flame.png"),
         left = love.graphics.newImage(path.."right_flame.png"),
@@ -228,6 +279,9 @@ functions.load = function()
     player.y = love.graphics.getHeight() / 2
     
     player.scale = scaling.get("ship_scale")
+    
+    player.engine_opacity = 0
+    player.engine_switch_locked = false
     
     ship_life = difficulty.get("health_player_ship_upgrade_0")
     create_ship_hull()
