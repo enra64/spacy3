@@ -35,6 +35,17 @@ local function highscore_dialog_finished(result, entered_text, score)
     -- insert new table with name and score in highscores table
     table.insert(highscores, {entered_text, score})
 
+    table.sort(
+        highscores, 
+        function(hs_a, hs_b) 
+            return hs_a[2] > hs_b[2] 
+        end
+    )
+
+    while (#highscores > 5) do
+        highscores[#highscores] = nil
+    end
+
     success = true
 
     -- store sorted highscores
@@ -55,7 +66,7 @@ local function highscore_dialog_finished(result, entered_text, score)
     gamestate.pop()
 end
 
-function player_wants_to_quit(score)
+function player_wants_to_quit(_)
     local quit_confirmation = dofile("menu.lua")
     gamestate.push(quit_confirmation)
     quit_confirmation:add_button("really quit")
