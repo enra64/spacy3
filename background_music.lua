@@ -33,6 +33,7 @@ local tracks = {
 }
 
 local function next_song()
+    stack[#stack]:stop()
     background_music.pop()
     background_music.push(current_category)
 end
@@ -46,13 +47,19 @@ local function get_track_object(category)
         category = category,
         track_timer = timer:after(track:getDuration(), next_song),
         track_id = track_id,
-        volume = 0.2, volume_tweener = nil, volume_updater = nil,
+        volume = 0.2,
         -- abort play-next-song timer, stop playing track
-        stop = function(tbl) track:stop(); timer:cancel(tbl.track_timer); timer:cancel(tbl.volume_tweener); timer:cancel(tbl.volume_updater) end
+        stop = function(tbl) 
+                track:stop()
+                timer:cancel(tbl.track_timer)
+                timer:cancel(tbl.volume_in_tweener)
+                timer:cancel(tbl.volume_out_tween_timer)
+                timer:cancel(tbl.volume_updater) 
+            end
     }
     
-    local TWEEN_IN_DURATION = 40
-    song_object.volume_tweener = timer:tween(TWEEN_IN_DURATION, song_object, {volume = 1}, 'out-quad')
+    song_object.volume_in_tweener = timer:tween(40, song_object, {volume = 1}, 'out-quad')
+    song_object.volume_out_tween_timer = timer:after(track:getDuration() - 20, function() timer:tween(20, song_object, {volume = 0.1}, 'in-quart') end)
     song_object.volume_updater = timer:every(0.1, 
         function() 
             song_object:setVolume(song_object.volume)
