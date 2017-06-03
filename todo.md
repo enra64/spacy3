@@ -5,12 +5,18 @@
 * story
 * ads?
 * better controller support, probably with nes->gamepad mapping
-* asteroid labyrinth
 
 ## playability
 * long-term motivation
 * increase game duration by lowering difficulty, generally better curve, replace level system with linear scaling?
-* possibility of achieving victory
+* station life
+    * shield has set amount of life; after that, the station is a one hit kill
+    * shield quickly regenerates after each hit; but before it has x% of life back, the station is a one hit kill
+
+## gamemodes
+* asteroid labyrinth evasion
+* endless mode (current)
+* finishable mode -> endboss?
 
 ## enemies
 * different types
@@ -23,8 +29,10 @@
     * more tracks
     * fading in/out
 * improve timings etc
-* blinking etc on ships
-* fix weapon spawn position
+* effects
+    * rocket propulsion
+    * ship engine pulsing on speed
+    * more blinky
 
 ## store
 * items
