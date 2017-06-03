@@ -27,11 +27,9 @@
 * scaling values for resolutions i dont have
 * background music
     * more tracks
-    * fading in/out
 * improve timings etc
 * effects
     * rocket propulsion
-    * ship engine pulsing on speed
     * more blinky
 
 ## store

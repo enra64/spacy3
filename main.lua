@@ -148,6 +148,11 @@ function player_died(score)
     end
 end
 
+local function root_update(dt)
+    --- called each update cycle before all other functions
+    background_music.update(dt)
+end
+
 function love.load(arg)
     --- enable zerobrane ide debugging
     if arg[#arg] == "-debug" then require("mobdebug").start() end
@@ -161,6 +166,9 @@ function love.load(arg)
     settings:graphics_mode_changed()
     settings:audio_mode_changed()
 
+    -- hump.gamestate will call this even after registerEvents
+    love.update = root_update
+    
     --- register event callbacks
     gamestate.registerEvents()
 

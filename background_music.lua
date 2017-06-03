@@ -1,5 +1,5 @@
 require("common")
-local timer = require("hump.timer")
+local timer = require("hump.timer").new()
 
 background_music = {}
 
@@ -44,16 +44,29 @@ local function get_track_object(category)
     local song_object = {
         track = track,
         category = category,
-        track_timer = timer.after(track:getDuration(), next_song),
+        track_timer = timer:after(track:getDuration(), next_song),
         track_id = track_id,
+        volume = 0.2, volume_tweener = nil, volume_updater = nil,
         -- abort play-next-song timer, stop playing track
-        stop = function(tbl) track:stop(); timer.cancel(tbl.track_timer) end
+        stop = function(tbl) track:stop(); timer:cancel(tbl.track_timer); timer:cancel(tbl.volume_tweener); timer:cancel(tbl.volume_updater) end
     }
     
+    local TWEEN_IN_DURATION = 40
+    song_object.volume_tweener = timer:tween(TWEEN_IN_DURATION, song_object, {volume = 1}, 'out-quad')
+    song_object.volume_updater = timer:every(0.1, 
+        function() 
+            song_object:setVolume(song_object.volume)
+            return song_object.volume < 0.995 -- stop updater at full volume
+        end
+    )
     -- forward unknown calls to the source object (song_object.track...)
     setmetatable(song_object, {__index = function(_, req_func) return function(song_obj, ...) track[req_func](track, ...) end end})
     
     return song_object
+end
+
+background_music.update = function(dt)
+    timer:update(dt)
 end
 
 background_music.push = function(category)
@@ -64,10 +77,7 @@ background_music.push = function(category)
     
     local track_id = random.choose(tracks[category])
     local track = get_track_object(category)
-        
-    print("pushing "..track_id.." from "..category)
-    print(debug.traceback())
-    
+            
     track:setVolume(track_volumes[track_id])
     track:setLooping(false)
     track:play()
@@ -82,10 +92,7 @@ background_music.pop = function()
         stack[#stack]:stop()
         stack[#stack] = nil
     end
-    
-    print("popping")
-    print(debug.traceback())
-    
+        
     -- resume last sound
     if #stack > 0 then
         stack[#stack]:resume()
