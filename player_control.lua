@@ -8,7 +8,6 @@
 
 local functions = {}
 
-functions.store_triggered = false
 
 -- contains "return function() return <false|true> end"
 local is_touch = require("is_touch")()
@@ -228,9 +227,12 @@ local function load()
     -- initialise control state
     reset_control_state()
 
-    signal.register("store_trigger_area_reached", function() functions.store_triggered = true end)
-    signal.register("store_closed", function() functions.store_triggered = false end)
-    signal.register("store_trigger_area_left", function() functions.store_triggered = false end)
+    functions.store_triggered = false
+    functions.store_locked = false
+
+    signal.register("store_trigger_area_reached", function() functions.store_triggered = true and not functions.store_locked end)
+    signal.register("store_closed", function() functions.store_triggered = false; functions.store_locked = true end)
+    signal.register("store_trigger_area_left", function() functions.store_triggered = false; functions.store_locked = false end)
 
     if is_touch then
         touch_collider = require("hc").new()

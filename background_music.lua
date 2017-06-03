@@ -37,6 +37,25 @@ local function next_song()
     background_music.push(current_category)
 end
 
+local function get_track_object(category)
+    local track_id = random.choose(tracks[category])
+    local track = track_objects[track_id]
+    
+    local song_object = {
+        track = track,
+        category = category,
+        track_timer = timer.after(track:getDuration(), next_song),
+        track_id = track_id,
+        -- abort play-next-song timer, stop playing track
+        stop = function(tbl) track:stop(); timer.cancel(tbl.track_timer) end
+    }
+    
+    -- forward unknown calls to the source object (song_object.track...)
+    setmetatable(song_object, {__index = function(_, req_func) return function(song_obj, ...) track[req_func](track, ...) end end})
+    
+    return song_object
+end
+
 background_music.push = function(category)
     -- begin playing another category, pausing the current song
     if #stack > 0 then
@@ -44,20 +63,16 @@ background_music.push = function(category)
     end
     
     local track_id = random.choose(tracks[category])
-    local track = track_objects[track_id]
+    local track = get_track_object(category)
+        
+    print("pushing "..track_id.." from "..category)
+    print(debug.traceback())
+    
     track:setVolume(track_volumes[track_id])
-    track:setLooping(true)
+    track:setLooping(false)
+    track:play()
     
     stack[#stack + 1] = track
-    stack[#stack]:play()
-    
-    -- avoid starting another song of the old category
-    if current_timer then
-        timer.cancel(next_song)
-    end
-    -- when this song ends, start another one in the same category
-    current_timer = timer.after(stack[#stack]:getDuration(), next_song)
-    
     current_category = category
 end
 
@@ -67,6 +82,9 @@ background_music.pop = function()
         stack[#stack]:stop()
         stack[#stack] = nil
     end
+    
+    print("popping")
+    print(debug.traceback())
     
     -- resume last sound
     if #stack > 0 then

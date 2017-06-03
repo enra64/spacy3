@@ -44,6 +44,5 @@
 * fix csv access error in packaged game
 
 ## bugs
-* store pops too many background music items
 
 ## mobile
