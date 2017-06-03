@@ -69,46 +69,41 @@ functions.update = function(dt, station)
     -- move player horizontally
     local dir = control.get_direction()
     local EPSILON = 0.0001
-    local is_moving = false
     if player.x > player.width / 2 and dir.x < -EPSILON then
         move_player(dir.x * player.speed, 0)
-        is_moving = true
     elseif player.x + player.width / 2< love.graphics.getWidth() and dir.x > EPSILON then
         move_player(dir.x * player.speed, 0)
-        is_moving = true
     end
     
     -- move player vertically
     if player.y > player.height / 2 and dir.y < -EPSILON then
         move_player(0, dir.y * player.speed)
-        is_moving = true
     elseif player.y + player.height / 2 < love.graphics.getHeight() and dir.y > EPSILON then
         move_player(0, dir.y * player.speed)
-        is_moving = true
     end
     
-    local SWITCH_DURATION = 0.08
+    local SWITCH_ON_DURATION = 0.08
+    local SWITCH_OFF_DURATION = 0.3
+    local is_moving = dir.y < -EPSILON or dir.y > EPSILON or dir.x < -EPSILON or dir.x > EPSILON
     -- turn on engine
-    if not player.engine_switch_locked and is_moving and not player.previous_moving then
-        player.engine_switch_locked = true
-        print("turning on engine")
-        timer.tween(
-            SWITCH_DURATION, 
+    if is_moving and not player.previous_moving then
+        if player.engine_switch_tweener then timer.cancel(player.engine_switch_tweener) end
+        player.engine_switch_tweener = timer.tween(
+            SWITCH_ON_DURATION, 
             player, 
             {engine_opacity = 100}, 
             'in-linear',
-            function() player.engine_switch_locked = false end
+            function() player.engine_switch_tweener = nil end
         )
     -- turn off engine
-    elseif not player.engine_switch_locked and not is_moving and player.previous_moving then
-        player.engine_switch_locked = true
-        print("turning off engine")
-        timer.tween(
-            SWITCH_DURATION, 
+    elseif not is_moving and player.previous_moving then
+        if player.engine_switch_tweener then timer.cancel(player.engine_switch_tweener) end
+        player.engine_switch_tweener = timer.tween(
+            SWITCH_OFF_DURATION, 
             player, 
             {engine_opacity = 0}, 
             'in-linear',
-            function() player.engine_switch_locked = false end
+            function() player.engine_switch_tweener = nil end
         )
     end
     
@@ -281,7 +276,7 @@ functions.load = function()
     player.scale = scaling.get("ship_scale")
     
     player.engine_opacity = 0
-    player.engine_switch_locked = false
+    player.engine_switch_tweener = nil
     
     ship_life = difficulty.get("health_player_ship_upgrade_0")
     create_ship_hull()
