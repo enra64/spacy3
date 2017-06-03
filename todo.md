@@ -27,7 +27,6 @@
 * fix weapon spawn position
 
 ## store
-* improve user discoverability of store
 * items
     * asteroid warner item
     * repair?
