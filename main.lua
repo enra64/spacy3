@@ -12,6 +12,8 @@ require("common")
 require("scaling")
 require("background_music")
 
+MAXIMUM_HIGHSCORE_COUNT = 5
+
 function on_pause_button_clicked(button_text)
     -- for when i get confused: print(function_location() .. ": " .. button_text)
     if (button_text == "new game") then
@@ -35,6 +37,17 @@ local function highscore_dialog_finished(result, entered_text, score)
     -- insert new table with name and score in highscores table
     table.insert(highscores, {entered_text, score})
 
+    table.sort(
+        highscores, 
+        function(hs_a, hs_b) 
+            return hs_a[2] > hs_b[2] 
+        end
+    )
+
+    while (#highscores > MAXIMUM_HIGHSCORE_COUNT) do
+        highscores[#highscores] = nil
+    end
+
     success = true
 
     -- store sorted highscores
@@ -55,7 +68,7 @@ local function highscore_dialog_finished(result, entered_text, score)
     gamestate.pop()
 end
 
-function player_wants_to_quit(score)
+function player_wants_to_quit(_)
     local quit_confirmation = dofile("menu.lua")
     gamestate.push(quit_confirmation)
     quit_confirmation:add_button("really quit")
@@ -105,7 +118,7 @@ function player_died(score)
     -- play u dead music
     background_music.push("killscreen")
 
-    local hs_entry_ok = #persistent_storage.get("highscores", {}) < 10 or score > persistent_storage.get("lowest_highscore", {"", 0})[2]
+    local hs_entry_ok = #persistent_storage.get("highscores", {}) < MAXIMUM_HIGHSCORE_COUNT or score > persistent_storage.get("lowest_highscore", {"", 0})[2]
     if hs_entry_ok then
         quit_confirmation:add_button("enter highscore")
     end
