@@ -5,9 +5,7 @@ local splashscreen = {}
 
 local click_sound = love.audio.newSource("sounds/button_click.ogg")
 
-local tween_in_duration = 1
-local display_duration = 2
-local splashscreen_duration = tween_in_duration + display_duration
+
 
 function splashscreen:update(dt)
     timer:update(dt)
@@ -54,6 +52,10 @@ function splashscreen:draw()
         "center")
 end
 
+local tween_in_duration = 1
+local display_duration = 2
+local splashscreen_duration = tween_in_duration + display_duration
+
 function splashscreen:init()
     self.opacity = 0
     self.opaque = false
@@ -86,7 +88,10 @@ function splashscreen:skip()
     -- skip to full opacity
     if not self.opaque then
         self.opaque = true
+        self.opacity = 255
         timer:cancel(self.opacity_tweener)
+        timer:cancel(self.splashscreen_timer)
+        self.splashscreen_timer = timer:after(display_duration, gamestate.pop)
     -- skip to main menu
     else 
         timer:cancel(self.splashscreen_timer)
