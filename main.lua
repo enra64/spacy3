@@ -11,23 +11,9 @@ require("persistent_storage")
 require("common")
 require("scaling")
 require("background_music")
-require("texture_cache")
+require("spacy3_love_extensions")
 
 MAXIMUM_HIGHSCORE_COUNT = 5
-
-function on_pause_button_clicked(button_text)
-    -- for when i get confused: print(function_location() .. ": " .. button_text)
-    if (button_text == "new game") then
-        --- push game on gamestate stack
-        gamestate.push(dofile("game_gamestate.lua"))
-    elseif (button_text == "view highscores") then
-        gamestate.push(dofile("highscore_view.lua"))
-    elseif button_text == "settings" then
-        gamestate.push(dofile("settings.lua"))
-    elseif button_text == "quit" then
-        love.event.quit()
-    end
-end
 
 local function highscore_dialog_finished(result, entered_text, score)
     local highscores = persistent_storage.get("highscores", {})
@@ -149,9 +135,54 @@ function player_died(score)
     end
 end
 
-local function root_update(dt)
-    --- called each update cycle before all other functions
-    background_music.update(dt)
+
+local function push_game_mode_menu()
+    --- push main menu onto stack
+    local mode_menu = dofile("menu.lua")
+    gamestate.push(mode_menu)
+
+    --- configure main menu
+    mode_menu:set_title("select game mode")
+    mode_menu:add_button("endless game")
+    mode_menu:add_button("asteroid rush")
+    mode_menu:add_button("back")
+    
+        --- set main menu callback
+    mode_menu.on_button_clicked = function(button_text)
+        if (button_text == "back") then
+            gamestate.pop()
+        else
+            gamestate.pop() -- pop mode menu
+            -- push game on gamestate stack with desired gamemode==button text
+            gamestate.push(dofile("game_gamestate.lua"), button_text)  
+        end
+    end
+end
+
+local function push_main_menu()
+    --- push main menu onto stack
+    local main_menu = dofile("menu.lua")
+    gamestate.push(main_menu)
+
+    --- configure main menu
+    main_menu:add_button("new game")
+    main_menu:add_button("view highscores")
+    main_menu:add_button("settings")
+    main_menu:add_button("quit")
+    main_menu:set_title("spacy3")
+    
+        --- set main menu callback
+    main_menu.on_button_clicked = function(button_text)
+        if (button_text == "new game") then
+            push_game_mode_menu()
+        elseif (button_text == "view highscores") then
+            gamestate.push(dofile("highscore_view.lua"))
+        elseif button_text == "settings" then
+            gamestate.push(dofile("settings.lua"))
+        elseif button_text == "quit" then
+            love.event.quit()
+        end
+    end
 end
 
 function love.load(arg)
@@ -168,28 +199,17 @@ function love.load(arg)
     settings:audio_mode_changed()
 
     -- hump.gamestate will call this even after registerEvents
-    love.update = root_update
+    love.update = background_music.update
     
     --- register event callbacks
     gamestate.registerEvents()
 
-    --- push main menu onto stack
-    local main_menu = dofile("menu.lua")
-    gamestate.push(main_menu)
-
-    --- configure main menu
-    main_menu:add_button("new game")
-    main_menu:add_button("view highscores")
-    main_menu:add_button("settings")
-    main_menu:add_button("quit")
-    main_menu:set_title("spacy3")
+    -- create main menu and push onto stack
+    push_main_menu()
     
     -- make background music
     background_music.push("main_menu")
     
     local splash_screen = dofile("splashscreen.lua")
     gamestate.push(splash_screen)
-
-    --- set main menu callback
-    main_menu.on_button_clicked = on_pause_button_clicked
 end

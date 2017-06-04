@@ -9,11 +9,11 @@
 local functions = {}
 
 local simple_enemies = {}
-functions.enemies = simple_enemies
 local hc = require("hc")
 require("difficulty_handler")
 require("scaling")
 
+functions.enable_enemy_spawning = true
 
 local function create_enemy()
     local new_enemy = {}
@@ -50,7 +50,6 @@ local function create_enemy()
 
     table.insert(simple_enemies, new_enemy)
 end
-functions.create_enemy = create_enemy
 
 local function create_simple_enemies()
     while #simple_enemies < difficulty.get("enemy_simple_count", current_level()) do
@@ -58,8 +57,10 @@ local function create_simple_enemies()
     end
 end
 
-local function update_enemies(dt)
-    create_simple_enemies()
+functions.update = function(dt)
+    if functions.enable_enemy_spawning then
+        create_simple_enemies()
+    end
     
     for index, enemy in ipairs(simple_enemies) do
         local enemy_speed = scaling.get("enemy_"..enemy.type.."_speed")[current_level()]
@@ -72,23 +73,20 @@ local function update_enemies(dt)
         end
     end
 end
-functions.update = update_enemies
 
-local function draw()
-    for _, item in ipairs(simple_enemies) do
-        love.graphics.draw(item.texture, item.x, item.y, NO_ROTATION, item.scale)
-    end
+functions.set_enemies_spawning = function(spawn)
+    functions.enable_enemy_spawning = spawn
+    print("enemy spawn ")
 end
-functions.draw = draw
 
-functions.has_enemy_collision = function(object)
-    has_collision = false
-    for shape, _ in pairs(hc.collisions(object.shape)) do
-        if shape.object_type == "enemy" then
-            has_collision = true
-        end
+functions.leave = function()
+    simple_enemies = {}
+end
+
+functions.draw = function()
+    for _, item in ipairs(simple_enemies) do
+        love.graphics.drawObject(item)
     end
-    return has_collision
 end
 
 functions.remove_colliding_enemies = function(shape, on_kill)
@@ -118,11 +116,6 @@ functions.remove_colliding_enemies = function(shape, on_kill)
     end
     
     return had_collision
-end
-
-functions.leave = function()
-    simple_enemies = {}
-    functions.enemies = simple_enemies
 end
 
 return functions

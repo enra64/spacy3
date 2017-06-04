@@ -22,11 +22,57 @@ require("background_music")
 
 local level_thresholds = difficulty.get("level_threshold")
 local level = 1
+local mode = ""
 
 local explosion_sound = love.audio.newSource("sounds/explosion.ogg", "static")
 explosion_sound:setVolume(.8)
 
 score = 0
+
+function game:create_pause_menu()
+    --- create pause menu
+    pause_menu:add_button("resume")
+    pause_menu:add_button("back to main menu")
+    pause_menu:add_button("quit game")
+    pause_menu:set_title("paused")
+
+    --- set pause menu callback handler
+    pause_menu.on_button_clicked = function(button_text)
+        if button_text == "resume" then
+            gamestate.pop() -- pop pause
+        elseif button_text == "back to main menu" then
+            gamestate.pop() -- pop pause
+            player_wants_back_to_main(score)
+        elseif button_text == "quit game" then
+            gamestate.pop()-- pop pause
+            player_wants_to_quit(score)
+        end
+    end
+    pause_menu.on_escape_pressed = function()
+        gamestate.pop()
+    end
+end
+
+function game:init()
+    --- reset score
+    score = 0
+
+    --- init all
+    bg.load()
+    player_ship_upgrade_state.init()
+    flyapartomatic.init()
+    drops.init()
+    weapons.init()
+    control.load()
+    player.load()
+    ingame_status.init()
+    asteroids.init()
+    station:init()
+
+    game:create_pause_menu()
+    
+    background_music.push("ingame")
+end
 
 local function on_kill(killed_enemy)
     score = score + killed_enemy.score
@@ -110,63 +156,16 @@ function game:resume()
     player.resume()
 end
 
-function game:init()
-    --- reset score
-    score = 0
-    --- load background textures
-    bg.load()
-
-    --print("init game")
-
-    --- init all
-    player_ship_upgrade_state.init()
-    flyapartomatic.init()
-    drops.init()
-    weapons.init()
-    control.load()
-    player.load()
-    ingame_status.init()
-    asteroids.init()
-    station:init()
-
-    --- create pause menu
-    pause_menu:add_button("resume")
-    pause_menu:add_button("back to main menu")
-    pause_menu:add_button("quit game")
-    pause_menu:set_title("paused")
-
-    --- set pause menu callback handler
-    pause_menu.on_button_clicked = function(button_text)
-        --print(function_location()..": "..button_text)
-        if button_text == "resume" then
-            gamestate.pop() -- pop pause
-        elseif button_text == "back to main menu" then
-            gamestate.pop() -- pop pause
-            player_wants_back_to_main(score)
-        elseif button_text == "quit game" then
-            gamestate.pop()-- pop pause
-            player_wants_to_quit(score)
-        end
-    end
-    pause_menu.on_escape_pressed = function()
-        gamestate.pop()
+function game:enter(_, chosen_gamemode)
+    mode = chosen_gamemode
+    
+    if mode == "asteroid rush" then
+        enemies.set_enemies_spawning(false)
     end
     
-    --print("push ingame music")
-    background_music.push("ingame")
-    
-    -- register a signal for returning to the running game state
-    signal.register('backgrounded', game.backgrounded)
-end
-
-function game:enter()
     ingame_status.enter()
     asteroids.enter()
     bg.enter()
-end
-
-function game.backgrounded()
-    
 end
 
 function game:leave()
@@ -178,45 +177,18 @@ function game:leave()
     asteroids.leave()
     
     -- pop ingame music
-    --print("pop ingame music")
     background_music.pop()
 end
 
 --- forward relevant input events
-function game:touchpressed(id, x, y)
-    control.touchpressed(id, x, y)
-end
-
-function game:touchmoved(id, x, y)
-    control.touchmoved(id, x, y)
-end
-
-function game:touchreleased(id)
-    control.touchreleased(id)
-end
-
-function game:keypressed()
-    control.update_keyboard(0.016)
-end
-
-function game:keyreleased()
-    control.update_keyboard(0.016)
-end
-
-function game:joystickpressed(joystick, button)
-    control.joystickpressed(joystick, button, 0.016)
-end
-
-function game:joystickreleased(joystick, button)
-    control.joystickreleased(joystick, button, 0.016)
-end
-
-function game:joystickadded(joystick)
-    control.joystickadded(joystick)
-end
-
-function game:joystickremoved(joystick)
-    control.joystickremoved(joystick)
-end
+function game:touchpressed(id, x, y) control.touchpressed(id, x, y) end
+function game:touchmoved(id, x, y) control.touchmoved(id, x, y) end
+function game:touchreleased(id) control.touchreleased(id) end
+function game:keypressed() control.update_keyboard(0.016) end
+function game:keyreleased() control.update_keyboard(0.016) end
+function game:joystickpressed(joystick, button) control.joystickpressed(joystick, button, 0.016) end
+function game:joystickreleased(joystick, button) control.joystickreleased(joystick, button, 0.016) end
+function game:joystickadded(joystick) control.joystickadded(joystick) end
+function game:joystickremoved(joystick) control.joystickremoved(joystick) end
 
 return game

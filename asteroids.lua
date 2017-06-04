@@ -219,34 +219,24 @@ end
 
 asteroids.draw = function()
     for _, asteroid in ipairs(asteroid_storage) do
-        love.graphics.draw(asteroid.texture, asteroid.x, asteroid.y, asteroid.rotation, asteroid.scale, asteroid.scale, asteroid.width / 2, asteroid.height / 2)
+        love.graphics.drawObjectCentered(asteroid)
     end
-end
-
-asteroids.has_collision = function(shape) 
-    has_collision = false
-    
-    for shape_, _ in pairs(hc.collisions(shape)) do
-        if shape_.object_type == "asteroid" then
-            has_collision = true
-        end
-    end
-    
-    return has_collision
 end
 
 asteroids.handle_projectile = function(projectile_shape, callback)
+    -- removes all asteroids colliding with the projectile shape, and calls the callback for each of them
     local has_collision = false
 
     for i, asteroid in ipairs(asteroid_storage) do
         if asteroid.shape:collidesWith(projectile_shape) then
+            -- call back
             callback(asteroid, asteroid.asteroid_type)
-            
+            -- breakup animation
             flyapartomatic.spawn(asteroid.fragments, asteroid.x, asteroid.y, FRAGMENT_SPEED, FRAGMENT_SCALE)
-
+            -- clean asteroid table and collider
             table.remove(asteroid_storage, i)
             hc.remove(asteroid.shape)
-
+            -- set collision flag
             has_collision = true
         end
     end
