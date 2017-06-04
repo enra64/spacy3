@@ -19,12 +19,14 @@ local default_state = {
 
 local avl_settings_touch = {
     fullscreen = {"yes", "no"},
-    sound = {"on", "off"}
+    sound = {"on", "off"},
+    control = {"accelerometer", "touchpad"}
 }
 
 local default_state_touch = {
     fullscreen = 2,
-    sound = 1
+    sound = 1,
+    control = 2
 }
 
 function this:get_current_value(key)

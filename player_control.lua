@@ -11,6 +11,8 @@ local functions = {}
 
 -- contains "return function() return <false|true> end"
 local is_touch = require("is_touch")()
+local touch_accel_control = is_touch and require("settings"):get_current_value("control") == 1
+
 require("common")
 
 --- touch only stuff
@@ -143,11 +145,16 @@ functions.update = function(dt)
         local axis_x, axis_y = joystick:getAxes()
         control_state.x = axis_x * dt
         control_state.y = axis_y * dt
+        
+        -- accel is a bit too slow
+        if touch_accel_control then
+            control_state.x = control_state.x * 1.3
+            control_state.y = control_state.y * 1.3
+        end
     end
 end
 
 functions.joystickadded = function(joystick)
-    print("added joystick "..joystick:getGUID())
     table.insert(joystick_list, joystick)
 end
 
@@ -234,25 +241,28 @@ functions.load = function()
     if is_touch then
         touch_collider = require("hc").new()
         
-        dpad_background.texture = love.graphics.newImage("img/touch_controls/dpad_background.png")
-        dpad_background.x = 50
-        dpad_background.y = love.graphics.getHeight() - dpad_background.texture:getHeight() - 50
-        dpad_background.width = dpad_background.texture:getWidth()
-        dpad_background.height = dpad_background.texture:getHeight()
-        dpad_background.opacity = 100
-        dpad_background.right_border = dpad_background.width + dpad_background.x
-        dpad_background.bottom_border = dpad_background.height + dpad_background.y
-        dpad_background.shape = touch_collider:rectangle(dpad_background.x, dpad_background.y, dpad_background.width, dpad_background.height)
-        dpad_background.shape.control_type = "dpad"
-
         local control_textures = {
-            dpad = love.graphics.newImage("img/touch_controls/dpad_knob.png"),
             button_a = love.graphics.newImage("img/touch_controls/button_a.png"),
             button_b = love.graphics.newImage("img/touch_controls/button_b.png"),
             button_escape = love.graphics.newImage("img/touch_controls/button_escape.png"),
             button_store = love.graphics.newImage("img/touch_controls/button_store.png")
         }
 
+        if touch_accel_control then
+            dpad_background.texture = love.graphics.newImage("img/touch_controls/dpad_background.png")
+            dpad_background.x = 50
+            dpad_background.y = love.graphics.getHeight() - dpad_background.texture:getHeight() - 50
+            dpad_background.width = dpad_background.texture:getWidth()
+            dpad_background.height = dpad_background.texture:getHeight()
+            dpad_background.opacity = 100
+            dpad_background.right_border = dpad_background.width + dpad_background.x
+            dpad_background.bottom_border = dpad_background.height + dpad_background.y
+            dpad_background.shape = touch_collider:rectangle(dpad_background.x, dpad_background.y, dpad_background.width, dpad_background.height)
+            dpad_background.shape.control_type = "dpad"
+
+            control_textures.dpad = love.graphics.newImage("img/touch_controls/dpad_knob.png")
+        end
+        
         for control_type, texture in pairs(control_textures) do
             local new_control = {}
             new_control.touch_id = nil
