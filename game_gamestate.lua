@@ -23,6 +23,9 @@ require("background_music")
 local level_thresholds = difficulty.get("level_threshold")
 local level = 1
 
+local explosion_sound = love.audio.newSource("sounds/explosion.ogg", "static")
+explosion_sound:setVolume(.8)
+
 score = 0
 
 local function on_kill(killed_enemy)
@@ -77,8 +80,6 @@ function game:update(dt)
 
         --- play one last explosion sound
         --- make explosion sound
-        local explosion_sound = love.audio.newSource("sounds/explosion.ogg", "static")
-        explosion_sound:setVolume(.8)
         explosion_sound:play()
 
         --- callback for main control

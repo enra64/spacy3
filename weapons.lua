@@ -23,6 +23,12 @@ local laser_textures = {
     love.graphics.newImage("img/blue_laser.png")
 }
 
+local laser_sound = love.audio.newSource("sounds/laser.ogg", "static")
+laser_sound:setVolume(.3)
+
+local rocket_sound = love.audio.newSource("sounds/rocket_fire.ogg", "static")
+rocket_sound:setVolume(1.5)
+
 --- requires
 local hc = require("hc")
 local enemies = require("enemies")
@@ -66,9 +72,7 @@ local function shoot_missile(x, y)
     table.insert(projectiles, new_missile)
 
     --- play firing sound
-    local fire_sound = love.audio.newSource("sounds/rocket_fire.ogg", "static")
-    fire_sound:setVolume(1.5)
-    fire_sound:play()
+    rocket_sound:play()
 
     --- reduce missile count
     missile_count = missile_count - 1
@@ -110,9 +114,7 @@ local function shoot_laser(x, y)
     table.insert(projectiles, new_laser)
 
     --- play firing sound
-    local fire_sound = love.audio.newSource("sounds/laser.ogg", "static")
-    fire_sound:setVolume(.3)
-    fire_sound:play()
+    laser_sound:play()
 
     --- make the laser hotter
     laser_overheat = math.clamp(laser_overheat + .23, 0, 1)

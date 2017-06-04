@@ -11,6 +11,7 @@ require("persistent_storage")
 require("common")
 require("scaling")
 require("background_music")
+require("texture_cache")
 
 MAXIMUM_HIGHSCORE_COUNT = 5
 
