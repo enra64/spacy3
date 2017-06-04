@@ -60,7 +60,7 @@ local function handle_dpad_touch(x, y)
     set_dpad_position(x, y)
 end
 
-local function touchreleased(id)
+functions.touchreleased = function(id)
     --- handle releases
     if id == touch_controls.button_a.touch_id then
         control_state.button_a_pressed = false
@@ -81,16 +81,14 @@ local function touchreleased(id)
         touch_controls.dpad.touch_id = nil
     end
 end
-functions.touchreleased = touchreleased
 
-local function touchmoved(id, x, y)
+functions.touchmoved = function(id, x, y)
     if id == touch_controls.dpad.touch_id then
         handle_dpad_touch(x, y)
     end
 end
-functions.touchmoved = touchmoved
 
-local function touchpressed(id, x, y)
+functions.touchpressed = function(id, x, y)
     local touch_point = touch_collider:point(x, y)
     
     --- handle button clicks
@@ -113,9 +111,8 @@ local function touchpressed(id, x, y)
         end
     end
 end
-functions.touchpressed = touchpressed
 
-local function update_keyboard(dt)
+functions.update_keyboard = function(dt)
     --- reset direction vector
     control_state.x = 0
     control_state.y = 0
@@ -140,13 +137,6 @@ local function update_keyboard(dt)
     control_state.button_escape_pressed = love.keyboard.isDown("escape")
     control_state.button_store_pressed = love.keyboard.isDown("e")
 end
-functions.update_keyboard = update_keyboard
-
-
-functions.joystickadded = function(joystick)
-    print("added joystick")
-    table.insert(joystick_list, joystick)
-end
 
 functions.update = function(dt)
     for _, joystick in ipairs(joystick_list) do
@@ -154,6 +144,11 @@ functions.update = function(dt)
         control_state.x = axis_x * dt
         control_state.y = axis_y * dt
     end
+end
+
+functions.joystickadded = function(joystick)
+    print("added joystick "..joystick:getGUID())
+    table.insert(joystick_list, joystick)
 end
 
 functions.joystickremoved = function(joystick)    
@@ -188,7 +183,7 @@ functions.joystickreleased = function(joystick, button)
     end
 end
 
-local function draw()
+functions.draw = function()
     if is_touch then
         love.graphics.setColor(255, 255, 255, dpad_background.opacity)
         love.graphics.draw(dpad_background.texture, dpad_background.x, dpad_background.y)
@@ -212,7 +207,6 @@ local function draw()
         love.graphics.printf(store_button_help.text, 0, store_button_help.y, love.graphics.getWidth(), "center")
     end
 end
-functions.draw = draw
 
 local function reset_control_state()
     control_state.button_a_pressed = false
@@ -223,7 +217,10 @@ local function reset_control_state()
     control_state.y = 0
 end
 
-local function load()
+functions.load = function()
+    -- load already connected joysticks
+    joystick_list = love.joystick.getJoysticks()
+    
     -- initialise control state
     reset_control_state()
 
@@ -236,8 +233,6 @@ local function load()
 
     if is_touch then
         touch_collider = require("hc").new()
-        
-        
         
         dpad_background.texture = love.graphics.newImage("img/touch_controls/dpad_background.png")
         dpad_background.x = 50
@@ -295,8 +290,6 @@ local function load()
         store_button_help.y = love.graphics.getHeight() - love.graphics.getFont():getHeight()
     end
 end
-
-functions.load = load
 
 local function is_button_pressed(button)
     if button == "a_button" then

@@ -4,7 +4,6 @@
     * online
 * story
 * ads?
-* better controller support, probably with nes->gamepad mapping
 
 ## playability
 * long-term motivation
