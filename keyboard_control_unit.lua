@@ -14,7 +14,6 @@ keyboard_control.new = function(bindings)
 
     ctrl.draw = function(control, store_triggered)
         if store_triggered then
-            print("printin")
             love.graphics.printf(control.store_button_help.text, 0, control.store_button_help.y, love.graphics.getWidth(), "center")
         end
     end

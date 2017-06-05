@@ -14,7 +14,7 @@ local control = require("player_control")
 local hc = require("hc")
 local timer = require("hump.timer")
 require("difficulty_handler")
-require("asteroids")
+require("asteroids.asteroids")
 require("drops")
 require("scaling")
 

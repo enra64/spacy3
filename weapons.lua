@@ -32,7 +32,7 @@ rocket_sound:setVolume(1.5)
 --- requires
 local hc = require("hc")
 local enemies = require("enemies")
-require("asteroids")
+require("asteroids.asteroids")
 
 --- list of current projectiles
 local projectiles = {}
