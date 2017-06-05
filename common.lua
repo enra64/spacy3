@@ -1,3 +1,4 @@
+require("lume.lume")
 require("random")
 
 --- remove annoying 0 parameter in draw calls
@@ -33,6 +34,14 @@ function table.foreach(tbl, func)
         tbl[k] = func(v, k)
     end
     return tbl
+end
+
+function ipairs_if(tbl, if_fn)
+    local i = 0
+    return function()
+        i = i + 1
+        if i < #tbl and if_fn(tbl[i]) then return tbl[i] end
+    end
 end
 
 --http://stackoverflow.com/a/15706820

@@ -5,7 +5,7 @@
 -- Time: 18:35
 -- To change this template use File | Settings | File Templates.
 --
-gamestate = require "hump.gamestate"
+gamestate = require("hump.gamestate")
 signal = require("hump.signal")
 require("persistent_storage")
 require("common")
@@ -13,39 +13,29 @@ require("scaling")
 require("background_music")
 require("spacy3_love_extensions")
 
-MAXIMUM_HIGHSCORE_COUNT = 5
+local MAXIMUM_HIGHSCORE_COUNT = 5
 
 local function highscore_dialog_finished(result, entered_text, score)
     local highscores = persistent_storage.get("highscores", {})
-    
+
     -- pop the "killed" music
     background_music.pop()
-    
-    -- insert new table with name and score in highscores table
-    table.insert(highscores, {entered_text, score})
 
-    table.sort(
-        highscores, 
-        function(hs_a, hs_b) 
-            return hs_a[2] > hs_b[2] 
-        end
-    )
+    -- insert new table with name and score in highscores table
+    table.insert(highscores, { entered_text, score })
+
+    table.sort(highscores,
+        function(hs_a, hs_b)
+            return hs_a[2] > hs_b[2]
+        end)
 
     while (#highscores > MAXIMUM_HIGHSCORE_COUNT) do
         highscores[#highscores] = nil
     end
 
-    success = true
-
-    -- store sorted highscores
-    if not persistent_storage.set("highscores", highscores) then
-        success = false
-    end
-
-    -- also store lowest value
-    if not persistent_storage.set("lowest_highscore", highscores[#highscores]) then
-        success = false
-    end
+    -- store highscore data
+    local success = persistent_storage.set("highscores", highscores) and
+            persistent_storage.set("lowest_highscore", highscores[#highscores])
 
     if not success then
         print("could not store data")
@@ -105,7 +95,7 @@ function player_died(score)
     -- play u dead music
     background_music.push("killscreen")
 
-    local hs_entry_ok = #persistent_storage.get("highscores", {}) < MAXIMUM_HIGHSCORE_COUNT or score > persistent_storage.get("lowest_highscore", {"", 0})[2]
+    local hs_entry_ok = #persistent_storage.get("highscores", {}) < MAXIMUM_HIGHSCORE_COUNT or score > persistent_storage.get("lowest_highscore", { "", 0 })[2]
     if hs_entry_ok then
         quit_confirmation:add_button("enter highscore")
     end
@@ -118,11 +108,11 @@ function player_died(score)
             background_music.pop() -- pop u dead music
         elseif button_txt == "enter highscore" then
             gamestate.pop() -- pop warning
-            
+
             -- show highscore entry thingy
             local highscore_entry = dofile("highscore_entry.lua")
             gamestate.push(highscore_entry)
-            highscore_entry:set_title("enter your score of "..score.." points")
+            highscore_entry:set_title("enter your score of " .. score .. " points")
             highscore_entry:set_score(score)
             highscore_entry:set_callback(highscore_dialog_finished)
         elseif button_txt == "quit" then
@@ -146,15 +136,15 @@ local function push_game_mode_menu()
     mode_menu:add_button("endless game")
     mode_menu:add_button("asteroid rush")
     mode_menu:add_button("back")
-    
-        --- set main menu callback
+
+    --- set main menu callback
     mode_menu.on_button_clicked = function(button_text)
         if (button_text == "back") then
             gamestate.pop()
         else
             gamestate.pop() -- pop mode menu
             -- push game on gamestate stack with desired gamemode==button text
-            gamestate.push(dofile("game_gamestate.lua"), button_text)  
+            gamestate.push(dofile("game_gamestate.lua"), button_text)
         end
     end
 end
@@ -170,8 +160,8 @@ local function push_main_menu()
     main_menu:add_button("settings")
     main_menu:add_button("quit")
     main_menu:set_title("spacy3")
-    
-        --- set main menu callback
+
+    --- set main menu callback
     main_menu.on_button_clicked = function(button_text)
         if (button_text == "new game") then
             push_game_mode_menu()
@@ -188,7 +178,7 @@ end
 function love.load(arg)
     --- enable zerobrane ide debugging
     if arg[#arg] == "-debug" then require("mobdebug").start() end
-    
+
     --- unshittify (technical term) random numbers
     math.randomseed(os.time())
 
@@ -200,16 +190,16 @@ function love.load(arg)
 
     -- hump.gamestate will call this even after registerEvents
     love.update = background_music.update
-    
+
     --- register event callbacks
     gamestate.registerEvents()
 
     -- create main menu and push onto stack
     push_main_menu()
-    
+
     -- make background music
     background_music.push("main_menu")
-    
+
     local splash_screen = dofile("splashscreen.lua")
     gamestate.push(splash_screen)
 end
