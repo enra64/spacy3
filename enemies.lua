@@ -76,7 +76,6 @@ end
 
 functions.set_enemies_spawning = function(spawn)
     functions.enable_enemy_spawning = spawn
-    print("enemy spawn ")
 end
 
 functions.leave = function()
