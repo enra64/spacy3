@@ -11,7 +11,8 @@ local functions = {}
 
 -- contains "return function() return <false|true> end"
 local is_touch = require("is_touch")()
-local touch_accel_control = is_touch and require("settings"):get_current_value("control") == 1
+local touch_accel_control = false
+local accelerometer_offset = {x=0, y=0}
 
 require("common")
 
@@ -30,6 +31,7 @@ local control_state = {}
 local joystick_list = {}
 
 local function set_dpad_position(x, y)
+    if touch_accel_control then return end
     --- set control knob position
     touch_controls.dpad.x = dpad_background.x + x - touch_controls.dpad.width / 2 + dpad_background.width / 2
     touch_controls.dpad.y = dpad_background.y + y - touch_controls.dpad.height / 2 + dpad_background.height / 2
@@ -76,7 +78,7 @@ functions.touchreleased = function(id)
     elseif id == touch_controls.button_store.touch_id then
         control_state.button_store_pressed = false
         store_button.touch_id = nil
-    elseif id == touch_controls.dpad.touch_id then
+    elseif not touch_accel_control and id == touch_controls.dpad.touch_id then
         control_state.x = 0
         control_state.y = 0
         set_dpad_position(0, 0)
@@ -85,7 +87,7 @@ functions.touchreleased = function(id)
 end
 
 functions.touchmoved = function(id, x, y)
-    if id == touch_controls.dpad.touch_id then
+    if not touch_accel_control and id == touch_controls.dpad.touch_id then
         handle_dpad_touch(x, y)
     end
 end
@@ -141,15 +143,17 @@ functions.update_keyboard = function(dt)
 end
 
 functions.update = function(dt)
-    for _, joystick in ipairs(joystick_list) do
-        local axis_x, axis_y = joystick:getAxes()
-        control_state.x = axis_x * dt
-        control_state.y = axis_y * dt
-        
-        -- accel is a bit too slow
-        if touch_accel_control then
-            control_state.x = control_state.x * 1.3
-            control_state.y = control_state.y * 1.3
+    if not is_touch or touch_accel_control then
+        for _, joystick in ipairs(joystick_list) do
+            local axis_x, axis_y = joystick:getAxes()
+            control_state.x = axis_x * dt
+            control_state.y = axis_y * dt
+            
+            -- accel is a bit too slow
+            if touch_accel_control then
+                control_state.x = (control_state.x - accelerometer_offset.x * dt) * 2
+                control_state.y = (control_state.y - accelerometer_offset.y * dt) * 2
+            end
         end
     end
 end
@@ -193,8 +197,10 @@ end
 functions.draw = function()
     if is_touch then
         love.graphics.setColor(255, 255, 255, dpad_background.opacity)
-        love.graphics.draw(dpad_background.texture, dpad_background.x, dpad_background.y)
-
+        if not touch_accel_control then
+            love.graphics.draw(dpad_background.texture, dpad_background.x, dpad_background.y)
+        end
+        
         for control_type, control in pairs(touch_controls) do
             local opacity_touch = control.opacity
             if not control.touch_id == nil then
@@ -241,6 +247,8 @@ functions.load = function()
     if is_touch then
         touch_collider = require("hc").new()
         
+        touch_accel_control = require("settings"):get_current_value("control") == "accelerometer"
+        
         local control_textures = {
             button_a = love.graphics.newImage("img/touch_controls/button_a.png"),
             button_b = love.graphics.newImage("img/touch_controls/button_b.png"),
@@ -248,7 +256,7 @@ functions.load = function()
             button_store = love.graphics.newImage("img/touch_controls/button_store.png")
         }
 
-        if touch_accel_control then
+        if not touch_accel_control then
             dpad_background.texture = love.graphics.newImage("img/touch_controls/dpad_background.png")
             dpad_background.x = 50
             dpad_background.y = love.graphics.getHeight() - dpad_background.texture:getHeight() - 50
@@ -261,6 +269,9 @@ functions.load = function()
             dpad_background.shape.control_type = "dpad"
 
             control_textures.dpad = love.graphics.newImage("img/touch_controls/dpad_knob.png")
+        else
+            local x_axis, y_axis = love.joystick.getJoysticks()[1]:getAxes()
+            accelerometer_offset = {x = x_axis, y = y_axis}
         end
         
         for control_type, texture in pairs(control_textures) do
