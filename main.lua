@@ -193,7 +193,7 @@ function love.load(arg)
     math.randomseed(os.time())
 
     --- apply settings (or default)
-    settings = dofile("settings.lua")
+    settings = require("settings")
     settings:init()
     settings:graphics_mode_changed()
     settings:audio_mode_changed()
