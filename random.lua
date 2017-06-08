@@ -37,12 +37,11 @@ functions.box_muller = box_muller
 local function shuffle(array)
     -- fisher-yates
     local output = {}
-    local random = math.random
 
     for index = 1, #array do
         local offset = index - 1
         local value = array[index]
-        local randomIndex = offset * random()
+        local randomIndex = offset * math.random()
         local flooredIndex = randomIndex - randomIndex % 1
 
         if flooredIndex == offset then
@@ -58,6 +57,7 @@ end
 functions.shuffle = shuffle
 
 random = {}
+random.shuffle = shuffle
 function random.choose(tbl)
     return tbl[math.random(#tbl)]
 end
