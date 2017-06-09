@@ -28,6 +28,14 @@ function table.multeach(tbl, factor)
     return table.foreach(tbl, function(key) return key * factor end)
 end
 
+function table.subrange(t, first, last)
+    local sub = {}
+    for i=first,last do
+        sub[#sub + 1] = t[i]
+    end
+    return sub
+end
+
 function table.foreach(tbl, func)
     --- replace each value in tbl with the return value of func(value, key)
     for k, v in pairs(tbl) do
