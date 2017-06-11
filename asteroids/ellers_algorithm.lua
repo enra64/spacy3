@@ -1,5 +1,15 @@
 require("common")
 
+local function is_fully_blocked(cell) return not (cell.north or cell.south or cell.east or cell.west) end
+
+local function north_west(cell) return not (cell.north or cell.west) end
+
+local function north_east(cell) return not (cell.north or cell.east) end
+
+local function south_west(cell) return not (cell.south or cell.west) end
+
+local function south_east(cell) return not (cell.south or cell.east) end
+
 local function new_cell(position, set, set_index)
     local cell = {}
     cell.position = position
@@ -9,6 +19,28 @@ local function new_cell(position, set, set_index)
     cell.east = false
     cell.west = false
     cell.set_index = set_index
+
+    -- helper functions for getting cell information
+    cell.is_fully_blocked = is_fully_blocked
+    cell.north_west_blocked = north_west
+    cell.north_east_blocked = north_east
+    cell.south_west_blocked = south_west
+    cell.south_east_blocked = south_east
+    cell.north_blocked = function(cell) return not cell.north end
+    cell.south_blocked = function(cell) return not cell.south end
+    cell.east_blocked = function(cell) return not cell.east end
+    cell.west_blocked = function(cell) return not cell.west end
+    cell.blocked_tests = {
+        cell.is_fully_blocked,
+        cell.north_west_blocked,
+        cell.north_east_blocked,
+        cell.south_west_blocked,
+        cell.south_east_blocked,
+        cell.north_blocked,
+        cell.south_blocked,
+        cell.east_blocked,
+        cell.west_blocked
+    }
     return cell
 end
 
@@ -26,7 +58,7 @@ end
 local function populate(column_cells, sets, set_index, height)
     --print("sets before populating")print_table(sets)
     -- fills unpopulated column positions with new cells in new sets
-    for cell_index=1,height do
+    for cell_index = 1, height do
         if not column_cells[cell_index] then
             -- create new set for the empty position
             set_index = set_index + 1
@@ -68,8 +100,8 @@ end
 local function create_vertical_corridors(column_cells, sets, height)
     --print("sets before vertical corridors")print_table(sets)
 
-    for c=1,height-1 do
-        local c0, c1 = column_cells[c], column_cells[c+1]
+    for c = 1, height - 1 do
+        local c0, c1 = column_cells[c], column_cells[c + 1]
         if love.math.random() > .6 then
             c0.south, c1.north = true, true
             merge_set(sets, c0.set_index, c1.set_index)
@@ -91,8 +123,8 @@ local function create_horizontal_corridors(sets)
         for _, cell in pairs(horizontal_connections) do
             -- copy the cell to the next state
             local next_level_cell = table.twolevel_clone(cell)
-            next_level_cell.west = true  -- the new cell has a west connection
-            cell.east = true  -- the cell we just copied now has a east connection
+            next_level_cell.west = true -- the new cell has a west connection
+            cell.east = true -- the cell we just copied now has a east connection
             next_column_cells[cell.position] = next_level_cell
 
             --print("hor con at "..cell.position)
@@ -102,9 +134,8 @@ local function create_horizontal_corridors(sets)
             if next_column_sets[cell.set_index] then
                 table.insert(next_column_sets[cell.set_index], next_level_cell)
             else
-                next_column_sets[cell.set_index] = {next_level_cell}
+                next_column_sets[cell.set_index] = { next_level_cell }
             end
-
         end
     end
 

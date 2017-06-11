@@ -59,15 +59,6 @@ end
 
 functions[2] = get_asteroid_fragments
 
-local function new_random_asteroid()
-    local new_asteroid = {}
-    new_asteroid.texture, new_asteroid.asteroid_collision_coordinates, new_asteroid.asteroid_type = load_random_asteroid()
-    new_asteroid.width, new_asteroid.height = new_asteroid.texture:getDimensions()
-    return new_asteroid
-end
-
-functions[3] = new_random_asteroid
-
 local function is_in_viewport(asteroid)
     return not (asteroid.x + 2 * asteroid.width < 0 or
             asteroid.x - asteroid.width > love.graphics.getWidth() or
@@ -76,5 +67,18 @@ local function is_in_viewport(asteroid)
 end
 
 functions[4] = is_in_viewport
+
+local function new_random_asteroid()
+    local new_asteroid = {}
+    new_asteroid.texture, new_asteroid.asteroid_collision_coordinates, new_asteroid.asteroid_type = load_random_asteroid()
+    new_asteroid.width, new_asteroid.height = new_asteroid.texture:getDimensions()
+    new_asteroid.is_in_viewport = is_in_viewport
+    new_asteroid.on_destroyed = function() end
+    return new_asteroid
+end
+
+functions[3] = new_random_asteroid
+
+
 
 return functions
