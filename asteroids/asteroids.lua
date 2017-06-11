@@ -44,7 +44,7 @@ end
 
 asteroids.update = function(dt, player_hit_callback)
     for i, asteroid in ipairs(asteroid_storage) do
-        asteroid:update(dt * asteroid.speed)
+        asteroid:update(dt)
 
         -- determine whether an asteroid ever was within the viewport
         local asteroid_in_viewport = asteroid:is_in_viewport()

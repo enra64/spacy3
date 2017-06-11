@@ -9,7 +9,7 @@ local asteroid_storage
 local asteroid_base_scale
 
 local function update(asteroid, dx)
-    asteroid.x = asteroid.x + dx
+    asteroid.x = asteroid.x + (dx * asteroid.speed)
 
     local new_y = asteroid.y_intersection + asteroid.x * asteroid.gradient
 
@@ -31,8 +31,6 @@ local function get_asteroid()
     -- positioning, movement
     new.x = math.random(love.graphics.getWidth() * 0.75, love.graphics.getWidth() + 100)
     new.gradient = math.random() + 0.3
-
-    new.fragments = get_asteroid_fragments(new.asteroid_type)
 
     -- position asteroid above or below game field, store information
     if math.random() > 0.5 then

@@ -16,6 +16,10 @@ function dofile(file)
     return love.filesystem.load(file)()
 end
 
+function table.remove_object(tbl, obj)
+    for i=#tbl,1,-1 do if tbl[i] == obj then tbl[i] = nil end end
+end
+
 function table.truncate(tbl, count)
     --- reduce number of items in tbl to count
     for i=1,#tbl - count do

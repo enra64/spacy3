@@ -71,6 +71,7 @@ functions[4] = is_in_viewport
 local function new_random_asteroid()
     local new_asteroid = {}
     new_asteroid.texture, new_asteroid.asteroid_collision_coordinates, new_asteroid.asteroid_type = load_random_asteroid()
+    new_asteroid.fragments = get_asteroid_fragments(new_asteroid.asteroid_type)
     new_asteroid.width, new_asteroid.height = new_asteroid.texture:getDimensions()
     new_asteroid.is_in_viewport = is_in_viewport
     new_asteroid.on_destroyed = function() end

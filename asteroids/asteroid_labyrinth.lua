@@ -10,6 +10,7 @@ local asteroid_storage
 local asteroid_columns
 local asteroid_base_scale
 local ellers
+local asteroid_height, asteroid_width
 
 local function update(asteroid, dx)
     asteroid.x = asteroid.x + dx
@@ -18,45 +19,68 @@ local function update(asteroid, dx)
     --asteroid.shape:rotate(asteroid.rotation_speed)
 end
 
-local function get_asteroid(col, row, x, y)
+local function add_asteroid(col, row, x, y_off)
     -- get some random asteroid
     local new = new_random_asteroid()
 
     -- set some methods
     new.update = update
-    new.scale = asteroid_base_scale
+    new.scale_x = math.scale_from_to(new.width, asteroid_width)
+    new.scale_y = math.scale_from_to(new.height, asteroid_height)
 
     -- set position
-    new.x, new.y = x, y
+    new.x, new.y = x, (row - 1) * asteroid_height + y_off
 
     -- initialise the collision shape
     new.shape = hc.polygon(unpack(new.asteroid_collision_coordinates))
     new.shape:move(new.x - new.width / 2, new.y - new.height / 2)
-    new.shape:scale(new.scale)
+    new.shape:scale(new.scale_x, new.scale_y)
     new.shape.object_type = "asteroid"
 
-    new.on_destroyed = function() asteroid_columns[col][row] = nil end
+    new.on_destroyed = function() table.remove_object(asteroid_columns[col][row], new) end
 
-    asteroid_columns[col][row] = new
+    if not asteroid_columns[col] then asteroid_columns[col] = {} end
+    if not asteroid_columns[col][row] then asteroid_columns[col][row] = {} end
+
+    table.insert(asteroid_columns[col][row], new)
     table.insert(asteroid_storage, new)
-
-    return new.shape:bbox()
 end
 
-local function spawn_asteroid_column(x_start)
+local function spawn_asteroid_column(x)
     local col = ellers:step()
 
     for _, cell in ipairs(col) do
-        if cell.north_west_blocked() then
-            add_asteroid(#asteroid_columns, cell.position, x_start)
+        if cell:north_west_blocked() then add_asteroid(#asteroid_columns, cell.position, x, 0) end
+        if cell:west_blocked() then add_asteroid(#asteroid_columns, cell.position, x, asteroid_height) end
+        if cell:south_west_blocked() then add_asteroid(#asteroid_columns, cell.position, x, asteroid_height * 2) end
+
+        if cell:north_blocked() then add_asteroid(#asteroid_columns, cell.position, x + asteroid_width, 0) end
+        if cell:is_fully_blocked() then add_asteroid(#asteroid_columns, cell.position, x + asteroid_width, asteroid_height) end
+        if cell:south_blocked() then add_asteroid(#asteroid_columns, cell.position, x + asteroid_width, asteroid_height * 2) end
+
+        if cell:north_east_blocked() then add_asteroid(#asteroid_columns, cell.position, x + asteroid_width, 0) end
+        if cell:east_blocked() then add_asteroid(#asteroid_columns, cell.position, x + asteroid_width, asteroid_height) end
+        if cell:south_east_blocked() then add_asteroid(#asteroid_columns, cell.position, x + asteroid_width, asteroid_height * 2) end
     end
+end
+
+local function find_asteroid()
+    local col = asteroid_columns[#asteroid_columns]
+    for _, row in ipairs(col) do
+        if row and #row > 0 then
+            return row[1].shape:bbox()
+        end
+    end
+
+    return 0, 0, love.graphics.getWidth(), 0
 end
 
 local function check_column_fill()
     -- find asteroid field right
-    local _, _, field_right, _ = asteroid_columns[#asteroid_columns].shape:bbox()
 
-    if field_right < love.graphics.getWidth() + 100 then
+    local _, _, field_right, _ = find_asteroid()
+
+    if field_right < love.graphics.getWidth() + asteroid_width then
         spawn_asteroid_column(field_right)
     end
 end
@@ -110,6 +134,14 @@ end
 return function(asteroid_storage_reference, asteroid_scale)
     asteroid_base_scale = asteroid_scale
     asteroid_storage = asteroid_storage_reference
+    asteroid_columns = {}
     timer.every(0.1, check_column_fill)
-    ellers = new_ellers_algorithm(5)
+
+    local HEIGHT = 5
+    ellers = new_ellers_algorithm(HEIGHT)
+    asteroid_height = love.graphics.getHeight() / (HEIGHT * 3)
+    asteroid_width = asteroid_height
+
+    -- start the field
+    spawn_asteroid_column(love.graphics.getWidth())
 end
