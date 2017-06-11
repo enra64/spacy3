@@ -24,8 +24,30 @@ function table.truncate(tbl, count)
     return tbl
 end
 
+function table.twolevel_clone(orig)
+    local orig_type = type(orig)
+    local copy
+    if orig_type == 'table' then
+        copy = {}
+        for orig_key, orig_value in pairs(orig) do
+            copy[orig_key] = orig_value
+        end
+    else -- number, string, boolean, etc
+        copy = orig
+    end
+    return copy
+end
+
 function table.multeach(tbl, factor)
     return table.foreach(tbl, function(key) return key * factor end)
+end
+
+function table.subrange(t, first, last)
+    local sub = {}
+    for i=first,last do
+        sub[#sub + 1] = t[i]
+    end
+    return sub
 end
 
 function table.foreach(tbl, func)
@@ -80,7 +102,7 @@ function print_table( t )
             if (type(t)=="table") then
                 for pos,val in pairs(t) do
                     if (type(val)=="table") then
-                        print(indent.."["..pos.."] => "..tostring(t).." {")
+                        print(indent.."["..pos.."] => "..tostring(val).." {")
                         sub_print_r(val,indent..string.rep(" ",string.len(pos)+8))
                         print(indent..string.rep(" ",string.len(pos)+6).."}")
                     elseif (type(val)=="string") then

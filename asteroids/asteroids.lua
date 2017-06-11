@@ -13,14 +13,10 @@ local FRAGMENT_SPEED = 2
 local FRAGMENT_SCALE = 4
 
 local random_asteroid_start_function = require("asteroids.random_asteroids")
+local asteroid_labyrinth_start_function = require("asteroids.asteroid_labyrinth")
 
-asteroids.init = function(asteroid_mode)
-    asteroid_mode = asteroid_mode or "random"
-    local asteroid_base_scale = scaling.get("asteroid_base_scale")
+asteroids.init = function()
 
-    if asteroid_mode == "random" then
-        random_asteroid_start_function(asteroid_storage, asteroid_base_scale)
-    end
 end
 
 local function get_index_of_asteroid_by_shape(shape)
@@ -131,8 +127,17 @@ asteroids.handle_projectile = function(projectile_shape, callback)
     return has_collision
 end
 
-asteroids.enter = function()
+asteroids.enter = function(asteroid_mode)
+    asteroid_mode = asteroid_mode or "random"
+    local asteroid_base_scale = scaling.get("asteroid_base_scale")
 
+    if asteroid_mode == "random" then
+        random_asteroid_start_function(asteroid_storage, asteroid_base_scale)
+    elseif asteroid_mode == "labyrinth" then
+        asteroid_labyrinth_start_function(asteroid_storage, asteroid_base_scale)
+    else
+        print("UNKNOWN ASTEROID MODE")
+    end
 end
 
 asteroids.resume = function() end

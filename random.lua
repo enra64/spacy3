@@ -62,4 +62,6 @@ function random.choose(tbl)
     return tbl[math.random(#tbl)]
 end
 
+random.shuffle = shuffle
+
 return functions

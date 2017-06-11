@@ -28,9 +28,6 @@ local function get_asteroid()
     -- set update routine
     new.update = update
 
-    -- function to check for viewport
-    new.is_in_viewport = is_in_viewport
-
     -- positioning, movement
     new.x = math.random(love.graphics.getWidth() * 0.75, love.graphics.getWidth() + 100)
     new.gradient = math.random() + 0.3
