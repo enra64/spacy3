@@ -1,6 +1,6 @@
 require("common")
 
-local function new_cell(position, set)
+local function new_cell(position, set, set_index)
     local cell = {}
     cell.position = position
     cell.set = set
@@ -8,19 +8,23 @@ local function new_cell(position, set)
     cell.south = false
     cell.east = false
     cell.west = false
+    cell.set_index = set_index
     return cell
 end
 
-local function merge_set(sets, sink_set, source_set)
-    for cell_index, cell in pairs(source_set) do
-        cell.set = sink_set
-        sink_set[cell_index] = cell
+local function merge_set(sets, sink_set_index, source_set_index)
+    if sink_set_index == source_set_index then return end
+    for _, cell in pairs(sets[source_set_index]) do
+        cell.set = sets[sink_set_index]
+        cell.set_index = sink_set_index
+        table.insert(sets[sink_set_index], cell)
     end
 
-    source_set = {}
+    sets[source_set_index] = nil
 end
 
 local function populate(column_cells, sets, set_index, height)
+    --print("sets before populating")print_table(sets)
     -- fills unpopulated column positions with new cells in new sets
     for cell_index=1,height do
         if not column_cells[cell_index] then
@@ -29,7 +33,24 @@ local function populate(column_cells, sets, set_index, height)
             sets[set_index] = {}
 
             -- create a new cell in that set
-            local cell = new_cell(cell_index, sets[set_index])
+            local cell = new_cell(cell_index, sets[set_index], set_index)
+
+            -- set connections
+            if cell_index == 1 or cell_index == 1 then
+                if cell_index == 1 then
+                    cell.north = false
+                elseif cell_index == height then
+                    cell.south = false
+                end
+            else
+                if column_cells[cell_index - 1].south then
+                    cell.north = true
+                end
+
+                if column_cells[cell_index + 1] and column_cells[cell_index + 1].north then
+                    cell.south = true
+                end
+            end
 
             -- store that new cell in the new set
             table.insert(sets[set_index], cell)
@@ -38,75 +59,107 @@ local function populate(column_cells, sets, set_index, height)
             column_cells[cell_index] = cell
         end
     end
+
+    --print("sets after populating")print_table(sets)
+
+    return set_index
 end
 
 local function create_vertical_corridors(column_cells, sets, height)
+    --print("sets before vertical corridors")print_table(sets)
+
     for c=1,height-1 do
         local c0, c1 = column_cells[c], column_cells[c+1]
-        if love.math.random(2) > 1 then
+        if love.math.random() > .6 then
             c0.south, c1.north = true, true
-            merge_set(sets, c0.set, c1.set)
+            merge_set(sets, c0.set_index, c1.set_index)
         end
     end
+
+    --print("sets after vertical corridors")print_table(sets)
 end
 
 local function create_horizontal_corridors(sets)
     local next_column_cells = {}
-    for _, set in pairs(sets) do
-        local horizontal_connections = table.subrange(random.shuffle(set), 1, math.random(#set - 1))
+    local next_column_sets = {}
+    --print("sets before horizontal corridors")print_table(sets)
+    for set_index, set in pairs(sets) do
+        local connection_count = math.random(#set - 1)
+        local shuffled = random.shuffle(set)
+        local horizontal_connections = table.subrange(shuffled, 1, connection_count)
 
-        for cell_index, cell in pairs(horizontal_connections) do
-            -- copy the cell to the next state, has connection to the west
+        for _, cell in pairs(horizontal_connections) do
+            -- copy the cell to the next state
             local next_level_cell = table.twolevel_clone(cell)
-            next_level_cell.east = true
-            next_column_cells[cell_index] = next_level_cell
+            next_level_cell.west = true  -- the new cell has a west connection
+            cell.east = true  -- the cell we just copied now has a east connection
+            next_column_cells[cell.position] = next_level_cell
 
-            -- the cell we just copied now has a east connection
-            cell.west = true
+            --print("hor con at "..cell.position)
+            --print("clc")print_table(cell)print("nlc")print_table(next_level_cell)
+
+            -- add the set to the set of sets in the next column
+            if next_column_sets[cell.set_index] then
+                table.insert(next_column_sets[cell.set_index], next_level_cell)
+            else
+                next_column_sets[cell.set_index] = {next_level_cell}
+            end
+
         end
     end
-    return next_column_cells
+
+    --print("sets after horizontal corridors (current column set)")print_table(sets)
+    --print("sets after horizontal corridors (next column set)")print_table(next_column_sets)
+
+    return next_column_cells, next_column_sets
 end
 
 local function step(self)
+    -- work the current column
     create_vertical_corridors(self.column_cells, self.sets, self.height)
-    local next_column_cells = create_horizontal_corridors(self.sets)
+    local next_column_cells, next_column_sets = create_horizontal_corridors(self.sets)
 
+    -- copy state info
+    self.sets = next_column_sets
     local current_column_cells = table.twolevel_clone(self.column_cells)
     self.column_cells = next_column_cells
 
-    populate(self.column_cells, self.sets, self.set_index, self.height)
+    -- fill in missing positions in next column
+    self.set_index = populate(self.column_cells, self.sets, self.set_index, self.height)
 
+    -- return current column cells
     return current_column_cells
+end
+
+local function debug_print_cell(self, cell)
+    if cell.north then
+        print(" ")
+    else
+        print(" _")
+    end
+
+    if cell.west then
+        io.write(" ")
+    else
+        io.write("|")
+    end
+
+    if cell.south then
+        io.write(" ")
+    else
+        io.write("_")
+    end
+
+    if cell.east then
+        print(" ")
+    else
+        print("|")
+    end
 end
 
 local function print_debug_column(self)
     for _, c in pairs(self.column_cells) do
-        if c.north then
-            print(" ")
-        else
-            print(" _")
-        end
-
-        if c.west then
-            io.write(" ")
-        else
-            io.write("|")
-        end
-
-        if c.south then
-            io.write(" ")
-        else
-            io.write("_")
-        end
-
-        if c.east then
-            print(" ")
-        else
-            print("|")
-        end
-
-
+        self:debug_print_cell(c)
     end
 end
 
@@ -119,7 +172,11 @@ return function(height)
     new.sets = {}
     new.set_index = 0
     new.step = step
+
+    new.debug_print_cell = debug_print_cell
     new.print_debug_column = print_debug_column
-    populate(new.column_cells, new.sets, new.set_index, new.height)
+
+    new.set_index = populate(new.column_cells, new.sets, new.set_index, new.height)
+
     return new
 end

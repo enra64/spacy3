@@ -41,12 +41,46 @@ return function(asteroid_storage_reference, asteroid_scale)
     asteroid_base_scale = asteroid_scale
     asteroid_storage = asteroid_storage_reference
 --    timer.every(0.1, check_column_fill)
-    local ellers = new_ellers_algorithm(5)
-    ellers:print_debug_column()
+    local ellers = new_ellers_algorithm(8)
 
-    for i=1,10 do
-        ellers:step()
-        print("step "..i)
-        ellers:print_debug_column()
+    local cols = {}
+
+    for i=1,20 do
+        table.insert(cols, ellers:step())
+    end
+
+    for row=1,ellers.height do
+        for column, _ in ipairs(cols) do
+            local cell = cols[column][row]
+            if cell.north then
+                io.write("   ")
+            else
+                io.write("___")
+            end
+        end
+
+        print()
+
+        for column, _ in ipairs(cols) do
+            local cell = cols[column][row]
+            if cell.west == true then
+                io.write(" ")
+            else
+                io.write("W")
+            end
+
+            if cell.south then
+                io.write(" ")
+            else
+                io.write("_")
+            end
+
+            if cell.east then
+                io.write(" ")
+            else
+                io.write("E")
+            end
+        end
+        print()
     end
 end
