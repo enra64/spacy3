@@ -11,12 +11,15 @@ local asteroid_columns
 local asteroid_base_scale
 local ellers
 local asteroid_height, asteroid_width
+local Y_MARGIN, X_MARGIN = 10, 10
 
 local function update(asteroid, dx)
-    asteroid.x = asteroid.x + dx
+    asteroid.x = asteroid.x - dx *150
 
-    --asteroid.rotation = asteroid.rotation + asteroid.rotation_speed
-    --asteroid.shape:rotate(asteroid.rotation_speed)
+
+    asteroid.rotation = asteroid.rotation + asteroid.rotation_speed
+    asteroid.shape:rotate(asteroid.rotation_speed)
+    asteroid.shape:move(-dx * 30, 0)
 end
 
 local function add_asteroid(col, row, x, y_off)
@@ -29,13 +32,16 @@ local function add_asteroid(col, row, x, y_off)
     new.scale_y = math.scale_from_to(new.height, asteroid_height)
 
     -- set position
-    new.x, new.y = x, (row - 1) * asteroid_height + y_off
+    new.x, new.y = x, (row - 1) * (3 * asteroid_height + 3 * Y_MARGIN) + y_off + 40
+    new.rotation, new.rotation_speed = 0, 0
 
     -- initialise the collision shape
     new.shape = hc.polygon(unpack(new.asteroid_collision_coordinates))
     new.shape:move(new.x - new.width / 2, new.y - new.height / 2)
     new.shape:scale(new.scale_x, new.scale_y)
+    new.shape:rotate(0)
     new.shape.object_type = "asteroid"
+    new.shape.identity = "col"..col.."row"..row
 
     new.on_destroyed = function() table.remove_object(asteroid_columns[col][row], new) end
 
@@ -48,27 +54,30 @@ end
 
 local function spawn_asteroid_column(x)
     local col = ellers:step()
-
+    local DEBUG_SPAWN_ALL = true
     for _, cell in ipairs(col) do
-        if cell:north_west_blocked() then add_asteroid(#asteroid_columns, cell.position, x, 0) end
-        if cell:west_blocked() then add_asteroid(#asteroid_columns, cell.position, x, asteroid_height) end
-        if cell:south_west_blocked() then add_asteroid(#asteroid_columns, cell.position, x, asteroid_height * 2) end
+        local col, row = #asteroid_columns + 1, cell.position
+        if DEBUG_SPAWN_ALL or cell:north_west_blocked() then add_asteroid(col, row, x, 0) end
+        if DEBUG_SPAWN_ALL or cell:west_blocked() then add_asteroid(col, row, x, asteroid_height + Y_MARGIN) end
+        if DEBUG_SPAWN_ALL or cell:south_west_blocked() then add_asteroid(col, row, x, (asteroid_height + Y_MARGIN) * 2) end
 
-        if cell:north_blocked() then add_asteroid(#asteroid_columns, cell.position, x + asteroid_width, 0) end
-        if cell:is_fully_blocked() then add_asteroid(#asteroid_columns, cell.position, x + asteroid_width, asteroid_height) end
-        if cell:south_blocked() then add_asteroid(#asteroid_columns, cell.position, x + asteroid_width, asteroid_height * 2) end
+        if DEBUG_SPAWN_ALL or cell:north_blocked() then add_asteroid(col, row, x + asteroid_width + X_MARGIN, 0) end
+        if DEBUG_SPAWN_ALL or cell:is_fully_blocked() then add_asteroid(col, row, x + asteroid_width + X_MARGIN, asteroid_height + Y_MARGIN) end
+        if DEBUG_SPAWN_ALL or cell:south_blocked() then add_asteroid(col, row, x + asteroid_width + X_MARGIN, (asteroid_height + Y_MARGIN) * 2) end
 
-        if cell:north_east_blocked() then add_asteroid(#asteroid_columns, cell.position, x + asteroid_width, 0) end
-        if cell:east_blocked() then add_asteroid(#asteroid_columns, cell.position, x + asteroid_width, asteroid_height) end
-        if cell:south_east_blocked() then add_asteroid(#asteroid_columns, cell.position, x + asteroid_width, asteroid_height * 2) end
+        if DEBUG_SPAWN_ALL or cell:north_east_blocked() then add_asteroid(col, row, x + (asteroid_width  + X_MARGIN) * 2, 0) end
+        if DEBUG_SPAWN_ALL or cell:east_blocked() then add_asteroid(col, row, x + (asteroid_width  + X_MARGIN) * 2, asteroid_height + Y_MARGIN) end
+        if DEBUG_SPAWN_ALL or cell:south_east_blocked() then add_asteroid(col, row, x + (asteroid_width  + X_MARGIN) * 2, (asteroid_height + Y_MARGIN) * 2) end
     end
 end
 
 local function find_asteroid()
-    local col = asteroid_columns[#asteroid_columns]
-    for _, row in ipairs(col) do
-        if row and #row > 0 then
-            return row[1].shape:bbox()
+    for i=#asteroid_columns, 1, -1 do
+        for _, row in pairs(asteroid_columns[i]) do
+            if row and #row > 0 then
+                --return 0, 0, 4000, 0
+                return row[1].shape:bbox()
+            end
         end
     end
 
@@ -79,8 +88,8 @@ local function check_column_fill()
     -- find asteroid field right
 
     local _, _, field_right, _ = find_asteroid()
-
-    if field_right < love.graphics.getWidth() + asteroid_width then
+    print(field_right)
+    if field_right < love.graphics.getWidth() then
         spawn_asteroid_column(field_right)
     end
 end
@@ -139,9 +148,9 @@ return function(asteroid_storage_reference, asteroid_scale)
 
     local HEIGHT = 5
     ellers = new_ellers_algorithm(HEIGHT)
-    asteroid_height = love.graphics.getHeight() / (HEIGHT * 3)
+    asteroid_height = love.graphics.getHeight() / (HEIGHT * 3.4)
     asteroid_width = asteroid_height
 
     -- start the field
-    spawn_asteroid_column(love.graphics.getWidth())
+    spawn_asteroid_column(love.graphics.getWidth() + 10)
 end

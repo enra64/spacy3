@@ -59,44 +59,7 @@ asteroids.update = function(dt, player_hit_callback)
         end
         
         --- remove asteroids that collided with an enemy or another asteroid
-        for other, _ in pairs(hc.collisions(asteroid.shape)) do
-            if other.object_type == "player" then
-                handle_player_collision(player_hit_callback, asteroid, i)
-            elseif other.object_type == "enemy" or other.object_type == "asteroid" then
-                local ast_bbox = {}
-                local oth_bbox = {}
-                ast_bbox.x1, ast_bbox.y1, ast_bbox.x2, ast_bbox.y2 = asteroid.shape:bbox()
-                oth_bbox.x1, oth_bbox.y1, oth_bbox.x2, oth_bbox.y2 = other:bbox()
-
-                local center_x, center_y
-                if oth_bbox.x1 < ast_bbox.x2 then
-                    center_x = oth_bbox.x1 + (ast_bbox.x2 - oth_bbox.x1) / 2
-                else
-                    center_x = ast_bbox.x1 + (oth_bbox.x2 - ast_bbox.x1) / 2
-                end
-                if oth_bbox.y1 < ast_bbox.y2 then
-                    center_y = oth_bbox.y1 + (ast_bbox.y2 - oth_bbox.y1) / 2
-                else
-                    center_y = ast_bbox.y1 + (oth_bbox.y2 - ast_bbox.y1) / 2
-                end
-                
-                table.remove(asteroid_storage, i)
-                hc.remove(asteroid.shape)
-                
-                if other.object_type == "enemy" then
-                    enemies.remove_colliding_enemies(asteroid.shape, function() end)
-                    explosions.create_explosion(center_x, center_y)
-                elseif other.object_type == "asteroid" then
-                    local ast_index = get_index_of_asteroid_by_shape(other)
-                    local other_asteroid = asteroid_storage[ast_index]
-                    flyapartomatic.spawn(other_asteroid.fragments, other_asteroid.x, other_asteroid.y, FRAGMENT_SCALE, FRAGMENT_SPEED)
-                    table.remove(asteroid_storage, ast_index)
-                    hc.remove(other)
-                end
-                
-                flyapartomatic.spawn(asteroid.fragments, asteroid.x, asteroid.y, FRAGMENT_SCALE, FRAGMENT_SPEED)
-            end
-        end
+        
     end
 end
 
