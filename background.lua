@@ -17,7 +17,7 @@ require("common")
 local planet_base_scale
 
 local function load_planets()
-    local planet_image_paths = { "img/blue_planet_1.png", "img/blue_planet_2.png", "img/yellow_planet.png", "img/grey_planet.png", "img/brown_planet.png"}
+    local planet_image_paths = { "img/blue_planet_1.png", "img/blue_planet_2.png", "img/yellow_planet.png", "img/grey_planet.png", "img/brown_planet.png", "img/black_and_red_planet.png"}
 
     --- make the planets appear in a random order
     planet_image_paths = random.shuffle(planet_image_paths)
