@@ -143,6 +143,7 @@ local function push_game_mode_menu()
             gamestate.pop()
         else
             gamestate.pop() -- pop mode menu
+            scaling.gamemode = button_text
             -- push game on gamestate stack with desired gamemode==button text
             gamestate.push(dofile("game_gamestate.lua"), button_text)
         end

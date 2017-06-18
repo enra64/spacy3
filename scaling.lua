@@ -1,5 +1,12 @@
 scaling = {}
 
+scaling.gamemode = "endless game"  -- one of "endless game" or "asteroid rush"
+
+local labyrinth_override_factors = {
+    ship_scale = 0.6,
+    drop_scale = 0.6
+}
+
 local vga = {
     ship_scale = 0.15,
     enemy_simple_scale = .7,
@@ -102,6 +109,16 @@ local uhd = {
 
 scaling.get = function(value)
     local table
+
+    -- get gamemode override factor
+    local gamemode_override_factor
+    if scaling.gamemode == "asteroid rush" then
+        for key, override_factor in pairs(labyrinth_override_factors) do
+            if key == value then
+                gamemode_override_factor = override_factor
+            end
+        end
+    end
     
     local res = love.graphics.getWidth()
     if res >= 3840 then
@@ -117,6 +134,9 @@ scaling.get = function(value)
     end
     
     if table[value] ~= nil then
+        if gamemode_override_factor then
+            return table[value] * gamemode_override_factor
+        end
         return table[value]
     else
         print("unknown scaling value requested!: "..value)

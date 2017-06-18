@@ -15,11 +15,11 @@ local COLUMN_SPAWN_MARGIN
 local ASTEROIDS_PER_BORDER = 6
 local LABYRINTH_CELLS_PER_COLUMN = 5
 local CELL_HEIGHT
-local DEBUG_SPAWN_ALL = true
+local DEBUG_SPAWN_ALL = false
 
 local function update(asteroid, dx)
     -- move left on update
-    local speed = 40
+    local speed = 100
     asteroid.x = asteroid.x - dx * speed
     asteroid.shape:move(-dx * speed, 0)
 
