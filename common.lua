@@ -28,6 +28,12 @@ function table.truncate(tbl, count)
     return tbl
 end
 
+function table.insert_multiple(tbl_sink, tbl_source)
+    for _, v in ipairs(tbl_source) do
+        table.insert(tbl_sink, v)
+    end
+end
+
 function table.twolevel_clone(orig)
     local orig_type = type(orig)
     local copy
