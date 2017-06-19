@@ -9,6 +9,9 @@
 local functions = {}
 local explosions = {}
 
+require("scaling")
+local explosion_base_scale = scaling.get("explosion_base_scale")
+
 local function draw_explosions()
     for _, explosion in ipairs(explosions) do
         local main_offset_x = explosion.main_texture:getWidth() / 2
@@ -43,7 +46,7 @@ local function create_explosion(x, y)
     explosion.main_rotation = math.rad(math.random(360))
 
     --- add more variation using random scale
-    local x_scale = math.random(60, 100)
+    local x_scale = explosion_base_scale + math.random(-20, 20)
     explosion.x_scale = x_scale / 100
     explosion.y_scale = math.random(x_scale - 20, x_scale + 20) / 100
 
