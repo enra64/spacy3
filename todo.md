@@ -11,10 +11,9 @@
 * station life
     * shield has set amount of life; after that, the station is a one hit kill
     * shield quickly regenerates after each hit; but before it has x% of life back, the station is a one hit kill
+* labyrinth mode: finish speed levels
 
-## gamemodes
-* asteroid labyrinth evasion
-* endless mode (current)
+## new gamemodes
 * finishable mode -> endboss?
 
 ## enemies
@@ -23,10 +22,13 @@
 * formations
 
 ## polishing
-* scaling values for resolutions i dont have
+* improve scaling values for resolutions i dont have
 * background music
     * more tracks
 * improve timings etc
+* labyrinth asteroids rotation, random offsets, custom asteroids?
+* speed level: tweening for less jarring increases
+* fix framedrop for new labyrinth column
 * effects
     * rocket propulsion
     * more blinky
