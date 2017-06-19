@@ -20,12 +20,11 @@ local common_value_dictionary = {
     asteroid_drop_credits = 40,
     health_player_ship_upgrade_0 = 1,
     health_player_ship_upgrade_1 = 2,
-    health_player_ship_upgrade_2 = 3
+    health_player_ship_upgrade_2 = 3,
+    labyrinth_scroll_speed = {30, 40, 50, 60, 80, 100, 130, 160, 200, 240, 300, 350, 400, 470, 550, 600} -- gl hf
 }
 
 function difficulty.get(value, level)
-    assert(not level or (level > 0 and level <= 5), "invalid level value ")
-    
     --- use appropriate value table
     local dict
     if not (touch_value_dictionary[value] and desktop_value_dictionary[value]) then
