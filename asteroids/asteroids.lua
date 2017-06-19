@@ -10,7 +10,7 @@ require("flyapartomatic")
 local enemies = require("enemies")
 
 local FRAGMENT_SPEED = 2
-local FRAGMENT_SCALE = 4
+local FRAGMENT_SCALE
 
 local random_asteroid_start_function = require("asteroids.random_asteroids")
 local asteroid_labyrinth_start_function = require("asteroids.asteroid_labyrinth")
@@ -93,6 +93,7 @@ end
 asteroids.enter = function(asteroid_mode)
     asteroid_mode = asteroid_mode or "random"
     local asteroid_base_scale = scaling.get("asteroid_base_scale")
+    FRAGMENT_SCALE = scaling.get("asteroid_fragment_scale")
 
     if asteroid_mode == "random" then
         random_asteroid_start_function(asteroid_storage, asteroid_base_scale)

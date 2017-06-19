@@ -12,14 +12,14 @@ local asteroid_base_scale
 local ellers
 local ASTEROID_HEIGHT, ASTEROID_WIDTH
 local COLUMN_SPAWN_MARGIN
-local ASTEROIDS_PER_BORDER = 6
-local LABYRINTH_CELLS_PER_COLUMN = 5
-local CELL_HEIGHT
+local ASTEROIDS_PER_VERTICAL_BORDER, ASTEROIDS_PER_HORIZONTAL_BORDER = 6, 9
+local LABYRINTH_CELLS_PER_COLUMN = 6 -- ellers height
+local CELL_HEIGHT, CELL_WIDTH
 local DEBUG_SPAWN_ALL = false
 
 local function update(asteroid, dx)
     -- move left on update
-    local speed = 100
+    local speed = 300
     asteroid.x = asteroid.x - dx * speed
     asteroid.shape:move(-dx * speed, 0)
 
@@ -58,14 +58,22 @@ local function add_asteroids(x, col, row, cell)
 
     if DEBUG_SPAWN_ALL or cell:north_blocked() then
         local x_off, y_off = x, row * drawn_cell_height + ASTEROID_HEIGHT / 2
-        for i = 1, ASTEROIDS_PER_BORDER - 1 do
+        for i = 1, ASTEROIDS_PER_HORIZONTAL_BORDER - 1 do
             table.insert(new_asteroids, get_asteroid(x_off + i * ASTEROID_WIDTH, y_off))
         end
     end
     if DEBUG_SPAWN_ALL or cell:east_blocked() then
-        local x_off, y_off = x + CELL_HEIGHT - ASTEROID_WIDTH, row * drawn_cell_height + ASTEROID_HEIGHT / 2
-        for i = 1, ASTEROIDS_PER_BORDER - 1 do
+        local x_off, y_off = x + CELL_WIDTH - ASTEROID_WIDTH, row * drawn_cell_height + ASTEROID_HEIGHT / 2
+        for i = 1, ASTEROIDS_PER_VERTICAL_BORDER - 1 do
             table.insert(new_asteroids, get_asteroid(x_off, y_off + i * ASTEROID_HEIGHT))
+        end
+    end
+
+    local cell_at_bottom = cell.position == LABYRINTH_CELLS_PER_COLUMN
+    if (DEBUG_SPAWN_ALL and cell_at_bottom)or (cell:south_blocked() and cell_at_bottom) then
+        local x_off, y_off = x, (1 + row) * drawn_cell_height + ASTEROID_HEIGHT / 2
+        for i = 1, ASTEROIDS_PER_HORIZONTAL_BORDER - 1 do
+            table.insert(new_asteroids, get_asteroid(x_off + i * ASTEROID_WIDTH, y_off))
         end
     end
 
@@ -184,11 +192,14 @@ return function(asteroid_storage_reference, asteroid_scale)
 
     ellers = new_ellers_algorithm(LABYRINTH_CELLS_PER_COLUMN)
 
-    CELL_HEIGHT = love.graphics.getHeight() / (LABYRINTH_CELLS_PER_COLUMN - 1)
-
-    -- asteroids are slightly larger than cell_height/asteroids_per_border because the north_south walls are collapsed
-    ASTEROID_HEIGHT = CELL_HEIGHT / (ASTEROIDS_PER_BORDER - 0)
+    -- asteroids are square (roughly...)
+    local number_of_drawn_asteroids = ASTEROIDS_PER_VERTICAL_BORDER - 1
+    ASTEROID_HEIGHT = love.graphics.getHeight() / (LABYRINTH_CELLS_PER_COLUMN * number_of_drawn_asteroids + 1)
     ASTEROID_WIDTH = ASTEROID_HEIGHT
+
+    CELL_HEIGHT = ASTEROID_HEIGHT * ASTEROIDS_PER_VERTICAL_BORDER
+    CELL_WIDTH = ASTEROID_WIDTH * ASTEROIDS_PER_HORIZONTAL_BORDER
+
 
     -- start the field
     spawn_asteroid_column(love.graphics.getWidth() + 10)

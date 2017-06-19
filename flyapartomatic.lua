@@ -38,8 +38,8 @@ end
 
 flyapartomatic.spawn = function(list_of_texture_paths, x, y, speed, scale)
     -- secure optional parameters
-    if not speed then speed = 1 end
-    if not scale then scale = 1 end
+    speed = speed or 1
+    scale = scale or 1
         
     local list_of_texture_paths = random.shuffle(list_of_texture_paths)
     
