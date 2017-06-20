@@ -39,7 +39,7 @@ local function get_asteroid(x, y)
 
     -- set position
     new.x, new.y = x, y
-    new.rotation, new.rotation_speed = 0, 0
+    new.rotation, new.rotation_speed = math.rad(math.random(0, 360)), math.rad(math.random() - 0.5)
 
     -- initialise the collision shape
     new.shape = hc.polygon(unpack(new.asteroid_collision_coordinates))
