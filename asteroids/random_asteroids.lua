@@ -9,13 +9,15 @@ local asteroid_storage
 local asteroid_base_scale
 
 local function update(asteroid, dx)
-    asteroid.x = asteroid.x + (dx * asteroid.speed)
+    local dx_abs = dx * asteroid.speed
+    asteroid.x = asteroid.x + dx_abs
+
 
     local new_y = asteroid.y_intersection + asteroid.x * asteroid.gradient
 
     local dy = new_y - asteroid.y
     asteroid.y = new_y
-    asteroid.shape:move(dx, dy)
+    asteroid.shape:move(dx_abs, dy)
 
     asteroid.rotation = asteroid.rotation + asteroid.rotation_speed
     asteroid.shape:rotate(asteroid.rotation_speed)
@@ -55,7 +57,7 @@ local function get_asteroid()
     new.y_intersection = new.y - new.gradient * new.x
 
     new.rotation_speed = math.random(7, 7 + new.speed / 80) / 100
-    new.rotation = math.random(2 * math.pi)
+    new.rotation = 0--math.random(2 * math.pi)
 
     --- collision shape
     new.shape = hc.polygon(unpack(new.asteroid_collision_coordinates))
