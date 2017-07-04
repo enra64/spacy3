@@ -14,9 +14,9 @@ local FRAGMENT_SCALE
 
 local random_asteroid_start_function = require("asteroids.random_asteroids")
 local asteroid_labyrinth_start_function = require("asteroids.asteroid_labyrinth")
+local mode
 
 asteroids.init = function()
-
 end
 
 local function get_index_of_asteroid_by_shape(shape)
@@ -28,12 +28,9 @@ local function get_index_of_asteroid_by_shape(shape)
 end
 
 local function handle_player_collision(player_hit_callback, asteroid, asteroid_storage_index)
-    player_hit_callback(
-        asteroid.x + asteroid.width / 2,
-        asteroid.y + asteroid.height / 2
-    )
-    flyapartomatic.spawn(
-        asteroid.fragments,
+    player_hit_callback(asteroid.x + asteroid.width / 2,
+        asteroid.y + asteroid.height / 2)
+    flyapartomatic.spawn(asteroid.fragments,
         asteroid.x,
         asteroid.y,
         FRAGMENT_SCALE,
@@ -41,6 +38,49 @@ local function handle_player_collision(player_hit_callback, asteroid, asteroid_s
     table.remove(asteroid_storage, asteroid_storage_index)
     hc.remove(asteroid.shape)
 end
+
+local function check_collisions_for_asteroid(i, asteroid, player_hit_callback)
+    --- remove asteroids that collided with an enemy or another asteroid
+    for other, _ in pairs(hc.collisions(asteroid.shape)) do
+        if other.object_type == "player" then
+            handle_player_collision(player_hit_callback, asteroid, i)
+        elseif other.object_type == "enemy" or other.object_type == "asteroid" then
+            local ast_bbox = {}
+            local oth_bbox = {}
+            ast_bbox.x1, ast_bbox.y1, ast_bbox.x2, ast_bbox.y2 = asteroid.shape:bbox()
+            oth_bbox.x1, oth_bbox.y1, oth_bbox.x2, oth_bbox.y2 = other:bbox()
+
+            local center_x, center_y
+            if oth_bbox.x1 < ast_bbox.x2 then
+                center_x = oth_bbox.x1 + (ast_bbox.x2 - oth_bbox.x1) / 2
+            else
+                center_x = ast_bbox.x1 + (oth_bbox.x2 - ast_bbox.x1) / 2
+            end
+            if oth_bbox.y1 < ast_bbox.y2 then
+                center_y = oth_bbox.y1 + (ast_bbox.y2 - oth_bbox.y1) / 2
+            else
+                center_y = ast_bbox.y1 + (oth_bbox.y2 - ast_bbox.y1) / 2
+            end
+
+            table.remove(asteroid_storage, i)
+            hc.remove(asteroid.shape)
+
+            if other.object_type == "enemy" then
+                enemies.remove_colliding_enemies(asteroid.shape, function() end)
+                explosions.create_explosion(center_x, center_y)
+            elseif other.object_type == "asteroid" then
+                local ast_index = get_index_of_asteroid_by_shape(other)
+                local other_asteroid = asteroid_storage[ast_index]
+                flyapartomatic.spawn(other_asteroid.fragments, other_asteroid.x, other_asteroid.y, FRAGMENT_SCALE, FRAGMENT_SPEED)
+                table.remove(asteroid_storage, ast_index)
+                hc.remove(other)
+            end
+
+            flyapartomatic.spawn(asteroid.fragments, asteroid.x, asteroid.y, FRAGMENT_SCALE, FRAGMENT_SPEED)
+        end
+    end
+end
+
 
 asteroids.update = function(dt, player_hit_callback)
     for i, asteroid in ipairs(asteroid_storage) do
@@ -51,17 +91,17 @@ asteroids.update = function(dt, player_hit_callback)
         if asteroid_in_viewport then
             asteroid.was_in_viewport = true
         end
-        
+
         -- remove if asteroid went through viewport and is not within 
         if asteroid.was_in_viewport and not asteroid_in_viewport then
             table.remove(asteroid_storage, i)
             hc.remove(asteroid.shape)
         end
-        
-        --- remove asteroids that collided with an enemy or another asteroid
-        
+
+        check_collisions_for_asteroid(i, asteroid, player_hit_callback)
     end
 end
+
 
 asteroids.draw = function()
     for _, asteroid in ipairs(asteroid_storage) do
@@ -86,12 +126,13 @@ asteroids.handle_projectile = function(projectile_shape, callback)
             has_collision = true
         end
     end
-    
+
     return has_collision
 end
 
 asteroids.enter = function(asteroid_mode)
     asteroid_mode = asteroid_mode or "random"
+    mode = asteroid_mode
     local asteroid_base_scale = scaling.get("asteroid_base_scale")
     FRAGMENT_SCALE = scaling.get("asteroid_fragment_scale")
 

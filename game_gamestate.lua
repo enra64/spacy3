@@ -159,10 +159,10 @@ function game:enter(_, chosen_gamemode)
     mode = chosen_gamemode
     
     if mode == "asteroid rush" then
-
         enemies.set_enemies_spawning(false)
         asteroids.enter("labyrinth")
     else
+        enemies.set_enemies_spawning(true)
         asteroids.enter("random")
     end
     
