@@ -16,8 +16,9 @@ local is_touch = require("is_touch")()
 local touch_accel_control
 
 require("common")
-
-local NES_CONTROL_MAPPING = {x_axis = 1, y_axis = 2, button_a = 1, button_b = 2, button_escape = 10, button_store = 9}
+-- actual nes mapping: local NES_CONTROL_MAPPING = {x_axis = 1, y_axis = 2, button_a = 1, button_b = 2, button_escape = 10, button_store = 9}
+-- xbox mapping:
+local NES_CONTROL_MAPPING = {x_axis = 1, y_axis = 2, button_a = 1, button_b = 2, button_escape = 3, button_store = 4}
 local TOUCH_CONTROL_MAPPING = {x_axis = 1, y_axis = 2, button_a = 2, button_b = 1, button_escape = 10, button_store = 9}
 local KEYBOARD_CONTROL_MAPPINGS = {
 {up = "w", down = "s", left = "a", right = "d", button_a = "q", button_b = "space", button_escape = "escape", button_store = "e"},
@@ -40,10 +41,10 @@ functions.touchpressed = function(id, x, y)
     for control in ipairs_if(controls, control_type_equals("touch")) do control:touchpressed(id, x, y) end
 end
 functions.joystickpressed = function(js, btn, dt)
-    for control in ipairs_if(controls, control_type_equals("joystick")) do control:touchpressed(js, btn, dt) end
+    --for control in ipairs_if(controls, control_type_equals("joystick")) do control:touchpressed(js, btn, dt) end
 end
 functions.joystickreleased = function(js, btn, dt)
-    for control in ipairs_if(controls, control_type_equals("joystick")) do control:touchpressed(js, btn, dt) end
+    --for control in ipairs_if(controls, control_type_equals("joystick")) do control:touchpressed(js, btn, dt) end
 end
 
 functions.update = function(dt)
