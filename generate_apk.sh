@@ -2,6 +2,7 @@
 echo "return function() return true end" > is_touch.lua
 
 # export all the variables
+export GRADLE_OPTS=-Dorg.gradle.daemon=true
 export ANDROID_SDK=/opt/sdk-android
 export ANDROID_NDK=/opt/sdk-android/ndk-bundle/
 export ANDROID_SWT=/usr/share/java
