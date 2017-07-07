@@ -23,11 +23,8 @@ local laser_textures = {
     love.graphics.newImage("img/blue_laser.png")
 }
 
-local laser_sound = love.audio.newSource("sounds/laser.ogg", "static")
-laser_sound:setVolume(.3)
-
-local rocket_sound = love.audio.newSource("sounds/rocket_fire.ogg", "static")
-rocket_sound:setVolume(1.5)
+local laser_sound_data = love.sound.newSoundData("sounds/laser.ogg")
+local rocket_sound_data = love.sound.newSoundData("sounds/rocket_fire.ogg")
 
 --- requires
 local hc = require("hc")
@@ -72,7 +69,9 @@ local function shoot_missile(x, y)
     table.insert(projectiles, new_missile)
 
     --- play firing sound
-    rocket_sound:play()
+    local sound = love.audio.newSource(rocket_sound_data)
+    sound:setVolume(1)
+    sound:play()
 
     --- reduce missile count
     missile_count = missile_count - 1
@@ -114,6 +113,8 @@ local function shoot_laser(x, y)
     table.insert(projectiles, new_laser)
 
     --- play firing sound
+    local laser_sound = love.audio.newSource(laser_sound_data)
+    laser_sound:setVolume(.3)
     laser_sound:play()
 
     --- make the laser hotter
