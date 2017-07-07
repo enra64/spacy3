@@ -73,6 +73,8 @@ local function shoot_missile(x, y)
     sound:setVolume(1)
     sound:play()
 
+    signal.emit("weapon_fired", "rocket")
+
     --- reduce missile count
     missile_count = missile_count - 1
 end
@@ -116,6 +118,8 @@ local function shoot_laser(x, y)
     local laser_sound = love.audio.newSource(laser_sound_data)
     laser_sound:setVolume(.3)
     laser_sound:play()
+
+    signal.emit("weapon_fired", "laser")
 
     --- make the laser hotter
     laser_overheat = math.clamp(laser_overheat + .23, 0, 1)

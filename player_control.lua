@@ -92,10 +92,10 @@ functions.load = function(player_count)
         local enable_accelerometer_control = require("settings"):get_current_value("control") == "accelerometer"
 
         if enable_accelerometer_control then
-            table.insert(controls, touch_control.new(true))
-        else
             table.insert(controls, touch_control.new(false))
             table.insert(controls, joystick_control.new(joystick_list[1], TOUCH_CONTROL_MAPPING))
+        else
+            table.insert(controls, touch_control.new(true))
         end
     end
 

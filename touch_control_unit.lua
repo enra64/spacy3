@@ -30,7 +30,7 @@ local function handle_dpad_touch(control, x, y)
     control.state.y = math.min((y / control.dpad_background.height) * 0.04, .05)
 
     --- set control knob position
-    set_dpad_position(x, y)
+    set_dpad_position(control, x, y)
 end
 
 touch_control.new = function(enable_move_pad)
@@ -42,11 +42,17 @@ touch_control.new = function(enable_move_pad)
     ctrl.dpad_background = {}
     ctrl.store_button = {}
     ctrl.enable_move_pad = true
+    ctrl.control_state = {x = 0, y = 0, button_a_pressed = false, button_b_pressed = false, button_escape_pressed = false, button_store_pressed = false}
 
     ctrl.type = "touch"
 
     -- whether or not this touch control should draw and use the move pad
     ctrl.enable_move_pad = enable_move_pad
+
+    -- subscribe to rumble events
+    signal.register("weapon_fired", function()
+        love.system.vibrate(0.3)
+    end)
 
     local control_textures = {
         button_a = love.graphics.newImage("img/touch_controls/button_a.png"),
@@ -104,12 +110,12 @@ touch_control.new = function(enable_move_pad)
             print("unknown control type")
         end
 
-        new_control.shape = control.touch_collider:rectangle(new_control.x, new_control.y, new_control.width, new_control.height)
+        new_control.shape = ctrl.touch_collider:rectangle(new_control.x, new_control.y, new_control.width, new_control.height)
         new_control.shape.control_type = control_type
     end
     ctrl.touchmoved = function(control, id, x, y)
         if control.enable_move_pad and id == control.touch_controls.dpad.touch_id then
-            handle_dpad_touch(x, y)
+            handle_dpad_touch(control, x, y)
         end
     end
     ctrl.touchreleased = function(control, id)

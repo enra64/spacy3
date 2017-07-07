@@ -13,14 +13,16 @@ joystick_control.new = function(joystick, bindings, store_button_name)
     ctrl.xoff = joystick:getAxis(bindings.x_axis)
     ctrl.yoff = joystick:getAxis(bindings.y_axis)
 
-    ctrl.store_button_help = {
-        text = store_button_name.." for store",
-        y = love.graphics.getHeight() - love.graphics.getFont():getHeight()
-    }
+
+    if store_button_name then
+        ctrl.store_button_help = {
+            text = store_button_name.." for store",
+            y = love.graphics.getHeight() - love.graphics.getFont():getHeight()
+        }
+    end
 
     ctrl.draw = function(control, store_triggered)
-        if store_triggered then
-
+        if store_triggered and control.store_button_help then
             love.graphics.printf(control.store_button_help.text, 0, control.store_button_help.y, love.graphics.getWidth(), "center")
         end
     end
