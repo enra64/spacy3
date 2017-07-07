@@ -69,6 +69,10 @@ function Timer:during(delay, during, after)
 	return handle
 end
 
+function Timer:remaining_time(handle)
+	return math.max(handle.limit - handle.time)
+end
+
 function Timer:after(delay, func)
 	return self:during(delay, _nothing_, func)
 end
