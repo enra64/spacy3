@@ -10,9 +10,75 @@
 
 local functions = {}
 
+
+
+local asteroids = {
+    _1 = {
+        {
+            texture = "img/asteroids/1/asteroid_brown.png",
+            polygon =  read_csv("collisionmaps/singlebrown.csv")
+        },
+        {
+            texture = "img/asteroids/1/asteroid_grey.png",
+            polygon =  read_csv("collisionmaps/singlegrey.csv")
+        }
+    },
+    _2 = {
+        {
+            texture = "img/asteroids/1/asteroid_grey.png",
+            polygon =  read_csv("collisionmaps/singlegrey.csv")
+        }, {
+            texture = "img/asteroids/1/asteroid_grey.png",
+            polygon =  read_csv("collisionmaps/singlegrey.csv")
+        }, {
+            texture = "img/asteroids/1/asteroid_grey.png",
+            polygon =  read_csv("collisionmaps/singlegrey.csv")
+        }, {
+            texture = "img/asteroids/1/asteroid_grey.png",
+            polygon =  read_csv("collisionmaps/singlegrey.csv")
+        }
+    },
+    _3 = {
+        {
+            texture = "img/asteroids/1/asteroid_grey.png",
+            polygon =  read_csv("collisionmaps/singlegrey.csv")
+        }, {
+            texture = "img/asteroids/1/asteroid_grey.png",
+            polygon =  read_csv("collisionmaps/singlegrey.csv")
+        }, {
+            texture = "img/asteroids/1/asteroid_grey.png",
+            polygon =  read_csv("collisionmaps/singlegrey.csv")
+        }
+    },
+    _4 = {
+        {
+            texture = "img/asteroids/1/asteroid_grey.png",
+            polygon =  read_csv("collisionmaps/singlegrey.csv")
+        }, {
+            texture = "img/asteroids/1/asteroid_grey.png",
+            polygon =  read_csv("collisionmaps/singlegrey.csv")
+        }, {
+            texture = "img/asteroids/1/asteroid_grey.png",
+            polygon =  read_csv("collisionmaps/singlegrey.csv")
+        }
+    },
+    _8 = {
+        {
+            texture = "img/asteroids/1/asteroid_grey.png",
+            polygon =  read_csv("collisionmaps/singlegrey.csv")
+        }, {
+            texture = "img/asteroids/1/asteroid_grey.png",
+            polygon =  read_csv("collisionmaps/singlegrey.csv")
+        }, {
+            texture = "img/asteroids/1/asteroid_grey.png",
+            polygon =  read_csv("collisionmaps/singlegrey.csv")
+        }
+    }
+}
+
 -- load_random_asteroid
 local function load_random_asteroid()
-    local textures = { "img/asteroid_brown.png", "img/asteroid_grey.png" }
+    local textures = { "img/asteroids/1/asteroid_brown.png", "img/asteroids/1/asteroid_grey.png" }
     local polygons = {
         {
             59, 163, 29, 143, 29, 137, 3, 105, 1, 83, 6, 36, 17, 22, 36, 9, 56, 1, 86, 5, 93, 10, 108, 9, 119, 16,
@@ -38,21 +104,21 @@ functions[1] = load_random_asteroid
 local function get_asteroid_fragments(asteroid_type)
     if asteroid_type == "asteroid_brown" then
         return {
-            "img/brown_asteroid_fragment_1.png",
-            "img/brown_asteroid_fragment_2.png",
-            "img/brown_asteroid_fragment_3.png",
-            "img/brown_asteroid_fragment_4.png",
-            "img/brown_asteroid_fragment_5.png",
-            "img/brown_asteroid_fragment_6.png"
+            "img/asteroids/1/brown_asteroid_fragment_1.png",
+            "img/asteroids/1/brown_asteroid_fragment_2.png",
+            "img/asteroids/1/brown_asteroid_fragment_3.png",
+            "img/asteroids/1/brown_asteroid_fragment_4.png",
+            "img/asteroids/1/brown_asteroid_fragment_5.png",
+            "img/asteroids/1/brown_asteroid_fragment_6.png"
         }
     elseif asteroid_type == "asteroid_grey" then
         return {
-            "img/grey_asteroid_fragment_1.png",
-            "img/grey_asteroid_fragment_2.png",
-            "img/grey_asteroid_fragment_3.png",
-            "img/grey_asteroid_fragment_4.png",
-            "img/grey_asteroid_fragment_5.png",
-            "img/grey_asteroid_fragment_6.png"
+            "img/asteroids/1/grey_asteroid_fragment_1.png",
+            "img/asteroids/1/grey_asteroid_fragment_2.png",
+            "img/asteroids/1/grey_asteroid_fragment_3.png",
+            "img/asteroids/1/grey_asteroid_fragment_4.png",
+            "img/asteroids/1/grey_asteroid_fragment_5.png",
+            "img/asteroids/1/grey_asteroid_fragment_6.png"
         }
     end
 end
