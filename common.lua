@@ -76,6 +76,21 @@ function ipairs_if(tbl, if_fn)
     end
 end
 
+-- Convert from CSV string to table (converts a single line of a CSV file)
+-- from http://lua-users.org/wiki/CsvUtils
+function read_csv(path)
+    local s, _ = love.filesystem.read(path)
+    s = s .. ','        -- ending comma
+    local t = {}        -- table to collect fields
+    local fieldstart = 1
+    repeat
+        local nexti = string.find(s, ',', fieldstart)
+        table.insert(t, tonumber(string.sub(s, fieldstart, nexti-1)))
+        fieldstart = nexti + 1
+    until fieldstart > string.len(s)
+    return t
+end
+
 --http://stackoverflow.com/a/15706820
 function spairs(t, order)
     --- ordered iteration through a table
