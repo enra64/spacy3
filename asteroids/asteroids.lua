@@ -39,12 +39,12 @@ local function handle_player_collision(player_hit_callback, asteroid, asteroid_s
     hc.remove(asteroid.shape)
 end
 
-local function check_collisions_for_asteroid(i, asteroid, player_hit_callback)
+local function check_collisions_for_asteroid(i, asteroid, player_hit_callback, check_for_asteroid_collisions)
     --- remove asteroids that collided with an enemy or another asteroid
     for other, _ in pairs(hc.collisions(asteroid.shape)) do
         if other.object_type == "player" then
             handle_player_collision(player_hit_callback, asteroid, i)
-        elseif other.object_type == "enemy" or other.object_type == "asteroid" then
+        elseif check_for_asteroid_collisions and (other.object_type == "enemy" or other.object_type == "asteroid") then
             local ast_bbox = {}
             local oth_bbox = {}
             ast_bbox.x1, ast_bbox.y1, ast_bbox.x2, ast_bbox.y2 = asteroid.shape:bbox()
@@ -100,7 +100,8 @@ asteroids.update = function(dt, player_hit_callback)
             hc.remove(asteroid.shape)
         end
 
-        --check_collisions_for_asteroid(i, asteroid, player_hit_callback)
+        local check_for_asteroid_collisions = mode ~= "labyrinth"
+        check_collisions_for_asteroid(i, asteroid, player_hit_callback, check_for_asteroid_collisions)
     end
 end
 
@@ -119,7 +120,7 @@ end
 asteroids.draw = function()
     for _, asteroid in ipairs(asteroid_storage) do
         love.graphics.drawObjectCentered(asteroid)
-        asteroid.shape:draw()
+        --asteroid.shape:draw()
     end
 end
 

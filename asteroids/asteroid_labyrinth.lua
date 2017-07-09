@@ -16,11 +16,11 @@ local COLUMN_SPAWN_MARGIN
 local ASTEROIDS_PER_VERTICAL_BORDER, ASTEROIDS_PER_HORIZONTAL_BORDER = 8, 14
 local LABYRINTH_CELLS_PER_COLUMN = 5 -- ellers height
 local CELL_HEIGHT, CELL_WIDTH
-local DEBUG_SPAWN_ALL = true
+local DEBUG_SPAWN_ALL = false
 
 local function update(asteroid, dx)
     -- move left on update
-    local speed = 160
+    local speed = 321
     asteroid.x = asteroid.x - dx * speed
     asteroid.shape:move(-dx * speed, 0)
 
@@ -86,7 +86,7 @@ local packing_solutions = {
 
 local function get_vertical_line(x_off, y_off)
     local new_asteroids = {}
-    local packing_choice = lume.randomchoice(packing_solutions["_"..ASTEROIDS_PER_VERTICAL_BORDER])
+    local packing_choice = table.permute(lume.randomchoice(packing_solutions["_"..ASTEROIDS_PER_VERTICAL_BORDER]))
     for _, ast_len in ipairs(packing_choice) do
         local new_asteroid = get_asteroid(x_off, y_off, ast_len, "vertical")
         table.insert(new_asteroids, new_asteroid)
@@ -102,7 +102,7 @@ local function get_horizontal_line(x_off, y_off)
     for _, ast_len in ipairs(packing_choice) do
         local new_asteroid = get_asteroid(x_off, y_off, ast_len, "horizontal")
         table.insert(new_asteroids, new_asteroid)
-        x_off = x_off + get_asteroid_width(new_asteroid)
+        x_off = x_off + get_asteroid_width(new_asteroid) + 2
     end
     return new_asteroids
 end
@@ -115,18 +115,17 @@ local function add_asteroids(x, col, row, cell)
 
     if DEBUG_SPAWN_ALL or cell:north_blocked() then
         table.insert_multiple(new_asteroids,
-            get_horizontal_line(x, row * drawn_cell_height + ASTEROID_HEIGHT / 2))
+            get_horizontal_line(x + ASTEROID_WIDTH / 2, row * drawn_cell_height + ASTEROID_HEIGHT / 2))
     end
     if DEBUG_SPAWN_ALL or cell:east_blocked() then
         table.insert_multiple(new_asteroids,
-            get_vertical_line(x + CELL_WIDTH - ASTEROID_WIDTH,
-                row * drawn_cell_height + ASTEROID_HEIGHT / 2))
+            get_vertical_line(x + CELL_WIDTH - ASTEROID_WIDTH, row * drawn_cell_height + ASTEROID_HEIGHT / 2))
     end
 
     local cell_at_bottom = cell.position == LABYRINTH_CELLS_PER_COLUMN
     if (DEBUG_SPAWN_ALL and cell_at_bottom) or (cell:south_blocked() and cell_at_bottom) then
         table.insert_multiple(new_asteroids,
-            get_horizontal_line(x, (1 + row) * drawn_cell_height + ASTEROID_HEIGHT / 2))
+            get_horizontal_line(x + ASTEROID_WIDTH / 2, (1 + row) * drawn_cell_height + ASTEROID_HEIGHT / 2))
     end
 
     -- get asteroid at the specified position
@@ -250,7 +249,7 @@ return function(asteroid_storage_reference, asteroid_scale)
     ASTEROID_WIDTH = ASTEROID_HEIGHT
 
     CELL_HEIGHT = ASTEROID_HEIGHT * ASTEROIDS_PER_VERTICAL_BORDER
-    CELL_WIDTH = ASTEROID_WIDTH * ASTEROIDS_PER_HORIZONTAL_BORDER
+    CELL_WIDTH = (ASTEROID_WIDTH + 2) * ASTEROIDS_PER_HORIZONTAL_BORDER
 
     -- start the field
     spawn_asteroid_column(love.graphics.getWidth() + 10)

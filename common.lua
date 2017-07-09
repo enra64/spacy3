@@ -34,6 +34,16 @@ function table.insert_multiple(tbl_sink, tbl_source)
     end
 end
 
+--http://lua-users.org/wiki/RandomSample
+function table.permute(tab, n, count)
+    n = n or #tab
+    for i = 1, count or n do
+        local j = math.random(i, n)
+        tab[i], tab[j] = tab[j], tab[i]
+    end
+    return tab
+end
+
 function table.twolevel_clone(orig)
     local orig_type = type(orig)
     local copy
