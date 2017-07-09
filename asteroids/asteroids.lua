@@ -71,7 +71,9 @@ local function check_collisions_for_asteroid(i, asteroid, player_hit_callback)
             elseif other.object_type == "asteroid" then
                 local ast_index = get_index_of_asteroid_by_shape(other)
                 local other_asteroid = asteroid_storage[ast_index]
-                flyapartomatic.spawn(other_asteroid.fragments, other_asteroid.x, other_asteroid.y, FRAGMENT_SCALE, FRAGMENT_SPEED)
+                if other_asteroid then
+                    flyapartomatic.spawn(other_asteroid.fragments, other_asteroid.x, other_asteroid.y, FRAGMENT_SCALE, FRAGMENT_SPEED)
+                end
                 table.remove(asteroid_storage, ast_index)
                 hc.remove(other)
             end
@@ -98,7 +100,7 @@ asteroids.update = function(dt, player_hit_callback)
             hc.remove(asteroid.shape)
         end
 
-        check_collisions_for_asteroid(i, asteroid, player_hit_callback)
+        --check_collisions_for_asteroid(i, asteroid, player_hit_callback)
     end
 end
 
@@ -106,7 +108,7 @@ end
 asteroids.draw = function()
     for _, asteroid in ipairs(asteroid_storage) do
         love.graphics.drawObjectCentered(asteroid)
-        --asteroid.shape:draw()
+        asteroid.shape:draw()
     end
 end
 
