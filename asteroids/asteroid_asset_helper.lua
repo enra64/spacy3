@@ -77,25 +77,14 @@ local asteroids = {
 }
 
 -- load_random_asteroid
-local function load_random_asteroid()
-    local textures = { "img/asteroids/1/asteroid_brown.png", "img/asteroids/1/asteroid_grey.png" }
-    local polygons = {
-        {
-            59, 163, 29, 143, 29, 137, 3, 105, 1, 83, 6, 36, 17, 22, 36, 9, 56, 1, 86, 5, 93, 10, 108, 9, 119, 16,
-            134, 25, 144, 34, 148, 51, 162, 68, 163, 90, 166, 113, 161, 127, 152, 129, 151, 134, 142, 135, 134, 152, 96, 168, 67, 165
-        },
-        {
-            31, 149, 31, 142, 18, 123, 7, 114, 7, 107, 4, 96, 5, 83, 2, 74, 20, 45, 21, 36, 29, 25, 43, 20, 47, 15, 61, 5, 81, 2, 88, 5, 107, 2, 114, 4, 115,
-            12, 145, 21, 143, 27, 170, 41, 162, 59, 171, 79, 175, 102, 172, 122, 165, 143, 141, 158, 118, 169, 92, 172, 66, 171, 52, 168, 31, 150, 31, 149
-        }
-    }
+local function load_random_asteroid(length)
+    length = length or 1
 
-    assert(#textures == #polygons, "bad texture/shape mapping count")
+    local asteroids_with_matching_length = asteroids["_"..length]
+    local choice = math.random(#asteroids_with_matching_length)
 
-    local choice = math.random(#textures)
-
-    -- return the texture, the polygon, and the choice
-    return love.graphics.newImage(textures[choice]), polygons[choice], string.sub(textures[choice], 5, -5)
+    -- return the texture, the polygon, and the name of the chosen asteroid
+    return love.graphics.newImage(asteroids_with_matching_length[choice].texture), asteroids_with_matching_length[choice].polygon, string:match("^.+/(.+)%..*$")
 end
 
 functions[1] = load_random_asteroid
@@ -120,6 +109,8 @@ local function get_asteroid_fragments(asteroid_type)
             "img/asteroids/1/grey_asteroid_fragment_5.png",
             "img/asteroids/1/grey_asteroid_fragment_6.png"
         }
+    else
+        assert(false, "asteroid fragments requested for "..asteroid_type)
     end
 end
 
