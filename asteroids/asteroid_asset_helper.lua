@@ -16,62 +16,62 @@ local asteroids = {
     _1 = {
         {
             texture = "img/asteroids/1/asteroid_brown.png",
-            polygon =  read_csv("collisionmaps/singlebrown.csv")
+            polygon =  unpack(read_csv("collisionmaps/singlebrown.csv"))
         },
         {
             texture = "img/asteroids/1/asteroid_grey.png",
-            polygon =  read_csv("collisionmaps/singlegrey.csv")
+            polygon =  unpack(read_csv("collisionmaps/singlegrey.csv"))
         }
     },
     _2 = {
         {
-            texture = "img/asteroids/1/asteroid_grey.png",
-            polygon =  read_csv("collisionmaps/singlegrey.csv")
+            texture = "img/asteroids/2/double1.png",
+            polygon =  unpack(read_csv("collisionmaps/double1.csv"))
         }, {
-            texture = "img/asteroids/1/asteroid_grey.png",
-            polygon =  read_csv("collisionmaps/singlegrey.csv")
+            texture = "img/asteroids/2/double2.png",
+            polygon =  unpack(read_csv("collisionmaps/double2.csv"))
         }, {
-            texture = "img/asteroids/1/asteroid_grey.png",
-            polygon =  read_csv("collisionmaps/singlegrey.csv")
+            texture = "img/asteroids/2/double3.png",
+            polygon =  unpack(read_csv("collisionmaps/double3.csv"))
         }, {
-            texture = "img/asteroids/1/asteroid_grey.png",
-            polygon =  read_csv("collisionmaps/singlegrey.csv")
+            texture = "img/asteroids/2/double4.png",
+            polygon =  unpack(read_csv("collisionmaps/double4.csv"))
         }
     },
     _3 = {
         {
-            texture = "img/asteroids/1/asteroid_grey.png",
-            polygon =  read_csv("collisionmaps/singlegrey.csv")
+            texture = "img/asteroids/3/triple1.png",
+            polygon =  unpack(read_csv("collisionmaps/triple1.csv"))
         }, {
-            texture = "img/asteroids/1/asteroid_grey.png",
-            polygon =  read_csv("collisionmaps/singlegrey.csv")
+            texture = "img/asteroids/3/triple2.png",
+            polygon =  unpack(read_csv("collisionmaps/triple2.csv"))
         }, {
-            texture = "img/asteroids/1/asteroid_grey.png",
-            polygon =  read_csv("collisionmaps/singlegrey.csv")
+            texture = "img/asteroids/3/triple3.png",
+            polygon =  unpack(read_csv("collisionmaps/triple3.csv"))
         }
     },
     _4 = {
         {
-            texture = "img/asteroids/1/asteroid_grey.png",
-            polygon =  read_csv("collisionmaps/singlegrey.csv")
+            texture = "img/asteroids/4/quadruple1.png",
+            polygon =  unpack(read_csv("collisionmaps/quadruple1.csv"))
         }, {
-            texture = "img/asteroids/1/asteroid_grey.png",
-            polygon =  read_csv("collisionmaps/singlegrey.csv")
+            texture = "img/asteroids/4/quadruple2.png",
+            polygon =  unpack(read_csv("collisionmaps/quadruple2.csv"))
         }, {
-            texture = "img/asteroids/1/asteroid_grey.png",
-            polygon =  read_csv("collisionmaps/singlegrey.csv")
+            texture = "img/asteroids/4/quadruple3.png",
+            polygon =  unpack(read_csv("collisionmaps/quadruple3.csv"))
         }
     },
     _8 = {
         {
-            texture = "img/asteroids/1/asteroid_grey.png",
-            polygon =  read_csv("collisionmaps/singlegrey.csv")
+            texture = "img/asteroids/8/eighter1.png",
+            polygon =  unpack(read_csv("collisionmaps/eighter1.csv"))
         }, {
-            texture = "img/asteroids/1/asteroid_grey.png",
-            polygon =  read_csv("collisionmaps/singlegrey.csv")
+            texture = "img/asteroids/8/eighter2.png",
+            polygon =  unpack(read_csv("collisionmaps/eighter2.csv"))
         }, {
-            texture = "img/asteroids/1/asteroid_grey.png",
-            polygon =  read_csv("collisionmaps/singlegrey.csv")
+            texture = "img/asteroids/8/eighter3.png",
+            polygon =  unpack(read_csv("collisionmaps/eighter3.csv"))
         }
     }
 }
