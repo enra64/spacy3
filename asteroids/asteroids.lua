@@ -104,6 +104,17 @@ asteroids.update = function(dt, player_hit_callback)
     end
 end
 
+local function draw_asteroid_centers(asteroid)
+    local x1, y1, x2, y2 = asteroid.shape:bbox()
+    print("shape size "..(x2-x1).."x"..(y2-y1).." and ast size"..asteroid.width.."x"..asteroid.height)
+    local cx, cy = asteroid.shape:center()
+
+    love.graphics.rectangle("fill", asteroid.x, asteroid.y, 10, 10)
+    love.graphics.setColor(255, 0, 0)
+    love.graphics.rectangle("fill", cx, cy, 10, 10)
+
+    love.graphics.setColor(255, 255, 255)
+end
 
 asteroids.draw = function()
     for _, asteroid in ipairs(asteroid_storage) do

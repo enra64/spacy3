@@ -54,21 +54,16 @@ local function get_asteroid(x, y, length, orientation)
     new.x, new.y = x, y
 
     -- rotate the asteroid a little
-    new.rotation, new.rotation_speed = math.rad(math.random(-3, 3)), 0.03
+    new.rotation, new.rotation_speed = math.rad(math.random(-3, 3)), 0
 
     -- if horizontal rotate by 90 degrees
     if orientation == "horizontal" then
         new.rotation = new.rotation + math.rad(lume.randomchoice({90, -90}))
     end
 
-
-    new.scale_x, new.scale_y = 1, 1
-    new.rotation = 0
-    new.rotation_speed = 0
-
     -- initialise the collision shape
     new.shape = hc.polygon(unpack(new.asteroid_collision_coordinates))
-    new.shape:move(new.x - new.width / 2, new.y - new.height / 2)
+    new.shape:moveTo(new.x, new.y)
     new.shape:scale(new.scale_x, new.scale_y)
     new.shape:rotate(new.rotation)
     new.shape.object_type = "asteroid"
@@ -251,7 +246,6 @@ return function(asteroid_storage_reference, asteroid_scale)
 
     CELL_HEIGHT = ASTEROID_HEIGHT * ASTEROIDS_PER_VERTICAL_BORDER
     CELL_WIDTH = ASTEROID_WIDTH * ASTEROIDS_PER_HORIZONTAL_BORDER
-
 
     -- start the field
     spawn_asteroid_column(love.graphics.getWidth() + 10)

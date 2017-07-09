@@ -66,7 +66,7 @@ local function get_asteroid()
     new.scale = asteroid_base_scale + math.random(-asteroid_base_scale * 25, asteroid_base_scale * 25) / 100
 
     -- move to "position of asteroid" - "center of asteroid"
-    new.shape:move(new.x - new.width / 2, new.y - new.height / 2)
+    new.shape:moveTo(new.x, new.y)
     new.shape:scale(new.scale)
     new.shape.object_type = "asteroid"
 
