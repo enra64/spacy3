@@ -1,4 +1,5 @@
 require("common")
+local timer = require("hump.timer")
 
 local joystick_control = {}
 
@@ -13,6 +14,14 @@ joystick_control.new = function(joystick, bindings, store_button_name)
     ctrl.xoff = joystick:getAxis(bindings.x_axis)
     ctrl.yoff = joystick:getAxis(bindings.y_axis)
 
+
+    -- subscribe to rumble events
+    signal.register("explosion", function()
+        if joystick:isVibrationSupported() then
+            joystick:setVibration(0.3, 0.3)
+            timer.after(0.2, function() joystick:setVibration(0, 0) end)
+        end
+    end)
 
     if store_button_name then
         ctrl.store_button_help = {

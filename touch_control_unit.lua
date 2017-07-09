@@ -51,7 +51,7 @@ touch_control.new = function(enable_move_pad)
     ctrl.enable_move_pad = enable_move_pad
 
     -- subscribe to rumble events
-    signal.register("weapon_fired", function()
+    signal.register("explosion", function()
         love.system.vibrate(0.3)
     end)
 
