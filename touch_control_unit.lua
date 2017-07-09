@@ -35,14 +35,15 @@ end
 
 touch_control.new = function(enable_move_pad)
     local ctrl = {}
-    ctrl.state = {x = 0, y = 0, button_a_pressed = false, button_b_pressed = false, button_escape_pressed = false, button_store_pressed = false}
+
     --- touch only stuff
     ctrl.touch_collider = require("hc").new()
     ctrl.touch_controls = {}
     ctrl.dpad_background = {}
     ctrl.store_button = {}
     ctrl.enable_move_pad = true
-    ctrl.control_state = {x = 0, y = 0, button_a_pressed = false, button_b_pressed = false, button_escape_pressed = false, button_store_pressed = false}
+
+    ctrl.state = {x = 0, y = 0, button_a_pressed = false, button_b_pressed = false, button_escape_pressed = false, button_store_pressed = false}
 
     ctrl.type = "touch"
 
@@ -120,20 +121,20 @@ touch_control.new = function(enable_move_pad)
     end
     ctrl.touchreleased = function(control, id)
         if id == control.touch_controls.button_a.touch_id then
-            control.control_state.button_a_pressed = false
+            control.state.button_a_pressed = false
             control.touch_controls.button_a.touch_id = nil
         elseif id == control.touch_controls.button_b.touch_id then
-            control.control_state.button_b_pressed = false
+            control.state.button_b_pressed = false
             control.touch_controls.button_b.touch_id = nil
         elseif id == control.touch_controls.button_escape.touch_id then
-            control.control_state.button_escape_pressed = false
+            control.state.button_escape_pressed = false
             control.touch_controls.button_escape.touch_id = nil
         elseif id == control.touch_controls.button_store.touch_id then
-            control.control_state.button_store_pressed = false
+            control.state.button_store_pressed = false
             control.store_button.touch_id = nil
         elseif control.enable_move_pad and id == control.touch_controls.dpad.touch_id then
-            control.control_state.x = 0
-            control.control_state.y = 0
+            control.state.x = 0
+            control.state.y = 0
             set_dpad_position(control, 0, 0)
             control.touch_controls.dpad.touch_id = nil
         end
@@ -151,13 +152,13 @@ touch_control.new = function(enable_move_pad)
 
             --- update control state
             if ctrl_type == "button_a" then
-                control.control_state.button_a_pressed = true
+                control.state.button_a_pressed = true
             elseif ctrl_type == "button_b" then
-                control.control_state.button_b_pressed = true
+                control.state.button_b_pressed = true
             elseif ctrl_type == "button_escape" then
-                control.control_state.button_escape_pressed = true
+                control.state.button_escape_pressed = true
             elseif ctrl_type == "button_store" then
-                control.control_state.button_store_pressed = true
+                control.state.button_store_pressed = true
             end
         end
     end
