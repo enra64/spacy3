@@ -52,7 +52,7 @@ local function get_asteroid(x, y, length, orientation)
     new.x, new.y = x, y
 
     -- rotate the asteroid a little
-    new.rotation, new.rotation_speed = math.rad(math.random(-3, 3)), 0
+    new.rotation, new.rotation_speed = math.rad(math.random(-8, 8)), 0
 
     -- if horizontal rotate by 90 degrees
     if orientation == "horizontal" then
