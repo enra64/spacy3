@@ -4,6 +4,7 @@ local timer = require("hump.timer")
 require("difficulty_handler")
 require("drops")
 require("flyapartomatic")
+local lume = require("lume.lume")
 local new_ellers_algorithm = require("asteroids.ellers_algorithm")
 
 local asteroid_storage
@@ -19,7 +20,7 @@ local DEBUG_SPAWN_ALL = false
 
 local function update(asteroid, dx)
     -- move left on update
-    local speed = 80
+    local speed = 160
     asteroid.x = asteroid.x - dx * speed
     asteroid.shape:move(-dx * speed, 0)
 
@@ -28,40 +29,74 @@ local function update(asteroid, dx)
     asteroid.shape:rotate(asteroid.rotation_speed)
 end
 
-local function get_asteroid(x, y)
+local function get_asteroid(x, y, length, orientation)
     -- get some random asteroid
-    local new = new_random_asteroid()
+    local new = new_random_asteroid(length)
 
     -- set some methods
     new.update = update
     new.scale_x = math.scale_from_to(new.width, ASTEROID_WIDTH)
-    new.scale_y = math.scale_from_to(new.height, ASTEROID_HEIGHT)
+    print("new ast has size "..new.width.."x"..new.height)
+    new.scale_y = new.scale_x
 
     -- set position
     new.x, new.y = x, y
-    new.rotation, new.rotation_speed = math.rad(math.random(0, 360)), math.rad(math.random() - 0.5)
+
+    -- rotate the asteroid a little
+    new.rotation, new.rotation_speed = math.rad(math.random(-3, 3)), 0
+
+    -- if horizontal rotate by 90 degrees
+    if orientation == "horizontal" then
+        new.rotation = new.rotation + math.rad(lume.randomchoice({90, -90}))
+    end
 
     -- initialise the collision shape
     new.shape = hc.polygon(unpack(new.asteroid_collision_coordinates))
     new.shape:move(new.x - new.width / 2, new.y - new.height / 2)
     new.shape:scale(new.scale_x, new.scale_y)
-    new.shape:rotate(0)
+    new.shape:rotate(new.rotation)
     new.shape.object_type = "asteroid"
     return new
 end
 
+--- this table stores the possible combinations of available asteroids to reach a given length
+local packing_solutions = {
+    _8 = { { 1, 1, 2, 2, 2 }, { 1, 1, 2, 4 }, { 1, 1, 2, 2, 2 }, { 1, 1, 2, 4 }, { 1, 1, 3, 3 }, { 1, 2, 2, 3 }, { 1, 3, 4 }, { 1, 2, 2, 3 }, { 1, 3, 4 }, { 2, 2, 2, 2 }, { 2, 2, 4 }, { 2, 3, 3 }, { 2, 2, 4 }, { 2, 3, 3 }, { 2, 2, 4 }, { 2, 3, 3 }, { 4, 4 }, { 8 } },
+    _14 = { { 1, 1, 2, 2, 2, 2, 4 }, { 1, 1, 2, 2, 2, 3, 3 }, { 1, 1, 2, 2, 4, 4 }, { 1, 1, 2, 2, 8 }, { 1, 1, 2, 2, 2, 3, 3 }, { 1, 1, 2, 2, 4, 4 }, { 1, 1, 2, 2, 8 }, { 1, 1, 2, 2, 4, 4 }, { 1, 1, 2, 2, 8 }, { 1, 1, 2, 3, 3, 4 }, { 1, 1, 2, 2, 2, 3, 3 }, { 1, 1, 2, 2, 4, 4 }, { 1, 1, 2, 2, 8 }, { 1, 1, 2, 2, 4, 4 }, { 1, 1, 2, 2, 8 }, { 1, 1, 2, 3, 3, 4 }, { 1, 1, 2, 2, 4, 4 }, { 1, 1, 2, 2, 8 }, { 1, 1, 2, 3, 3, 4 }, { 1, 1, 4, 4, 4 }, { 1, 1, 4, 8 }, { 1, 2, 2, 2, 3, 4 }, { 1, 2, 2, 3, 3, 3 }, { 1, 2, 2, 2, 3, 4 }, { 1, 2, 2, 3, 3, 3 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 2, 2, 3, 4 }, { 1, 2, 2, 3, 3, 3 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 2, 3, 3, 3 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 3, 3, 3, 4 }, { 1, 2, 2, 2, 3, 4 }, { 1, 2, 2, 3, 3, 3 }, { 1, 2, 2, 2, 3, 4 }, { 1, 2, 2, 3, 3, 3 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 2, 2, 3, 4 }, { 1, 2, 2, 3, 3, 3 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 2, 3, 3, 3 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 3, 3, 3, 4 }, { 2, 2, 2, 2, 3, 3 }, { 2, 2, 2, 4, 4 }, { 2, 2, 2, 8 }, { 2, 2, 2, 4, 4 }, { 2, 2, 2, 8 }, { 2, 2, 3, 3, 4 }, { 2, 2, 2, 4, 4 }, { 2, 2, 2, 8 }, { 2, 2, 3, 3, 4 }, { 2, 4, 4, 4 }, { 2, 4, 8 }, { 2, 2, 2, 4, 4 }, { 2, 2, 2, 8 }, { 2, 2, 3, 3, 4 }, { 2, 4, 4, 4 }, { 2, 4, 8 }, { 2, 2, 3, 3, 4 }, { 2, 4, 4, 4 }, { 2, 4, 8 }, { 2, 4, 4, 4 }, { 2, 4, 8 }, { 3, 3, 4, 4 }, { 3, 3, 8 }, { 3, 3, 4, 4 }, { 3, 3, 8 }, { 3, 3, 4, 4 }, { 3, 3, 8 } }
+}
+
+local function get_asteroid_width(asteroid)
+    local x1, _, x2, _ = asteroid.shape:bbox()
+    return x2 - x1
+end
+
+local function get_asteroid_height(asteroid)
+    local _, y1, _, y2 = asteroid.shape:bbox()
+    return y2 - y1
+end
+
 local function get_vertical_line(x_off, y_off)
     local new_asteroids = {}
-    for i = 1, ASTEROIDS_PER_VERTICAL_BORDER - 1 do
-        table.insert(new_asteroids, get_asteroid(x_off, y_off + i * ASTEROID_HEIGHT))
+    local packing_choice = lume.randomchoice(packing_solutions["_"..ASTEROIDS_PER_VERTICAL_BORDER])
+    for _, ast_len in ipairs(packing_choice) do
+        local new_asteroid = get_asteroid(x_off, y_off, ast_len, "vertical")
+        table.insert(new_asteroids, new_asteroid)
+        y_off = y_off + get_asteroid_height(new_asteroid) + 2
+        print("using ast len"..ast_len.." has width "..get_asteroid_width(new_asteroid)..", height "..get_asteroid_height(new_asteroid))
     end
     return new_asteroids
 end
 
 local function get_horizontal_line(x_off, y_off)
     local new_asteroids = {}
-    for i = 1, ASTEROIDS_PER_HORIZONTAL_BORDER - 1 do
-        table.insert(new_asteroids, get_asteroid(x_off + i * ASTEROID_WIDTH, y_off))
+    local packing_choice = lume.randomchoice(packing_solutions["_"..ASTEROIDS_PER_HORIZONTAL_BORDER])
+
+    for _, ast_len in ipairs(packing_choice) do
+        local new_asteroid = get_asteroid(x_off, y_off, ast_len, "horizontal")
+
+        table.insert(new_asteroids, new_asteroid)
+        print("using ast len"..ast_len.." has width "..get_asteroid_width(new_asteroid)..", height "..get_asteroid_height(new_asteroid))
+        x_off = x_off + get_asteroid_width(new_asteroid)
     end
     return new_asteroids
 end

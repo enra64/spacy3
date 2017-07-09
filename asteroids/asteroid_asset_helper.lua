@@ -113,7 +113,7 @@ local function get_asteroid_fragments(asteroid_type)
             "img/asteroids/1/grey_asteroid_fragment_6.png"
         }
     else
-        assert(false, "asteroid fragments requested for "..asteroid_type)
+        return {}
     end
 end
 
@@ -128,9 +128,9 @@ end
 
 functions[4] = is_in_viewport
 
-local function new_random_asteroid()
+local function new_random_asteroid(length)
     local new_asteroid = {}
-    new_asteroid.texture, new_asteroid.asteroid_collision_coordinates, new_asteroid.asteroid_type = load_random_asteroid()
+    new_asteroid.texture, new_asteroid.asteroid_collision_coordinates, new_asteroid.asteroid_type = load_random_asteroid(length)
     new_asteroid.fragments = get_asteroid_fragments(new_asteroid.asteroid_type)
     new_asteroid.width, new_asteroid.height = new_asteroid.texture:getDimensions()
     new_asteroid.is_in_viewport = is_in_viewport

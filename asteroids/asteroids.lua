@@ -98,7 +98,7 @@ asteroids.update = function(dt, player_hit_callback)
             hc.remove(asteroid.shape)
         end
 
-        --check_collisions_for_asteroid(i, asteroid, player_hit_callback)
+        check_collisions_for_asteroid(i, asteroid, player_hit_callback)
     end
 end
 
