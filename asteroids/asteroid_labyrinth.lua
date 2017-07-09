@@ -48,8 +48,6 @@ local function get_asteroid(x, y, length, orientation)
     new.scale_x = math.scale_from_to(new.width, ASTEROID_WIDTH)
     new.scale_y = new.scale_x
 
-
-
     -- set position
     new.x, new.y = x, y
 
@@ -63,10 +61,17 @@ local function get_asteroid(x, y, length, orientation)
 
     -- initialise the collision shape
     new.shape = hc.polygon(unpack(new.asteroid_collision_coordinates))
-    new.shape:moveTo(new.x, new.y)
     new.shape:scale(new.scale_x, new.scale_y)
     new.shape:rotate(new.rotation)
     new.shape.object_type = "asteroid"
+
+    if orientation == "horizontal" then
+        new.x = new.x + get_asteroid_width(new) / 2
+    else
+        new.y = new.y + get_asteroid_height(new) / 2
+    end
+
+    new.shape:moveTo(new.x, new.y)
 
     return new
 end
