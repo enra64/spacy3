@@ -19,7 +19,7 @@ local DEBUG_SPAWN_ALL = false
 
 local function update(asteroid, dx)
     -- move left on update
-    local speed = 300
+    local speed = 80
     asteroid.x = asteroid.x - dx * speed
     asteroid.shape:move(-dx * speed, 0)
 
@@ -50,6 +50,22 @@ local function get_asteroid(x, y)
     return new
 end
 
+local function get_vertical_line(x_off, y_off)
+    local new_asteroids = {}
+    for i = 1, ASTEROIDS_PER_VERTICAL_BORDER - 1 do
+        table.insert(new_asteroids, get_asteroid(x_off, y_off + i * ASTEROID_HEIGHT))
+    end
+    return new_asteroids
+end
+
+local function get_horizontal_line(x_off, y_off)
+    local new_asteroids = {}
+    for i = 1, ASTEROIDS_PER_HORIZONTAL_BORDER - 1 do
+        table.insert(new_asteroids, get_asteroid(x_off + i * ASTEROID_WIDTH, y_off))
+    end
+    return new_asteroids
+end
+
 local function add_asteroids(x, col, row, cell)
     local new_asteroids = {}
 
@@ -57,24 +73,19 @@ local function add_asteroids(x, col, row, cell)
     local drawn_cell_height = CELL_HEIGHT - ASTEROID_HEIGHT
 
     if DEBUG_SPAWN_ALL or cell:north_blocked() then
-        local x_off, y_off = x, row * drawn_cell_height + ASTEROID_HEIGHT / 2
-        for i = 1, ASTEROIDS_PER_HORIZONTAL_BORDER - 1 do
-            table.insert(new_asteroids, get_asteroid(x_off + i * ASTEROID_WIDTH, y_off))
-        end
+        table.insert_multiple(new_asteroids,
+            get_horizontal_line(x, row * drawn_cell_height + ASTEROID_HEIGHT / 2))
     end
     if DEBUG_SPAWN_ALL or cell:east_blocked() then
-        local x_off, y_off = x + CELL_WIDTH - ASTEROID_WIDTH, row * drawn_cell_height + ASTEROID_HEIGHT / 2
-        for i = 1, ASTEROIDS_PER_VERTICAL_BORDER - 1 do
-            table.insert(new_asteroids, get_asteroid(x_off, y_off + i * ASTEROID_HEIGHT))
-        end
+        table.insert_multiple(new_asteroids,
+            get_vertical_line(x + CELL_WIDTH - ASTEROID_WIDTH,
+                row * drawn_cell_height + ASTEROID_HEIGHT / 2))
     end
 
     local cell_at_bottom = cell.position == LABYRINTH_CELLS_PER_COLUMN
-    if (DEBUG_SPAWN_ALL and cell_at_bottom)or (cell:south_blocked() and cell_at_bottom) then
-        local x_off, y_off = x, (1 + row) * drawn_cell_height + ASTEROID_HEIGHT / 2
-        for i = 1, ASTEROIDS_PER_HORIZONTAL_BORDER - 1 do
-            table.insert(new_asteroids, get_asteroid(x_off + i * ASTEROID_WIDTH, y_off))
-        end
+    if (DEBUG_SPAWN_ALL and cell_at_bottom) or (cell:south_blocked() and cell_at_bottom) then
+        table.insert_multiple(new_asteroids,
+            get_horizontal_line(x, (1 + row) * drawn_cell_height + ASTEROID_HEIGHT / 2))
     end
 
     -- get asteroid at the specified position
