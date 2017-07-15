@@ -101,7 +101,7 @@ function player_died(score)
     end
 
     quit_confirmation:add_button("quit")
-    quit_confirmation:set_title("you made " .. score .. " points.\nyou also horifically failed your colony.")
+    quit_confirmation:set_title("you made " .. score .. " points.\nyou also horrifically failed your colony.")
     quit_confirmation.on_button_clicked = function(button_txt)
         if button_txt == "back to main" then
             gamestate.pop() -- pop warning
