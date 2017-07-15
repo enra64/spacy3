@@ -1,4 +1,4 @@
-require("lume.lume")
+lume = require("lume.lume")
 require("random")
 
 --- remove annoying 0 parameter in draw calls
@@ -14,10 +14,6 @@ end
 function dofile(file)
     --- overwrite luas "dofile" to work on android
     return love.filesystem.load(file)()
-end
-
-function table.remove_object(tbl, obj)
-    for i=#tbl,1,-1 do if tbl[i] == obj then tbl[i] = nil end end
 end
 
 function table.truncate(tbl, count)
@@ -59,7 +55,7 @@ function table.twolevel_clone(orig)
 end
 
 function table.multeach(tbl, factor)
-    return table.foreach(tbl, function(key) return key * factor end)
+    return lume.map(tbl, function(key) return key * factor end)
 end
 
 function table.subrange(t, first, last)
@@ -68,14 +64,6 @@ function table.subrange(t, first, last)
         sub[#sub + 1] = t[i]
     end
     return sub
-end
-
-function table.foreach(tbl, func)
-    --- replace each value in tbl with the return value of func(value, key)
-    for k, v in pairs(tbl) do
-        tbl[k] = func(v, k)
-    end
-    return tbl
 end
 
 function ipairs_if(tbl, if_fn)
