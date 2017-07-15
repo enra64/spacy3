@@ -135,8 +135,10 @@ asteroids.handle_projectile = function(projectile_shape, callback)
     -- removes all asteroids colliding with the projectile shape, and calls the callback for each of them
     local has_collision = false
 
-    for _, asteroid in ipairs(asteroid_storage) do
-        if asteroid.shape:collidesWith(projectile_shape) then
+    for other_shape, _ in ipairs(hc:collisions(projectile_shape)) do
+        if other_shape.shape.object_type == "asteroid" then
+            local asteroid = other_shape.asteroid_reference
+
             -- call back
             callback(asteroid, asteroid.asteroid_type)
             -- breakup animation
