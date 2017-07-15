@@ -60,7 +60,6 @@ local function get_asteroid(x, y, length, orientation)
     end
 
     -- initialise the collision shape
-    new.shape = hc.polygon(unpack(new.asteroid_collision_coordinates))
     new.shape:scale(new.scale_x, new.scale_y)
     new.shape:rotate(new.rotation)
     new.shape.object_type = "asteroid"
@@ -129,9 +128,14 @@ local function add_asteroids(x, col, row, cell)
     end
 
     -- get asteroid at the specified position
-    table.foreach(new_asteroids, function(asteroid, _)
-        asteroid.shape.identity = "col" .. col .. "row" .. row
-        asteroid.on_destroyed = function() table.remove_object(asteroid_columns[col][row], asteroid) end
+    lume.map(new_asteroids, function(asteroid, _)
+        asteroid.shape.identity = "spalte " .. col .. ", zeile" .. row
+        asteroid.on_destroyed = function(ast)
+            lume.remove(asteroid_storage, ast)
+            lume.remove(asteroid_columns[col][row], ast)
+            ast.shape.asteroid_reference = nil
+            hc.remove(ast.shape)
+        end
         return asteroid
     end)
 

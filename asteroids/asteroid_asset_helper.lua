@@ -9,69 +9,69 @@
 -- return an array load_random_asteroid, get_asteroid_fragments
 
 local functions = {}
-
-
+local hc = require("hc")
+local lume = require("lume.lume")
 
 local asteroids = {
     _1 = {
         {
-            texture = "img/asteroids/1/asteroid_brown.png",
-            polygon =  (read_csv("collisionmaps/singlebrown.csv"))
+            texture_path = "img/asteroids/1/asteroid_brown.png",
+            polygon =  read_csv("collisionmaps/singlebrown.csv")
         },
         {
-            texture = "img/asteroids/1/asteroid_grey.png",
-            polygon =  (read_csv("collisionmaps/singlegrey.csv"))
+            texture_path = "img/asteroids/1/asteroid_grey.png",
+            polygon =  read_csv("collisionmaps/singlegrey.csv")
         }
     },
     _2 = {
         {
-            texture = "img/asteroids/2/double1.png",
-            polygon =  (read_csv("collisionmaps/double1.csv"))
+            texture_path = "img/asteroids/2/double1.png",
+            polygon =  read_csv("collisionmaps/double1.csv")
         }, {
-            texture = "img/asteroids/2/double2.png",
-            polygon =  (read_csv("collisionmaps/double2.csv"))
+            texture_path = "img/asteroids/2/double2.png",
+            polygon =  read_csv("collisionmaps/double2.csv")
         }, {
-            texture = "img/asteroids/2/double3.png",
-            polygon =  (read_csv("collisionmaps/double3.csv"))
+            texture_path = "img/asteroids/2/double3.png",
+            polygon =  read_csv("collisionmaps/double3.csv")
         }, {
-            texture = "img/asteroids/2/double4.png",
-            polygon =  (read_csv("collisionmaps/double4.csv"))
+            texture_path = "img/asteroids/2/double4.png",
+            polygon =  read_csv("collisionmaps/double4.csv")
         }
     },
     _3 = {
         {
-            texture = "img/asteroids/3/triple1.png",
-            polygon =  (read_csv("collisionmaps/triple1.csv"))
+            texture_path = "img/asteroids/3/triple1.png",
+            polygon =  read_csv("collisionmaps/triple1.csv")
         }, {
-            texture = "img/asteroids/3/triple2.png",
-            polygon =  (read_csv("collisionmaps/triple2.csv"))
+            texture_path = "img/asteroids/3/triple2.png",
+            polygon =  read_csv("collisionmaps/triple2.csv")
         }, {
-            texture = "img/asteroids/3/triple3.png",
-            polygon =  (read_csv("collisionmaps/triple3.csv"))
+            texture_path = "img/asteroids/3/triple3.png",
+            polygon =  read_csv("collisionmaps/triple3.csv")
         }
     },
     _4 = {
         {
-            texture = "img/asteroids/4/quadruple1.png",
-            polygon =  (read_csv("collisionmaps/quadruple1.csv"))
+            texture_path = "img/asteroids/4/quadruple1.png",
+            polygon =  read_csv("collisionmaps/quadruple1.csv")
         }, {
-            texture = "img/asteroids/4/quadruple2.png",
-            polygon =  (read_csv("collisionmaps/quadruple2.csv"))
+            texture_path = "img/asteroids/4/quadruple2.png",
+            polygon =  read_csv("collisionmaps/quadruple2.csv")
         }, {
-            texture = "img/asteroids/4/quadruple3.png",
-            polygon =  (read_csv("collisionmaps/quadruple3.csv"))
+            texture_path = "img/asteroids/4/quadruple3.png",
+            polygon =  read_csv("collisionmaps/quadruple3.csv")
         }
     },
     _8 = {
         {
-            texture = "img/asteroids/8/eighter1.png",
-            polygon =  (read_csv("collisionmaps/eighter1.csv"))
+            texture_path = "img/asteroids/8/eighter1.png",
+            polygon =  read_csv("collisionmaps/eighter1.csv")
         }, {
-            texture = "img/asteroids/8/eighter2.png",
-            polygon =  (read_csv("collisionmaps/eighter2.csv"))
+            texture_path = "img/asteroids/8/eighter2.png",
+            polygon =  read_csv("collisionmaps/eighter2.csv")
         }, {
-            texture = "img/asteroids/8/eighter3.png",
-            polygon =  (read_csv("collisionmaps/eighter3.csv"))
+            texture_path = "img/asteroids/8/eighter3.png",
+            polygon =  read_csv("collisionmaps/eighter3.csv")
         }
     }
 }
@@ -80,14 +80,11 @@ local asteroids = {
 local function load_random_asteroid(length)
     length = length or 1
 
-    local asteroids_with_matching_length = asteroids["_"..length]
-    local choice = math.random(#asteroids_with_matching_length)
-    local polygon = asteroids_with_matching_length[choice].polygon
-    local texture_path = asteroids_with_matching_length[choice].texture
-    local id = texture_path:match("^.+/(.+)%..*$")
+    local choice = lume.randomchoice(asteroids["_"..length])
+    local id = choice.texture_path:match("^.+/(.+)%..*$")
 
     -- return the texture, the polygon, and the name of the chosen asteroid
-    return love.graphics.newImage(texture_path), polygon, id
+    return love.graphics.newImage(choice.texture_path), hc.polygon(unpack(choice.polygon)), id
 end
 
 functions[1] = load_random_asteroid
@@ -130,11 +127,13 @@ functions[4] = is_in_viewport
 
 local function new_random_asteroid(length)
     local new_asteroid = {}
-    new_asteroid.texture, new_asteroid.asteroid_collision_coordinates, new_asteroid.asteroid_type = load_random_asteroid(length)
+    new_asteroid.texture, new_asteroid.shape, new_asteroid.asteroid_type = load_random_asteroid(length)
     new_asteroid.fragments = get_asteroid_fragments(new_asteroid.asteroid_type)
     new_asteroid.width, new_asteroid.height = new_asteroid.texture:getDimensions()
     new_asteroid.is_in_viewport = is_in_viewport
-    new_asteroid.on_destroyed = function() end
+    new_asteroid.shape.asteroid_reference = new_asteroid
+    new_asteroid.on_destroyed = function(asteroid) print("BAD on_destroyed") end
+
     return new_asteroid
 end
 
