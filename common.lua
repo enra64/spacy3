@@ -25,19 +25,7 @@ function table.truncate(tbl, count)
 end
 
 function table.insert_multiple(tbl_sink, tbl_source)
-    for _, v in ipairs(tbl_source) do
-        table.insert(tbl_sink, v)
-    end
-end
-
---http://lua-users.org/wiki/RandomSample
-function table.permute(tab, n, count)
-    n = n or #tab
-    for i = 1, count or n do
-        local j = math.random(i, n)
-        tab[i], tab[j] = tab[j], tab[i]
-    end
-    return tab
+    lume.push(tbl_sink, unpack(tbl_source))
 end
 
 function table.twolevel_clone(orig)
@@ -52,6 +40,17 @@ function table.twolevel_clone(orig)
         copy = orig
     end
     return copy
+end
+
+-- like lume.each, but in reverse order to allow deletion
+function table.reach(t, fn, ...)
+    for _, v in lume.ripairs(t) do
+        if type(fn) == "string" then
+            v[fn](v, ...)
+        else
+            fn(v, ...)
+        end
+    end
 end
 
 function table.multeach(tbl, factor)

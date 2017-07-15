@@ -17,6 +17,7 @@ local ASTEROIDS_PER_VERTICAL_BORDER, ASTEROIDS_PER_HORIZONTAL_BORDER = 8, 14
 local LABYRINTH_CELLS_PER_COLUMN = 5 -- ellers height
 local CELL_HEIGHT, CELL_WIDTH
 local DEBUG_SPAWN_ALL = false
+local column_fill_check_timer
 
 local function update(asteroid, dx)
     -- move left on update
@@ -81,11 +82,9 @@ local packing_solutions = {
     _14 = { { 1, 1, 2, 2, 2, 2, 4 }, { 1, 1, 2, 2, 2, 3, 3 }, { 1, 1, 2, 2, 4, 4 }, { 1, 1, 2, 2, 8 }, { 1, 1, 2, 2, 2, 3, 3 }, { 1, 1, 2, 2, 4, 4 }, { 1, 1, 2, 2, 8 }, { 1, 1, 2, 2, 4, 4 }, { 1, 1, 2, 2, 8 }, { 1, 1, 2, 3, 3, 4 }, { 1, 1, 2, 2, 2, 3, 3 }, { 1, 1, 2, 2, 4, 4 }, { 1, 1, 2, 2, 8 }, { 1, 1, 2, 2, 4, 4 }, { 1, 1, 2, 2, 8 }, { 1, 1, 2, 3, 3, 4 }, { 1, 1, 2, 2, 4, 4 }, { 1, 1, 2, 2, 8 }, { 1, 1, 2, 3, 3, 4 }, { 1, 1, 4, 4, 4 }, { 1, 1, 4, 8 }, { 1, 2, 2, 2, 3, 4 }, { 1, 2, 2, 3, 3, 3 }, { 1, 2, 2, 2, 3, 4 }, { 1, 2, 2, 3, 3, 3 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 2, 2, 3, 4 }, { 1, 2, 2, 3, 3, 3 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 2, 3, 3, 3 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 3, 3, 3, 4 }, { 1, 2, 2, 2, 3, 4 }, { 1, 2, 2, 3, 3, 3 }, { 1, 2, 2, 2, 3, 4 }, { 1, 2, 2, 3, 3, 3 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 2, 2, 3, 4 }, { 1, 2, 2, 3, 3, 3 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 2, 3, 3, 3 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 3, 3, 3, 4 }, { 2, 2, 2, 2, 3, 3 }, { 2, 2, 2, 4, 4 }, { 2, 2, 2, 8 }, { 2, 2, 2, 4, 4 }, { 2, 2, 2, 8 }, { 2, 2, 3, 3, 4 }, { 2, 2, 2, 4, 4 }, { 2, 2, 2, 8 }, { 2, 2, 3, 3, 4 }, { 2, 4, 4, 4 }, { 2, 4, 8 }, { 2, 2, 2, 4, 4 }, { 2, 2, 2, 8 }, { 2, 2, 3, 3, 4 }, { 2, 4, 4, 4 }, { 2, 4, 8 }, { 2, 2, 3, 3, 4 }, { 2, 4, 4, 4 }, { 2, 4, 8 }, { 2, 4, 4, 4 }, { 2, 4, 8 }, { 3, 3, 4, 4 }, { 3, 3, 8 }, { 3, 3, 4, 4 }, { 3, 3, 8 }, { 3, 3, 4, 4 }, { 3, 3, 8 } }
 }
 
-
-
 local function get_vertical_line(x_off, y_off)
     local new_asteroids = {}
-    local packing_choice = table.permute(lume.randomchoice(packing_solutions["_"..ASTEROIDS_PER_VERTICAL_BORDER]))
+    local packing_choice = lume.shuffle(lume.randomchoice(packing_solutions["_"..ASTEROIDS_PER_VERTICAL_BORDER]))
     for _, ast_len in ipairs(packing_choice) do
         local new_asteroid = get_asteroid(x_off, y_off, ast_len, "vertical")
         table.insert(new_asteroids, new_asteroid)
@@ -131,10 +130,10 @@ local function add_asteroids(x, col, row, cell)
     lume.map(new_asteroids, function(asteroid, _)
         asteroid.shape.identity = "spalte " .. col .. ", zeile" .. row
         asteroid.on_destroyed = function(ast)
+            hc.remove(ast.shape)
             lume.remove(asteroid_storage, ast)
             lume.remove(asteroid_columns[col][row], ast)
             ast.shape.asteroid_reference = nil
-            hc.remove(ast.shape)
         end
         return asteroid
     end)
@@ -186,64 +185,17 @@ end
 
 local function check_column_fill()
     -- find asteroid field right
-
     local _, _, field_right, _ = find_asteroid()
     if field_right - ASTEROID_WIDTH / 2 < love.graphics.getWidth() then
         spawn_asteroid_column(field_right - ASTEROID_WIDTH / 2)
     end
 end
 
-local function test_ellers()
-    local ellers = new_ellers_algorithm(8)
-
-    local cols = {}
-
-    for i = 1, 20 do
-        table.insert(cols, ellers:step())
-    end
-
-    for row = 1, ellers.height do
-        for column, _ in ipairs(cols) do
-            local cell = cols[column][row]
-            if cell.north then
-                io.write("   ")
-            else
-                io.write("___")
-            end
-        end
-
-        print()
-
-        for column, _ in ipairs(cols) do
-            local cell = cols[column][row]
-            if cell.west == true then
-                io.write(" ")
-            else
-                io.write("W")
-            end
-
-            if cell.south then
-                io.write(" ")
-            else
-                io.write("_")
-            end
-
-            if cell.east then
-                io.write(" ")
-            else
-                io.write("E")
-            end
-        end
-        print()
-    end
-end
-
--- init function
-return function(asteroid_storage_reference, asteroid_scale)
+local function start(asteroid_storage_reference, asteroid_scale)
     asteroid_base_scale = asteroid_scale
     asteroid_storage = asteroid_storage_reference
     asteroid_columns = {}
-    timer.every(0.1, check_column_fill)
+    column_fill_check_timer = timer.every(0.1, check_column_fill)
 
     ellers = new_ellers_algorithm(LABYRINTH_CELLS_PER_COLUMN)
 
@@ -258,3 +210,12 @@ return function(asteroid_storage_reference, asteroid_scale)
     -- start the field
     spawn_asteroid_column(love.graphics.getWidth() + 10)
 end
+
+local function stop()
+    if column_fill_check_timer then
+        timer.cancel(column_fill_check_timer)
+    end
+end
+
+-- init function
+return {start = start, stop = stop}

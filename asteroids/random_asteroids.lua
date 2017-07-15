@@ -86,8 +86,10 @@ local function on_asteroid_timer()
     timer.after(get_next_asteroid_delay(), on_asteroid_timer)
 end
 
-return function(asteroid_storage_reference, asteroid_scale)
+local function start(asteroid_storage_reference, asteroid_scale)
     asteroid_base_scale = asteroid_scale
     asteroid_storage = asteroid_storage_reference
     timer.after(get_next_asteroid_delay(), on_asteroid_timer)
 end
+
+return {start = start, stop = function() end}

@@ -4,6 +4,7 @@ local asteroid_storage = {}
 
 local hc = require("hc")
 local explosions = require("explosions")
+local lume = require("lume.lume")
 require("difficulty_handler")
 require("drops")
 require("flyapartomatic")
@@ -12,24 +13,15 @@ local enemies = require("enemies")
 local FRAGMENT_SPEED = 2
 local FRAGMENT_SCALE
 
-local random_asteroid_start_function = require("asteroids.random_asteroids")
-local asteroid_labyrinth_start_function = require("asteroids.asteroid_labyrinth")
+local random_asteroids = require("asteroids.random_asteroids")
+local labyrinth_asteroids = require("asteroids.asteroid_labyrinth")
 local mode
 
 asteroids.init = function()
 end
 
-local function get_index_of_asteroid_by_shape(shape)
-    for i, ast in ipairs(asteroid_storage) do
-        if ast.shape == shape then
-            return i
-        end
-    end
-end
-
 local function handle_player_collision(player_hit_callback, asteroid)
-    player_hit_callback(asteroid.x + asteroid.width / 2,
-        asteroid.y + asteroid.height / 2)
+    player_hit_callback(asteroid.shape:center())
     flyapartomatic.spawn(asteroid.fragments,
         asteroid.x,
         asteroid.y,
@@ -38,7 +30,7 @@ local function handle_player_collision(player_hit_callback, asteroid)
     asteroid:on_destroyed()
 end
 
-local function check_collisions_for_asteroid(i, asteroid)
+local function check_collisions_for_asteroid(asteroid)
     --- remove asteroids that collided with an enemy or another asteroid
     for other, _ in pairs(hc.collisions(asteroid.shape)) do
         if (other.object_type == "enemy" or other.object_type == "asteroid") then
@@ -68,8 +60,8 @@ local function check_collisions_for_asteroid(i, asteroid)
                 local other_asteroid = other.asteroid_reference
                 if other_asteroid then
                     flyapartomatic.spawn(other_asteroid.fragments, other_asteroid.x, other_asteroid.y, FRAGMENT_SCALE, FRAGMENT_SPEED)
+                    other_asteroid:on_destroyed()
                 end
-                other:on_destroyed()
             end
 
             flyapartomatic.spawn(asteroid.fragments, asteroid.x, asteroid.y, FRAGMENT_SCALE, FRAGMENT_SPEED)
@@ -81,13 +73,13 @@ local function check_player_collisions(player_shape, player_hit_callback)
     for other, _ in pairs(hc.collisions(player_shape)) do
         if other.object_type == "asteroid" then
             local asteroid = other.asteroid_reference
-            handle_player_collision(player_hit_callback, asteroid, i)
+            handle_player_collision(player_hit_callback, asteroid)
         end
     end
 end
 
 asteroids.update = function(dt, player_shape, player_hit_callback)
-    for i, asteroid in ipairs(asteroid_storage) do
+    for _, asteroid in ipairs(asteroid_storage) do
         asteroid:update(dt)
 
         -- determine whether an asteroid ever was within the viewport
@@ -105,7 +97,7 @@ asteroids.update = function(dt, player_shape, player_hit_callback)
 
         local check_for_asteroid_collisions = mode ~= "labyrinth"
         if check_for_asteroid_collisions then
-            check_collisions_for_asteroid(i, asteroid)
+            check_collisions_for_asteroid(asteroid)
         end
     end
 
@@ -135,8 +127,8 @@ asteroids.handle_projectile = function(projectile_shape, callback)
     -- removes all asteroids colliding with the projectile shape, and calls the callback for each of them
     local has_collision = false
 
-    for other_shape, _ in ipairs(hc:collisions(projectile_shape)) do
-        if other_shape.shape.object_type == "asteroid" then
+    for other_shape, _ in pairs(hc.collisions(projectile_shape)) do
+        if other_shape.object_type == "asteroid" then
             local asteroid = other_shape.asteroid_reference
 
             -- call back
@@ -160,9 +152,9 @@ asteroids.enter = function(asteroid_mode)
     FRAGMENT_SCALE = scaling.get("asteroid_fragment_scale")
 
     if asteroid_mode == "random" then
-        random_asteroid_start_function(asteroid_storage, asteroid_base_scale)
+        random_asteroids.start(asteroid_storage, asteroid_base_scale)
     elseif asteroid_mode == "labyrinth" then
-        asteroid_labyrinth_start_function(asteroid_storage, asteroid_base_scale)
+        labyrinth_asteroids.start(asteroid_storage, asteroid_base_scale)
     else
         print("UNKNOWN ASTEROID MODE")
     end
@@ -171,9 +163,6 @@ end
 asteroids.resume = function() end
 
 asteroids.leave = function()
-    lume.each(asteroid_storage, function (ast)
-        ast:on_destroyed()
-    end)
-
-    asteroid_storage = {}
+    labyrinth_asteroids.stop()
+    table.reach(asteroid_storage, "on_destroyed")
 end
