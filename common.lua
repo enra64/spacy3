@@ -24,6 +24,15 @@ function table.truncate(tbl, count)
     return tbl
 end
 
+
+--- return 0 if the absolute value of val is below epsilon, and val otherwise
+function math.apply_epsilon(val, epsilon)
+    if math.abs(val) < epsilon then
+        return 0
+    end
+    return val
+end
+
 function table.insert_multiple(tbl_sink, tbl_source)
     lume.push(tbl_sink, unpack(tbl_source))
 end
@@ -160,9 +169,7 @@ function string.split(inputstr, sep)
 end
 
 function math.clamp(val, lower, upper)
-    assert(val and lower and upper, "missing argument for math.clamp")
-    if lower > upper then lower, upper = upper, lower end -- swap if boundaries supplied the wrong way
-    return math.max(lower, math.min(upper, val))
+    return lume.clamp(val, lower, upper)
 end
 
 function math.scale_from_to(from, to)

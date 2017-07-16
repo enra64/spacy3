@@ -119,7 +119,7 @@ end
 asteroids.draw = function()
     for _, asteroid in ipairs(asteroid_storage) do
         love.graphics.drawObjectCentered(asteroid)
-        asteroid.shape:draw()
+        --asteroid.shape:draw()
     end
 end
 
