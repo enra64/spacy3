@@ -107,7 +107,7 @@ function game:update(dt)
     explosions.update(dt)
     bg.update(dt)
     ingame_status.update(score)
-    asteroids.update(dt, player.asteroid_hit)
+    asteroids.update(dt, player.get_player_shape(), player.asteroid_hit)
     
     
     if score > level_thresholds[level] then

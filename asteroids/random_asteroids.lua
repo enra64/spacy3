@@ -60,15 +60,19 @@ local function get_asteroid()
     new.rotation = 0--math.random(2 * math.pi)
 
     --- collision shape
-    new.shape = hc.polygon(unpack(new.asteroid_collision_coordinates))
-
-
     new.scale = asteroid_base_scale + math.random(-asteroid_base_scale * 25, asteroid_base_scale * 25) / 100
 
     -- move to "position of asteroid" - "center of asteroid"
-    new.shape:move(new.x - new.width / 2, new.y - new.height / 2)
+    new.shape:moveTo(new.x, new.y)
     new.shape:scale(new.scale)
     new.shape.object_type = "asteroid"
+
+    -- clean up when the asteroid is destroyed
+    new.on_destroyed = function(asteroid)
+        lume.remove(asteroid_storage, asteroid)
+        asteroid.shape.asteroid_reference = nil
+        hc.remove(asteroid.shape)
+    end
 
     return new
 end
@@ -82,8 +86,10 @@ local function on_asteroid_timer()
     timer.after(get_next_asteroid_delay(), on_asteroid_timer)
 end
 
-return function(asteroid_storage_reference, asteroid_scale)
+local function start(asteroid_storage_reference, asteroid_scale)
     asteroid_base_scale = asteroid_scale
     asteroid_storage = asteroid_storage_reference
     timer.after(get_next_asteroid_delay(), on_asteroid_timer)
 end
+
+return {start = start, stop = function() end}

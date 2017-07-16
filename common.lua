@@ -1,4 +1,4 @@
-require("lume.lume")
+lume = require("lume.lume")
 require("random")
 
 --- remove annoying 0 parameter in draw calls
@@ -16,10 +16,6 @@ function dofile(file)
     return love.filesystem.load(file)()
 end
 
-function table.remove_object(tbl, obj)
-    for i=#tbl,1,-1 do if tbl[i] == obj then tbl[i] = nil end end
-end
-
 function table.truncate(tbl, count)
     --- reduce number of items in tbl to count
     for i=1,#tbl - count do
@@ -28,10 +24,17 @@ function table.truncate(tbl, count)
     return tbl
 end
 
-function table.insert_multiple(tbl_sink, tbl_source)
-    for _, v in ipairs(tbl_source) do
-        table.insert(tbl_sink, v)
+
+--- return 0 if the absolute value of val is below epsilon, and val otherwise
+function math.apply_epsilon(val, epsilon)
+    if math.abs(val) < epsilon then
+        return 0
     end
+    return val
+end
+
+function table.insert_multiple(tbl_sink, tbl_source)
+    lume.push(tbl_sink, unpack(tbl_source))
 end
 
 function table.twolevel_clone(orig)
@@ -48,8 +51,19 @@ function table.twolevel_clone(orig)
     return copy
 end
 
+-- like lume.each, but in reverse order to allow deletion
+function table.reach(t, fn, ...)
+    for _, v in lume.ripairs(t) do
+        if type(fn) == "string" then
+            v[fn](v, ...)
+        else
+            fn(v, ...)
+        end
+    end
+end
+
 function table.multeach(tbl, factor)
-    return table.foreach(tbl, function(key) return key * factor end)
+    return lume.map(tbl, function(key) return key * factor end)
 end
 
 function table.subrange(t, first, last)
@@ -60,20 +74,27 @@ function table.subrange(t, first, last)
     return sub
 end
 
-function table.foreach(tbl, func)
-    --- replace each value in tbl with the return value of func(value, key)
-    for k, v in pairs(tbl) do
-        tbl[k] = func(v, k)
-    end
-    return tbl
-end
-
 function ipairs_if(tbl, if_fn)
     local i = 0
     return function()
         i = i + 1
         if i < #tbl and if_fn(tbl[i]) then return tbl[i] end
     end
+end
+
+-- Convert from CSV string to table (converts a single line of a CSV file)
+-- from http://lua-users.org/wiki/CsvUtils
+function read_csv(path)
+    local s, _ = love.filesystem.read(path)
+    s = s .. ','        -- ending comma
+    local t = {}        -- table to collect fields
+    local fieldstart = 1
+    repeat
+        local nexti = string.find(s, ',', fieldstart)
+        table.insert(t, tonumber(string.sub(s, fieldstart, nexti-1)))
+        fieldstart = nexti + 1
+    until fieldstart > string.len(s)
+    return t
 end
 
 --http://stackoverflow.com/a/15706820
@@ -148,9 +169,7 @@ function string.split(inputstr, sep)
 end
 
 function math.clamp(val, lower, upper)
-    assert(val and lower and upper, "missing argument for math.clamp")
-    if lower > upper then lower, upper = upper, lower end -- swap if boundaries supplied the wrong way
-    return math.max(lower, math.min(upper, val))
+    return lume.clamp(val, lower, upper)
 end
 
 function math.scale_from_to(from, to)

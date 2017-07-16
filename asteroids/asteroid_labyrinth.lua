@@ -4,6 +4,7 @@ local timer = require("hump.timer")
 require("difficulty_handler")
 require("drops")
 require("flyapartomatic")
+local lume = require("lume.lume")
 local new_ellers_algorithm = require("asteroids.ellers_algorithm")
 
 local asteroid_storage
@@ -16,10 +17,11 @@ local ASTEROIDS_PER_VERTICAL_BORDER, ASTEROIDS_PER_HORIZONTAL_BORDER = 8, 14
 local LABYRINTH_CELLS_PER_COLUMN = 5 -- ellers height
 local CELL_HEIGHT, CELL_WIDTH
 local DEBUG_SPAWN_ALL = false
+local column_fill_check_timer
 
 local function update(asteroid, dx)
     -- move left on update
-    local speed = 300
+    local speed = 321
     asteroid.x = asteroid.x - dx * speed
     asteroid.shape:move(-dx * speed, 0)
 
@@ -28,26 +30,79 @@ local function update(asteroid, dx)
     asteroid.shape:rotate(asteroid.rotation_speed)
 end
 
-local function get_asteroid(x, y)
+local function get_asteroid_width(asteroid)
+    local x1, _, x2, _ = asteroid.shape:bbox()
+    return x2 - x1
+end
+
+local function get_asteroid_height(asteroid)
+    local _, y1, _, y2 = asteroid.shape:bbox()
+    return y2 - y1
+end
+
+local function get_asteroid(x, y, length, orientation)
     -- get some random asteroid
-    local new = new_random_asteroid()
+    local new = new_random_asteroid(length)
 
     -- set some methods
     new.update = update
     new.scale_x = math.scale_from_to(new.width, ASTEROID_WIDTH)
-    new.scale_y = math.scale_from_to(new.height, ASTEROID_HEIGHT)
+    new.scale_y = new.scale_x
 
     -- set position
     new.x, new.y = x, y
-    new.rotation, new.rotation_speed = math.rad(math.random(0, 360)), math.rad(math.random() - 0.5)
+
+    -- rotate the asteroid a little
+    new.rotation, new.rotation_speed = math.rad(math.random(-8, 8)), 0
+
+    -- if horizontal rotate by 90 degrees
+    if orientation == "horizontal" then
+        new.rotation = new.rotation + math.rad(lume.randomchoice({90, -90}))
+    end
 
     -- initialise the collision shape
-    new.shape = hc.polygon(unpack(new.asteroid_collision_coordinates))
-    new.shape:move(new.x - new.width / 2, new.y - new.height / 2)
     new.shape:scale(new.scale_x, new.scale_y)
-    new.shape:rotate(0)
+    new.shape:rotate(new.rotation)
     new.shape.object_type = "asteroid"
+
+    if orientation == "horizontal" then
+        new.x = new.x + get_asteroid_width(new) / 2
+    else
+        new.y = new.y + get_asteroid_height(new) / 2
+    end
+
+    new.shape:moveTo(new.x, new.y)
+
     return new
+end
+
+--- this table stores the possible combinations of available asteroids to reach a given length
+local packing_solutions = {
+    _8 = { { 1, 1, 2, 2, 2 }, { 1, 1, 2, 4 }, { 1, 1, 2, 2, 2 }, { 1, 1, 2, 4 }, { 1, 1, 3, 3 }, { 1, 2, 2, 3 }, { 1, 3, 4 }, { 1, 2, 2, 3 }, { 1, 3, 4 }, { 2, 2, 2, 2 }, { 2, 2, 4 }, { 2, 3, 3 }, { 2, 2, 4 }, { 2, 3, 3 }, { 2, 2, 4 }, { 2, 3, 3 }, { 4, 4 }, { 8 } },
+    _14 = { { 1, 1, 2, 2, 2, 2, 4 }, { 1, 1, 2, 2, 2, 3, 3 }, { 1, 1, 2, 2, 4, 4 }, { 1, 1, 2, 2, 8 }, { 1, 1, 2, 2, 2, 3, 3 }, { 1, 1, 2, 2, 4, 4 }, { 1, 1, 2, 2, 8 }, { 1, 1, 2, 2, 4, 4 }, { 1, 1, 2, 2, 8 }, { 1, 1, 2, 3, 3, 4 }, { 1, 1, 2, 2, 2, 3, 3 }, { 1, 1, 2, 2, 4, 4 }, { 1, 1, 2, 2, 8 }, { 1, 1, 2, 2, 4, 4 }, { 1, 1, 2, 2, 8 }, { 1, 1, 2, 3, 3, 4 }, { 1, 1, 2, 2, 4, 4 }, { 1, 1, 2, 2, 8 }, { 1, 1, 2, 3, 3, 4 }, { 1, 1, 4, 4, 4 }, { 1, 1, 4, 8 }, { 1, 2, 2, 2, 3, 4 }, { 1, 2, 2, 3, 3, 3 }, { 1, 2, 2, 2, 3, 4 }, { 1, 2, 2, 3, 3, 3 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 2, 2, 3, 4 }, { 1, 2, 2, 3, 3, 3 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 2, 3, 3, 3 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 3, 3, 3, 4 }, { 1, 2, 2, 2, 3, 4 }, { 1, 2, 2, 3, 3, 3 }, { 1, 2, 2, 2, 3, 4 }, { 1, 2, 2, 3, 3, 3 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 2, 2, 3, 4 }, { 1, 2, 2, 3, 3, 3 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 2, 3, 3, 3 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 2, 3, 4, 4 }, { 1, 2, 3, 8 }, { 1, 3, 3, 3, 4 }, { 2, 2, 2, 2, 3, 3 }, { 2, 2, 2, 4, 4 }, { 2, 2, 2, 8 }, { 2, 2, 2, 4, 4 }, { 2, 2, 2, 8 }, { 2, 2, 3, 3, 4 }, { 2, 2, 2, 4, 4 }, { 2, 2, 2, 8 }, { 2, 2, 3, 3, 4 }, { 2, 4, 4, 4 }, { 2, 4, 8 }, { 2, 2, 2, 4, 4 }, { 2, 2, 2, 8 }, { 2, 2, 3, 3, 4 }, { 2, 4, 4, 4 }, { 2, 4, 8 }, { 2, 2, 3, 3, 4 }, { 2, 4, 4, 4 }, { 2, 4, 8 }, { 2, 4, 4, 4 }, { 2, 4, 8 }, { 3, 3, 4, 4 }, { 3, 3, 8 }, { 3, 3, 4, 4 }, { 3, 3, 8 }, { 3, 3, 4, 4 }, { 3, 3, 8 } }
+}
+
+local function get_vertical_line(x_off, y_off)
+    local new_asteroids = {}
+    local packing_choice = lume.shuffle(lume.randomchoice(packing_solutions["_"..ASTEROIDS_PER_VERTICAL_BORDER]))
+    for _, ast_len in ipairs(packing_choice) do
+        local new_asteroid = get_asteroid(x_off, y_off, ast_len, "vertical")
+        table.insert(new_asteroids, new_asteroid)
+        y_off = y_off + get_asteroid_height(new_asteroid) + 2
+    end
+    return new_asteroids
+end
+
+local function get_horizontal_line(x_off, y_off)
+    local new_asteroids = {}
+    local packing_choice = lume.randomchoice(packing_solutions["_"..ASTEROIDS_PER_HORIZONTAL_BORDER])
+
+    for _, ast_len in ipairs(packing_choice) do
+        local new_asteroid = get_asteroid(x_off, y_off, ast_len, "horizontal")
+        table.insert(new_asteroids, new_asteroid)
+        x_off = x_off + get_asteroid_width(new_asteroid) + 2
+    end
+    return new_asteroids
 end
 
 local function add_asteroids(x, col, row, cell)
@@ -57,30 +112,29 @@ local function add_asteroids(x, col, row, cell)
     local drawn_cell_height = CELL_HEIGHT - ASTEROID_HEIGHT
 
     if DEBUG_SPAWN_ALL or cell:north_blocked() then
-        local x_off, y_off = x, row * drawn_cell_height + ASTEROID_HEIGHT / 2
-        for i = 1, ASTEROIDS_PER_HORIZONTAL_BORDER - 1 do
-            table.insert(new_asteroids, get_asteroid(x_off + i * ASTEROID_WIDTH, y_off))
-        end
+        table.insert_multiple(new_asteroids,
+            get_horizontal_line(x + ASTEROID_WIDTH / 2, row * drawn_cell_height + ASTEROID_HEIGHT / 2))
     end
     if DEBUG_SPAWN_ALL or cell:east_blocked() then
-        local x_off, y_off = x + CELL_WIDTH - ASTEROID_WIDTH, row * drawn_cell_height + ASTEROID_HEIGHT / 2
-        for i = 1, ASTEROIDS_PER_VERTICAL_BORDER - 1 do
-            table.insert(new_asteroids, get_asteroid(x_off, y_off + i * ASTEROID_HEIGHT))
-        end
+        table.insert_multiple(new_asteroids,
+            get_vertical_line(x + CELL_WIDTH - ASTEROID_WIDTH, row * drawn_cell_height + ASTEROID_HEIGHT / 2))
     end
 
     local cell_at_bottom = cell.position == LABYRINTH_CELLS_PER_COLUMN
-    if (DEBUG_SPAWN_ALL and cell_at_bottom)or (cell:south_blocked() and cell_at_bottom) then
-        local x_off, y_off = x, (1 + row) * drawn_cell_height + ASTEROID_HEIGHT / 2
-        for i = 1, ASTEROIDS_PER_HORIZONTAL_BORDER - 1 do
-            table.insert(new_asteroids, get_asteroid(x_off + i * ASTEROID_WIDTH, y_off))
-        end
+    if (DEBUG_SPAWN_ALL and cell_at_bottom) or (cell:south_blocked() and cell_at_bottom) then
+        table.insert_multiple(new_asteroids,
+            get_horizontal_line(x + ASTEROID_WIDTH / 2, (1 + row) * drawn_cell_height + ASTEROID_HEIGHT / 2))
     end
 
     -- get asteroid at the specified position
-    table.foreach(new_asteroids, function(asteroid, _)
-        asteroid.shape.identity = "col" .. col .. "row" .. row
-        asteroid.on_destroyed = function() table.remove_object(asteroid_columns[col][row], asteroid) end
+    lume.map(new_asteroids, function(asteroid, _)
+        asteroid.shape.identity = "spalte " .. col .. ", zeile" .. row
+        asteroid.on_destroyed = function(ast)
+            hc.remove(ast.shape)
+            lume.remove(asteroid_storage, ast)
+            lume.remove(asteroid_columns[col][row], ast)
+            ast.shape.asteroid_reference = nil
+        end
         return asteroid
     end)
 
@@ -131,64 +185,17 @@ end
 
 local function check_column_fill()
     -- find asteroid field right
-
     local _, _, field_right, _ = find_asteroid()
     if field_right - ASTEROID_WIDTH / 2 < love.graphics.getWidth() then
         spawn_asteroid_column(field_right - ASTEROID_WIDTH / 2)
     end
 end
 
-local function test_ellers()
-    local ellers = new_ellers_algorithm(8)
-
-    local cols = {}
-
-    for i = 1, 20 do
-        table.insert(cols, ellers:step())
-    end
-
-    for row = 1, ellers.height do
-        for column, _ in ipairs(cols) do
-            local cell = cols[column][row]
-            if cell.north then
-                io.write("   ")
-            else
-                io.write("___")
-            end
-        end
-
-        print()
-
-        for column, _ in ipairs(cols) do
-            local cell = cols[column][row]
-            if cell.west == true then
-                io.write(" ")
-            else
-                io.write("W")
-            end
-
-            if cell.south then
-                io.write(" ")
-            else
-                io.write("_")
-            end
-
-            if cell.east then
-                io.write(" ")
-            else
-                io.write("E")
-            end
-        end
-        print()
-    end
-end
-
--- init function
-return function(asteroid_storage_reference, asteroid_scale)
+local function start(asteroid_storage_reference, asteroid_scale)
     asteroid_base_scale = asteroid_scale
     asteroid_storage = asteroid_storage_reference
     asteroid_columns = {}
-    timer.every(0.1, check_column_fill)
+    column_fill_check_timer = timer.every(0.1, check_column_fill)
 
     ellers = new_ellers_algorithm(LABYRINTH_CELLS_PER_COLUMN)
 
@@ -198,9 +205,17 @@ return function(asteroid_storage_reference, asteroid_scale)
     ASTEROID_WIDTH = ASTEROID_HEIGHT
 
     CELL_HEIGHT = ASTEROID_HEIGHT * ASTEROIDS_PER_VERTICAL_BORDER
-    CELL_WIDTH = ASTEROID_WIDTH * ASTEROIDS_PER_HORIZONTAL_BORDER
-
+    CELL_WIDTH = (ASTEROID_WIDTH + 2) * ASTEROIDS_PER_HORIZONTAL_BORDER
 
     -- start the field
     spawn_asteroid_column(love.graphics.getWidth() + 10)
 end
+
+local function stop()
+    if column_fill_check_timer then
+        timer.cancel(column_fill_check_timer)
+    end
+end
+
+-- init function
+return {start = start, stop = stop}

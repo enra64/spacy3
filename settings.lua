@@ -7,26 +7,30 @@ local avl_settings = {
     fullscreen = {"yes", "borderless", "no"},
     resolution = {"640x480", "1366x768", "1920x1080", "2560x1440", "3840x2160"},
     vsync = {"yes", "no"},
-    sound = {"on", "off"}
+    sound = {"on", "off"},
+    rumble = {"on", "off"}
 }
 
 local default_state = {
     fullscreen = 3,
     resolution = 1,
     vsync = 1,
-    sound = 1
+    sound = 1,
+    rumble = 1
 }
 
 local avl_settings_touch = {
     fullscreen = {"yes", "no"},
     sound = {"on", "off"},
-    control = {"accelerometer", "touchpad"}
+    control = {"accelerometer", "touchpad"},
+    rumble = {"on", "off"}
 }
 
 local default_state_touch = {
     fullscreen = 2,
     sound = 1,
-    control = 2
+    control = 2,
+    rumble = 2
 }
 
 function this:get_current_value(key)
@@ -54,7 +58,7 @@ function this:graphics_mode_changed()
     local flags = {}
 
     local fullscreen_mode = self:get_current_value("fullscreen")
-    local vsync_mode = self:get_current_value("fullscreen") == "yes"
+    flags.vsync = self:get_current_value("fullscreen") == "yes"
 
     if fullscreen_mode == "borderless" then
         flags.borderless = true
@@ -116,10 +120,10 @@ function this:init()
 
     if is_touch then
         self.available_settings = avl_settings_touch
-        self.state = persistent_storage.get("settings", default_state_touch)
+        self.state = lume.extend(default_state_touch, persistent_storage.get("settings", {}))
     else
         self.available_settings = avl_settings
-        self.state = persistent_storage.get("settings", default_state)
+        self.state = lume.extend(default_state, persistent_storage.get("settings", {}))
     end
 
     self:generate_buttons()

@@ -53,6 +53,9 @@ local function create_explosion(x, y)
     --- store explosion
     table.insert(explosions, explosion)
 
+    --- signal explosion
+    signal.emit("explosion")
+
     --- make explosion sound
     local explosion_sound = love.audio.newSource("sounds/explosion.ogg", "static")
     explosion_sound:play()

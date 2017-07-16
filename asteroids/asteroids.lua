@@ -4,6 +4,7 @@ local asteroid_storage = {}
 
 local hc = require("hc")
 local explosions = require("explosions")
+local lume = require("lume.lume")
 require("difficulty_handler")
 require("drops")
 require("flyapartomatic")
@@ -12,39 +13,27 @@ local enemies = require("enemies")
 local FRAGMENT_SPEED = 2
 local FRAGMENT_SCALE
 
-local random_asteroid_start_function = require("asteroids.random_asteroids")
-local asteroid_labyrinth_start_function = require("asteroids.asteroid_labyrinth")
+local random_asteroids = require("asteroids.random_asteroids")
+local labyrinth_asteroids = require("asteroids.asteroid_labyrinth")
 local mode
 
 asteroids.init = function()
 end
 
-local function get_index_of_asteroid_by_shape(shape)
-    for i, ast in ipairs(asteroid_storage) do
-        if ast.shape == shape then
-            return i
-        end
-    end
-end
-
-local function handle_player_collision(player_hit_callback, asteroid, asteroid_storage_index)
-    player_hit_callback(asteroid.x + asteroid.width / 2,
-        asteroid.y + asteroid.height / 2)
+local function handle_player_collision(player_hit_callback, asteroid)
+    player_hit_callback(asteroid.shape:center())
     flyapartomatic.spawn(asteroid.fragments,
         asteroid.x,
         asteroid.y,
         FRAGMENT_SCALE,
         FRAGMENT_SPEED)
-    table.remove(asteroid_storage, asteroid_storage_index)
-    hc.remove(asteroid.shape)
+    asteroid:on_destroyed()
 end
 
-local function check_collisions_for_asteroid(i, asteroid, player_hit_callback)
+local function check_collisions_for_asteroid(asteroid)
     --- remove asteroids that collided with an enemy or another asteroid
     for other, _ in pairs(hc.collisions(asteroid.shape)) do
-        if other.object_type == "player" then
-            handle_player_collision(player_hit_callback, asteroid, i)
-        elseif other.object_type == "enemy" or other.object_type == "asteroid" then
+        if (other.object_type == "enemy" or other.object_type == "asteroid") then
             local ast_bbox = {}
             local oth_bbox = {}
             ast_bbox.x1, ast_bbox.y1, ast_bbox.x2, ast_bbox.y2 = asteroid.shape:bbox()
@@ -62,18 +51,17 @@ local function check_collisions_for_asteroid(i, asteroid, player_hit_callback)
                 center_y = ast_bbox.y1 + (oth_bbox.y2 - ast_bbox.y1) / 2
             end
 
-            table.remove(asteroid_storage, i)
-            hc.remove(asteroid.shape)
+            asteroid:on_destroyed()
 
             if other.object_type == "enemy" then
                 enemies.remove_colliding_enemies(asteroid.shape, function() end)
                 explosions.create_explosion(center_x, center_y)
             elseif other.object_type == "asteroid" then
-                local ast_index = get_index_of_asteroid_by_shape(other)
-                local other_asteroid = asteroid_storage[ast_index]
-                flyapartomatic.spawn(other_asteroid.fragments, other_asteroid.x, other_asteroid.y, FRAGMENT_SCALE, FRAGMENT_SPEED)
-                table.remove(asteroid_storage, ast_index)
-                hc.remove(other)
+                local other_asteroid = other.asteroid_reference
+                if other_asteroid then
+                    flyapartomatic.spawn(other_asteroid.fragments, other_asteroid.x, other_asteroid.y, FRAGMENT_SCALE, FRAGMENT_SPEED)
+                    other_asteroid:on_destroyed()
+                end
             end
 
             flyapartomatic.spawn(asteroid.fragments, asteroid.x, asteroid.y, FRAGMENT_SCALE, FRAGMENT_SPEED)
@@ -81,9 +69,17 @@ local function check_collisions_for_asteroid(i, asteroid, player_hit_callback)
     end
 end
 
+local function check_player_collisions(player_shape, player_hit_callback)
+    for other, _ in pairs(hc.collisions(player_shape)) do
+        if other.object_type == "asteroid" then
+            local asteroid = other.asteroid_reference
+            handle_player_collision(player_hit_callback, asteroid)
+        end
+    end
+end
 
-asteroids.update = function(dt, player_hit_callback)
-    for i, asteroid in ipairs(asteroid_storage) do
+asteroids.update = function(dt, player_shape, player_hit_callback)
+    for _, asteroid in ipairs(asteroid_storage) do
         asteroid:update(dt)
 
         -- determine whether an asteroid ever was within the viewport
@@ -94,14 +90,31 @@ asteroids.update = function(dt, player_hit_callback)
 
         -- remove if asteroid went through viewport and is not within 
         if asteroid.was_in_viewport and not asteroid_in_viewport then
-            table.remove(asteroid_storage, i)
-            hc.remove(asteroid.shape)
+            asteroid:on_destroyed()
         end
 
-        check_collisions_for_asteroid(i, asteroid, player_hit_callback)
+
+
+        local check_for_asteroid_collisions = mode ~= "labyrinth"
+        if check_for_asteroid_collisions then
+            check_collisions_for_asteroid(asteroid)
+        end
     end
+
+    check_player_collisions(player_shape, player_hit_callback)
 end
 
+local function draw_asteroid_centers(asteroid)
+    local x1, y1, x2, y2 = asteroid.shape:bbox()
+    print("shape size "..(x2-x1).."x"..(y2-y1).." and ast size"..asteroid.width.."x"..asteroid.height)
+    local cx, cy = asteroid.shape:center()
+
+    love.graphics.rectangle("fill", asteroid.x, asteroid.y, 10, 10)
+    love.graphics.setColor(255, 0, 0)
+    love.graphics.rectangle("fill", cx, cy, 10, 10)
+
+    love.graphics.setColor(255, 255, 255)
+end
 
 asteroids.draw = function()
     for _, asteroid in ipairs(asteroid_storage) do
@@ -114,15 +127,16 @@ asteroids.handle_projectile = function(projectile_shape, callback)
     -- removes all asteroids colliding with the projectile shape, and calls the callback for each of them
     local has_collision = false
 
-    for i, asteroid in ipairs(asteroid_storage) do
-        if asteroid.shape:collidesWith(projectile_shape) then
+    for other_shape, _ in pairs(hc.collisions(projectile_shape)) do
+        if other_shape.object_type == "asteroid" then
+            local asteroid = other_shape.asteroid_reference
+
             -- call back
             callback(asteroid, asteroid.asteroid_type)
             -- breakup animation
             flyapartomatic.spawn(asteroid.fragments, asteroid.x, asteroid.y, FRAGMENT_SPEED, FRAGMENT_SCALE)
-            -- clean asteroid table and collider
-            table.remove(asteroid_storage, i)
-            hc.remove(asteroid.shape)
+            -- clean up asteroid
+            asteroid:on_destroyed()
             -- set collision flag
             has_collision = true
         end
@@ -138,9 +152,9 @@ asteroids.enter = function(asteroid_mode)
     FRAGMENT_SCALE = scaling.get("asteroid_fragment_scale")
 
     if asteroid_mode == "random" then
-        random_asteroid_start_function(asteroid_storage, asteroid_base_scale)
+        random_asteroids.start(asteroid_storage, asteroid_base_scale)
     elseif asteroid_mode == "labyrinth" then
-        asteroid_labyrinth_start_function(asteroid_storage, asteroid_base_scale)
+        labyrinth_asteroids.start(asteroid_storage, asteroid_base_scale)
     else
         print("UNKNOWN ASTEROID MODE")
     end
@@ -149,5 +163,6 @@ end
 asteroids.resume = function() end
 
 asteroids.leave = function()
-    asteroid_storage = {}
+    labyrinth_asteroids.stop()
+    table.reach(asteroid_storage, "on_destroyed")
 end
