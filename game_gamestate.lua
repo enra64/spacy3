@@ -20,6 +20,7 @@ require("player_ship_upgrade_state")
 require("background_music")
 
 local level_thresholds = difficulty.get("level_threshold")
+local level_count = difficulty.level_count()
 local level = 1
 local mode = ""
 
@@ -110,7 +111,12 @@ function game:update(dt)
     
     
     if score > level_thresholds[level] then
-        level = math.clamp(level + 1, 1, 5)
+        local oldlevel = level
+        level = math.clamp(level + 1, 1, level_count)
+
+        if level > oldlevel then
+            signal.emit("levelup", level)
+        end
     end
 
 
@@ -165,7 +171,8 @@ function game:enter(_, chosen_gamemode)
         enemies.set_enemies_spawning(true)
         asteroids.enter("random")
     end
-    
+
+    enemies.enter()
     ingame_status.enter()
     bg.enter()
 end
