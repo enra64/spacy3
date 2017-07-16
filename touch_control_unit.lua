@@ -1,5 +1,7 @@
 local touch_control = {}
 
+
+
 local function set_dpad_position(control, x, y)
     --- set control knob position
     control.touch_controls.dpad.x = control.dpad_background.x + x - control.touch_controls.dpad.width / 2 + control.dpad_background.width / 2
@@ -34,6 +36,7 @@ local function handle_dpad_touch(control, x, y)
 end
 
 touch_control.new = function(enable_move_pad)
+    local enable_rumble = require("settings"):get_current_value("rumble") == "on"
     local ctrl = {}
 
     --- touch only stuff
@@ -51,9 +54,11 @@ touch_control.new = function(enable_move_pad)
     ctrl.enable_move_pad = enable_move_pad
 
     -- subscribe to rumble events
-    signal.register("explosion", function()
-        love.system.vibrate(0.3)
-    end)
+    if enable_rumble then
+        signal.register("explosion", function()
+            love.system.vibrate(0.3)
+        end)
+    end
 
     local control_textures = {
         button_a = love.graphics.newImage("img/touch_controls/button_a.png"),
