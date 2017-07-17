@@ -21,10 +21,11 @@ local common_value_dictionary = {
     health_player_ship_upgrade_2 = 3,
     labyrinth_bspline = {
         0, 0,
-        200, 80,
-        300, 240,
-        500, 300,
-        800, 400 },
+        10, 100,
+        30, 200,
+        75, 250,
+        100, 350,
+        120, 400 },
     labyrinth_base_speed = 100
 }
 

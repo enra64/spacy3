@@ -5,6 +5,7 @@ require("difficulty_handler")
 require("drops")
 require("flyapartomatic")
 
+local spawn_timer
 local asteroid_storage
 local asteroid_base_scale
 
@@ -89,7 +90,7 @@ end
 local function start(asteroid_storage_reference, asteroid_scale)
     asteroid_base_scale = asteroid_scale
     asteroid_storage = asteroid_storage_reference
-    timer.after(get_next_asteroid_delay(), on_asteroid_timer)
+    spawn_timer = timer.after(get_next_asteroid_delay(), on_asteroid_timer)
 end
 
-return {start = start, stop = function() end}
+return {start = start, stop = function() timer.cancel(spawn_timer) end}
