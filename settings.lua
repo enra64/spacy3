@@ -140,7 +140,15 @@ end
 
 function this:mousepressed(x, y)
     self.menu:mousepressed(x, y)
-end 
+end
+
+function this:gamepadreleased(joystick, button)
+    self.menu:gamepadreleased(joystick, button)
+end
+
+function this:mousemoved(x, y)
+    self.menu:mousemoved(x, y)
+end
 
 function this:enter()
     self.menu:enter()

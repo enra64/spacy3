@@ -6,6 +6,8 @@
 -- To change this template use File | Settings | File Templates.
 --
 
+local lume = require("lume.lume")
+
 local menu = {}
 menu.horizontal_button_distance = 20
 
@@ -24,9 +26,11 @@ local click_sound = love.audio.newSource("sounds/button_click.ogg")
 
 --- store the target menu size and position
 menu.menu_width = love.graphics.getWidth() / 2
-menu.menu_height = 2 * love.graphics.getHeight() / 4
+menu.menu_height = math.floor(2.6 * love.graphics.getHeight() / 4)
 menu.menu_x = love.graphics.getWidth() / 4
 menu.menu_y = love.graphics.getHeight() / 4
+
+local hovered_button = nil
 
 function menu:invalidate_buttons()
     self.menu_width = love.graphics.getWidth() / 2
@@ -90,7 +94,12 @@ function menu:draw()
     love.graphics.setFont(self.font_config.get_font("menu"))
     --- draw buttons
     for i, button_rect in ipairs(self.button_rectangles) do
-        love.graphics.setColor(255, 255, 255)
+        love.graphics.setColor(255, 255, 255, 200)
+
+        if hovered_button == self.button_texts[i] then
+            love.graphics.setColor(255, 255, 255, 255)
+        end
+
         love.graphics.draw(self.button_texture, button_rect.x, button_rect.y, 0, self.button_rectangle_x_scale, self.button_rectangle_y_scale)
 
         love.graphics.setColor(0, 0, 0)
@@ -106,11 +115,45 @@ function menu:draw()
     love.graphics.setColor(255, 255, 255)
 end
 
+function menu:button_clicked(button_text)
+    click_sound:play()
+    self.on_button_clicked(button_text)
+end
+
+function menu:gamepadreleased(_, button)
+    local index
+    if hovered_button == nil then
+        if button == "dpdown" then
+            index = 1
+        elseif button == "dpup" then
+            index = #self.button_texts
+        end
+    else
+        if button == "dpdown" then
+            index = lume.find(self.button_texts, hovered_button) + 1
+        elseif button == "dpup" then
+            index = lume.find(self.button_texts, hovered_button) - 1
+        elseif button == "a" then
+            self:button_clicked(hovered_button)
+        end
+    end
+    if index then
+        hovered_button = self.button_texts[index % (#self.button_texts+1) + 0]
+    end
+end
+
+function menu:mousemoved(x, y)
+    local mouse_point = self.hc_world:point(x, y)
+    for button, _ in pairs(self.hc_world:collisions(mouse_point)) do
+        hovered_button = button.text
+    end
+    self.hc_world:remove(mouse_point)
+end
+
 function menu:mousepressed(x, y)
     local mouse_point = self.hc_world:point(x, y) 
     for button, _ in pairs(self.hc_world:collisions(mouse_point)) do
-        click_sound:play()
-        self.on_button_clicked(button.text)
+        self:button_clicked(button.text)
     end
     self.hc_world:remove(mouse_point)
 end
