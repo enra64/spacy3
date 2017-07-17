@@ -154,3 +154,7 @@ scaling.get = function(value)
         print("unknown scaling value requested!: "..value)
     end
 end
+
+function scaling.get_enemy_speed(enemy_type, current_level)
+    return scaling.get("enemy_"..enemy_type.."_speed")[current_level]
+end

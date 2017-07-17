@@ -89,14 +89,14 @@ functions.leave = function()
 end
 
 local function trigger_speed_tween_up(level)
-    local TWEEN_DURATION = 0.5
+    local TWEEN_DURATION = 1
     for _, enemy_type in ipairs(enemy_types) do
-        local old_speed = scaling.get_enemy_speed(enemy.type, level - 1)
-        local new_speed = scaling.get_enemy_speed(enemy.type, level)
+        local old_speed = scaling.get_enemy_speed(enemy_type, level - 1)
+        local new_speed = scaling.get_enemy_speed(enemy_type, level)
 
         enemy_tweening_values[enemy_type] = old_speed - new_speed
 
-        timer.tween(TWEEN_DURATION, enemy_tweening_values, { x = 0 }, 'out-quad')
+        timer.tween(TWEEN_DURATION, enemy_tweening_values, { simple = 0 }, 'out-quad')
     end
 end
 

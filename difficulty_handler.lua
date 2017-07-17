@@ -24,10 +24,6 @@ local common_value_dictionary = {
     labyrinth_scroll_speed = {30, 40, 50, 60, 80, 100, 130, 160, 200, 240, 300, 350, 400, 470, 550, 600} -- gl hf
 }
 
-function difficulty.get_enemy_speed(enemy_type, current_level)
-    return difficulty.get("enemy_"..enemy_type.."_speed")[current_level]
-end
-
 function difficulty.level_count()
     return #common_value_dictionary.level_threshold
 end
@@ -55,3 +51,4 @@ function difficulty.get(value, level)
     --- return either single (non-level-dependent) value, or table of level values
     return dict[value]
 end
+
