@@ -1,6 +1,7 @@
-local _, get_asteroid_fragments, new_random_asteroid, is_in_viewport = unpack(require("asteroids.asteroid_asset_helper"))
+local _, _, new_random_asteroid, _ = unpack(require("asteroids.asteroid_asset_helper"))
 local hc = require("hc")
 local timer = require("hump.timer")
+local get_speed = require("asteroids.labyrinth_speed_interpolator")
 require("difficulty_handler")
 require("drops")
 require("flyapartomatic")
@@ -18,10 +19,11 @@ local LABYRINTH_CELLS_PER_COLUMN = 5 -- ellers height
 local CELL_HEIGHT, CELL_WIDTH
 local DEBUG_SPAWN_ALL = false
 local column_fill_check_timer
+local start_time
 
 local function update(asteroid, dx)
     -- move left on update
-    local speed = 321
+    local speed = get_speed(os.time() - start_time)
     asteroid.x = asteroid.x - dx * speed
     asteroid.shape:move(-dx * speed, 0)
 
@@ -57,7 +59,7 @@ local function get_asteroid(x, y, length, orientation)
 
     -- if horizontal rotate by 90 degrees
     if orientation == "horizontal" then
-        new.rotation = new.rotation + math.rad(lume.randomchoice({90, -90}))
+        new.rotation = new.rotation + math.rad(lume.randomchoice({ 90, -90 }))
     end
 
     -- initialise the collision shape
@@ -84,7 +86,7 @@ local packing_solutions = {
 
 local function get_vertical_line(x_off, y_off)
     local new_asteroids = {}
-    local packing_choice = lume.shuffle(lume.randomchoice(packing_solutions["_"..ASTEROIDS_PER_VERTICAL_BORDER]))
+    local packing_choice = lume.shuffle(lume.randomchoice(packing_solutions["_" .. ASTEROIDS_PER_VERTICAL_BORDER]))
     for _, ast_len in ipairs(packing_choice) do
         local new_asteroid = get_asteroid(x_off, y_off, ast_len, "vertical")
         table.insert(new_asteroids, new_asteroid)
@@ -95,7 +97,7 @@ end
 
 local function get_horizontal_line(x_off, y_off)
     local new_asteroids = {}
-    local packing_choice = lume.randomchoice(packing_solutions["_"..ASTEROIDS_PER_HORIZONTAL_BORDER])
+    local packing_choice = lume.randomchoice(packing_solutions["_" .. ASTEROIDS_PER_HORIZONTAL_BORDER])
 
     for _, ast_len in ipairs(packing_choice) do
         local new_asteroid = get_asteroid(x_off, y_off, ast_len, "horizontal")
@@ -209,6 +211,9 @@ local function start(asteroid_storage_reference, asteroid_scale)
 
     -- start the field
     spawn_asteroid_column(love.graphics.getWidth() + 10)
+
+    -- store duration
+    start_time = os.time()
 end
 
 local function stop()
@@ -218,4 +223,4 @@ local function stop()
 end
 
 -- init function
-return {start = start, stop = stop}
+return { start = start, stop = stop }
