@@ -157,6 +157,12 @@ function print_table( t )
     print()
 end
 
+-- see https://github.com/rxi/lume#lumelerpa-b-amount
+--- takes in a, its min and max, and returns the scaled and normalized a.
+function math.normalize(a, min, max)
+    return (a - min) / (max - min)
+end
+
 --http://stackoverflow.com/a/7615129
 function string.split(inputstr, sep)
         assert(sep)

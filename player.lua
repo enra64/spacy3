@@ -24,6 +24,7 @@ local a_button_lock = false
 local b_button_lock = false
 local store_button_lock = false
 
+local THRUSTER_MAX_VOLUME = 0.7
 local last_ship_hull_state = 1
 local ship_life
 
@@ -118,7 +119,8 @@ functions.update = function(dt, station)
     end
 
     -- play thruster sound
-    player.thruster_sound:setVolume(.25 * thruster_count)
+    local thruster_scale = math.normalize(math.abs(dir.x) + math.abs(dir.y), 0, 2 * dt)
+    player.thruster_sound:setVolume(THRUSTER_MAX_VOLUME * thruster_scale)
     if thruster_count > 0 then
         player.thruster_sound:play()
     else
