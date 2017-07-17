@@ -96,6 +96,9 @@ function current_level()
 end
 
 function game:update(dt)
+    local score = score + asteroids.get_score()
+
+
     timer.update(dt)
     control.update(dt)
     flyapartomatic.update(dt)
@@ -108,8 +111,7 @@ function game:update(dt)
     bg.update(dt)
     ingame_status.update(score)
     asteroids.update(dt, player.get_player_shape(), player.asteroid_hit)
-    
-    
+
     if score > level_thresholds[level] then
         local oldlevel = level
         level = math.clamp(level + 1, 1, level_count)

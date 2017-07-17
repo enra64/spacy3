@@ -93,4 +93,12 @@ local function start(asteroid_storage_reference, asteroid_scale)
     spawn_timer = timer.after(get_next_asteroid_delay(), on_asteroid_timer)
 end
 
-return {start = start, stop = function() timer.cancel(spawn_timer) end}
+local function stop()
+    timer.cancel(spawn_timer)
+end
+
+local function get_score()
+    return 0
+end
+
+return {start = start, stop = stop, get_score = get_score}

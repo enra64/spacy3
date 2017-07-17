@@ -26,7 +26,8 @@ local common_value_dictionary = {
         75, 250,
         100, 350,
         120, 400 },
-    labyrinth_base_speed = 100
+    labyrinth_base_speed = 100,
+    labyrinth_time_score_divisor = 2.6
 }
 
 function difficulty.level_count()

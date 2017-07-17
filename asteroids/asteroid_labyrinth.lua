@@ -18,8 +18,7 @@ local ASTEROIDS_PER_VERTICAL_BORDER, ASTEROIDS_PER_HORIZONTAL_BORDER = 8, 14
 local LABYRINTH_CELLS_PER_COLUMN = 5 -- ellers height
 local CELL_HEIGHT, CELL_WIDTH
 local DEBUG_SPAWN_ALL = false
-local column_fill_check_timer
-local start_time
+local column_fill_check_timer, start_time, time_score_divisor
 
 local function update(asteroid, dx)
     -- move left on update
@@ -212,6 +211,9 @@ local function start(asteroid_storage_reference, asteroid_scale)
     -- start the field
     spawn_asteroid_column(love.graphics.getWidth() + 10)
 
+    -- get score speed
+    time_score_divisor = difficulty.get("labyrinth_time_score_divisor")
+
     -- store duration
     start_time = os.time()
 end
@@ -222,5 +224,9 @@ local function stop()
     end
 end
 
+local function get_score()
+    return math.floor((os.time() - start_time) / time_score_divisor)
+end
+
 -- init function
-return { start = start, stop = stop }
+return { start = start, stop = stop, get_score = get_score }

@@ -93,8 +93,6 @@ asteroids.update = function(dt, player_shape, player_hit_callback)
             asteroid:on_destroyed()
         end
 
-
-
         local check_for_asteroid_collisions = mode ~= "labyrinth"
         if check_for_asteroid_collisions then
             check_collisions_for_asteroid(asteroid)
@@ -157,6 +155,14 @@ asteroids.enter = function(asteroid_mode)
         labyrinth_asteroids.start(asteroid_storage, asteroid_base_scale)
     else
         print("UNKNOWN ASTEROID MODE")
+    end
+end
+
+asteroids.get_score = function()
+    if mode == "random" then
+        return random_asteroids.get_score()
+    elseif mode == "labyrinth" then
+        return labyrinth_asteroids.get_score()
     end
 end
 
