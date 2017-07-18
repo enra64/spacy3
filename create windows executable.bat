@@ -1,5 +1,5 @@
-rm spacy3.zip spacy3.exe
-7za a -r -tzip -xr!xcf\* -xr!raw\* -xr!sounds\audacity\* -x!spacy3.zip -x!spacy3.exe -x!7za.exe -x!*.sh -x!*.zip.tmp* spacy3.love *
+del spacy3.zip spacy3.exe
+7za a -r -tzip -xr!xcf\* -xr!raw\* -xr!.git\* -xr!sounds\audacity\* -x!spacy3.zip -x!spacy3.exe -x!spacy3.apk -x!spacy3.love -x!7za.exe -x!*.sh -x!*.zip.tmp* spacy3.love *
 copy /b "C:\Program Files (x86)\LOVE\love.exe"+spacy3.love spacy3.exe
 echo "created .love archive and zip and exe"
 pause
@@ -21,4 +21,4 @@ echo "zipped dist folder"
 pause
 
 rmdir /s /q spacy3_distribution
-rm -r spacy3_distribution
+del -r spacy3_distribution
