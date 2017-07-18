@@ -25,7 +25,7 @@ local level = 1
 local mode = ""
 
 local explosion_sound = love.audio.newSource("sounds/explosion.ogg", "static")
-explosion_sound:setVolume(.8)
+explosion_sound:setVolume(.4)
 
 score = 0
 
