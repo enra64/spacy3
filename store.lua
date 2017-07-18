@@ -7,6 +7,10 @@ local vertical_margin = 20
 local item_count = 0
 local credits
 local click_sound = love.audio.newSource("sounds/button_click.ogg")
+local open_sound, close_sound = love.audio.newSource("sounds/store_open.ogg"), love.audio.newSource("sounds/store_close.ogg")
+
+open_sound:setVolume(0.2)
+close_sound:setVolume(0.2)
 
 function store:update()
     
@@ -299,12 +303,14 @@ function store:enter()
     credits = player_ship_upgrade_state.get_credits()
     love.graphics.setFont(self.font_config.get_font("menu"))
     background_music.push("store")
-    --print("push store music")
+    open_sound:play()
+    print("push store music")
 end
 
 function store:leave()
-    --print("pop store music")
+    print("pop store music")
     background_music.pop()
+    close_sound:play()
     signal.emit("store_closed")
 end
 
