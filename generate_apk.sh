@@ -10,7 +10,7 @@ export ANDROID_HOME=${ANDROID_SDK}
 export PATH=$PATH:$ANDROID_SDK/tools:$ANDROID_NDK
 
 # zip to game.love
-zip -qr -9 game.love . -x "xcf/*" -x ".idea/*" -x spacy3.iml -x "out/*" -x .gitignore -x "raw/*" -x *.apk -x ".git/*"
+zip -qr -9 game.love . -x "xcf/*" -x ".idea/*" -x "sounds/audacity/*" -x spacy3.iml -x "out/*" -x .gitignore -x "raw/*" -x *.apk -x ".git/*"
 
 # move the game.love to the love-android folder
 mkdir -p /home/arne/Documents/Development/love2d-android-gradle/app/src/main/assets/
