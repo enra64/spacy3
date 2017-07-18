@@ -70,7 +70,7 @@ local function shoot_missile(x, y)
 
     --- play firing sound
     local sound = love.audio.newSource(rocket_sound_data)
-    sound:setVolume(1)
+    sound:setVolume(0.23)
     sound:play()
 
     signal.emit("weapon_fired", "rocket")
