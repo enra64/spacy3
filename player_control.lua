@@ -18,11 +18,11 @@ local touch_accel_control
 require("common")
 -- actual nes mapping: local NES_CONTROL_MAPPING = {x_axis = 1, y_axis = 2, button_a = 1, button_b = 2, button_escape = 10, button_store = 9}
 -- xbox mapping:
-local NES_CONTROL_MAPPING = {x_axis = 1, y_axis = 2, button_a = 1, button_b = 2, button_escape = 3, button_store = 4}
-local TOUCH_CONTROL_MAPPING = {x_axis = 1, y_axis = 2, button_a = 2, button_b = 1, button_escape = 10, button_store = 9}
+local NES_CONTROL_MAPPING = { x_axis = 1, y_axis = 2, button_a = 1, button_b = 2, button_escape = 3, button_store = 4 }
+local TOUCH_CONTROL_MAPPING = { x_axis = 1, y_axis = 2, button_a = 2, button_b = 1, button_escape = 10, button_store = 9 }
 local KEYBOARD_CONTROL_MAPPINGS = {
-{up = "w", down = "s", left = "a", right = "d", button_a = "q", button_b = "space", button_escape = "escape", button_store = "e"},
-{up = "8", down = "2", left = "4", right = "6", button_a = "0", button_b = "enter", button_escape = "escape", button_store = "-"}
+    { up = "w", down = "s", left = "a", right = "d", button_a = "q", button_b = "space", button_escape = "escape", button_store = "e" },
+    { up = "8", down = "2", left = "4", right = "6", button_a = "0", button_b = "enter", button_escape = "escape", button_store = "-" }
 }
 
 
@@ -31,21 +31,14 @@ local control_type_equals = function(type) return function(control) return contr
 
 local controls = {}
 
-functions.touchreleased = function(id)
-    for control in ipairs_if(controls, control_type_equals("touch")) do control:touchreleased(id) end
-end
-functions.touchmoved = function(id, x, y)
-    for control in ipairs_if(controls, control_type_equals("touch")) do control:touchmoved(id, x, y) end
-end
-functions.touchpressed = function(id, x, y)
-    for control in ipairs_if(controls, control_type_equals("touch")) do control:touchpressed(id, x, y) end
-end
-functions.joystickpressed = function(js, btn, dt)
-    --for control in ipairs_if(controls, control_type_equals("joystick")) do control:touchpressed(js, btn, dt) end
-end
-functions.joystickreleased = function(js, btn, dt)
-    --for control in ipairs_if(controls, control_type_equals("joystick")) do control:touchpressed(js, btn, dt) end
-end
+functions.touchreleased = function(id) table.each_if(controls, "touchreleased", control_type_equals("touch"), id) end
+functions.touchmoved = function(id, x, y) table.each_if(controls, "touchmoved", control_type_equals("touch"), id, x, y) end
+functions.touchpressed = function(id, x, y) table.each_if(controls, "touchpressed", control_type_equals("touch"), id, x, y) end
+functions.joystickpressed = function(js, btn) table.each_if(controls, "joystickpressed", control_type_equals("joystick"), js, btn) end
+functions.joystickreleased = function(js, btn) table.each_if(controls, "joystickreleased", control_type_equals("joystick"), js, btn) end
+functions.gamepadpressed = function(js, btn) table.each_if(controls, "gamepadpressed", control_type_equals("gamepad"), js, btn) end
+functions.gamepadreleased = function(js, btn) table.each_if(controls, "gamepadreleased", control_type_equals("gamepad"), js, btn) end
+
 
 functions.update = function(dt)
     for _, ctrl_unit in ipairs(controls) do
@@ -62,7 +55,7 @@ end
 
 functions.joystickadded = function(joystick)
     -- replace the first keyboard player with the new joystick
-    for i=1,#controls do
+    for i = 1, #controls do
         if controls[i].type == "keyboard" then
             controls[i] = joystick_control.new(joystick, NES_CONTROL_MAPPING, "SELECT")
         end
@@ -70,7 +63,7 @@ functions.joystickadded = function(joystick)
 end
 
 functions.joystickremoved = function(joystick)
-    for i=#controls,1,-1 do
+    for i = #controls, 1, -1 do
         if controls[i].type == "joystick" and controls[i].joystick == joystick then
             controls[i] = keyboard_control.new(KEYBOARD_CONTROL_MAPPINGS[i])
         end
@@ -99,7 +92,7 @@ functions.load = function(player_count)
         end
     end
 
-    for i=1,player_count do
+    for i = 1, player_count do
         if joystick_list[i] then
             table.insert(controls, joystick_control.new(joystick_list[i], NES_CONTROL_MAPPING, "SELECT"))
         else

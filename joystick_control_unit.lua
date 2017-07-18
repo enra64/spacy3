@@ -41,17 +41,38 @@ joystick_control.new = function(joystick, bindings, store_button_name)
     end
 
     ctrl.update = function(control, dt)
-        --- reset direction vector
+        --- load direction vector
         control.state.x = (control.joystick:getAxis(control.bindings.x_axis) - control.xoff) * dt
         control.state.y = (control.joystick:getAxis(control.bindings.y_axis) - control.yoff) * dt
-
-        --- other buttons
-        control.state.button_a_pressed = control.joystick:isDown(control.bindings.button_a)
-        control.state.button_b_pressed = control.joystick:isDown(control.bindings.button_b)
-        control.state.button_escape_pressed = control.joystick:isDown(control.bindings.button_escape)
-        control.state.button_store_pressed = control.joystick:isDown(control.bindings.button_store)
-        
         return control.state
+    end
+
+    ctrl.joystickpressed = function(control, joystick, button)
+        if joystick == control.joystick then
+            if button == control.bindings.button_a then
+                control.state.button_a_pressed = true
+            elseif button == control.bindings.button_b then
+                control.state.button_b_pressed = true
+            elseif button == control.bindings.button_escape then
+                control.state.button_escape_pressed = true
+            elseif button == control.bindings.button_store then
+                control.state.button_store_pressed = true
+            end
+        end
+    end
+
+    ctrl.joystickreleased = function(control, joystick, button)
+        if joystick == control.joystick then
+            if button == control.bindings.button_a then
+                control.state.button_a_pressed = false
+            elseif button == control.bindings.button_b then
+                control.state.button_b_pressed = false
+            elseif button == control.bindings.button_escape then
+                control.state.button_escape_pressed = false
+            elseif button == control.bindings.button_store then
+                control.state.button_store_pressed = false
+            end
+        end
     end
     return ctrl
 end

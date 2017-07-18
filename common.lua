@@ -74,12 +74,14 @@ function table.subrange(t, first, last)
     return sub
 end
 
-function ipairs_if(tbl, if_fn)
-    local i = 0
-    return function()
-        i = i + 1
-        if i < #tbl and if_fn(tbl[i]) then return tbl[i] end
+function table.each_if(t, fn, condition, ...)
+    local iter = ipairs
+    if type(fn) == "string" then
+        for _, v in iter(t) do if condition(v) then v[fn](v, ...) end end
+    else
+        for _, v in iter(t) do if condition(v) then fn(v, ...) end end
     end
+    return t
 end
 
 -- Convert from CSV string to table (converts a single line of a CSV file)
