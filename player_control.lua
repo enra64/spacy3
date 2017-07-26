@@ -10,6 +10,7 @@ local functions = {}
 local touch_control = require("touch_control_unit")
 local joystick_control = require("joystick_control_unit")
 local keyboard_control = require("keyboard_control_unit")
+local gamepad_control = require("gamepad_control_unit")
 
 -- contains "return function() return <false|true> end"
 local is_touch = require("is_touch")()
@@ -53,18 +54,29 @@ functions.draw = function()
     end
 end
 
+local function get_control_unit_for_joystick(joystick)
+    if joystick:isGamepad() then
+        log.debug("added gamepad")
+        return gamepad_control.new(joystick)
+    else
+        log.debug("added joystick")
+        return joystick_control.new(joystick, NES_CONTROL_MAPPING, "SELECT")
+    end
+
+end
+
 functions.joystickadded = function(joystick)
     -- replace the first keyboard player with the new joystick
     for i = 1, #controls do
         if controls[i].type == "keyboard" then
-            controls[i] = joystick_control.new(joystick, NES_CONTROL_MAPPING, "SELECT")
+            controls[i] = get_control_unit_for_joystick(joystick)
         end
     end
 end
 
 functions.joystickremoved = function(joystick)
     for i = #controls, 1, -1 do
-        if controls[i].type == "joystick" and controls[i].joystick == joystick then
+        if (controls[i].type == "joystick" or controls[i].type == "gamepad") and controls[i].joystick == joystick then
             controls[i] = keyboard_control.new(KEYBOARD_CONTROL_MAPPINGS[i])
         end
     end
@@ -94,7 +106,7 @@ functions.load = function(player_count)
 
     for i = 1, player_count do
         if joystick_list[i] then
-            table.insert(controls, joystick_control.new(joystick_list[i], NES_CONTROL_MAPPING, "SELECT"))
+            controls[i] = get_control_unit_for_joystick(joystick_list[i])
         else
             table.insert(controls, keyboard_control.new(KEYBOARD_CONTROL_MAPPINGS[i]))
         end

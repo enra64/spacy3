@@ -138,7 +138,7 @@ functions.update = function(dt, station)
 end
 
 functions.player_is_alive = function()
-    return ship_life > 0
+    return true or ship_life > 0
 end
 
 functions.draw = function()

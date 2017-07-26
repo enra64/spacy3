@@ -197,11 +197,8 @@ function game:touchmoved(id, x, y) control.touchmoved(id, x, y) end
 function game:touchreleased(id) control.touchreleased(id) end
 function game:joystickpressed(joystick, button) control.joystickpressed(joystick, button) end
 function game:joystickreleased(joystick, button) control.joystickreleased(joystick, button) end
-
-
 function game:gamepadpressed(joystick, button) control.gamepadpressed(joystick, button) end
 function game:gamepadreleased(joystick, button) control.gamepadreleased(joystick, button) end
-
 function game:joystickadded(joystick) control.joystickadded(joystick) end
 function game:joystickremoved(joystick) control.joystickremoved(joystick) end
 
