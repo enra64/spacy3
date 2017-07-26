@@ -183,8 +183,11 @@ function love.load(arg)
     --- unshittify (technical term) random numbers
     math.randomseed(os.time())
 
+    --- load gamepad mapping and hope it is useful
+    love.joystick.loadGamepadMappings("gamecontrollerdb.txt")
+
     --- apply settings (or default)
-    settings = require("settings")
+    local settings = require("settings")
     settings:init()
     settings:graphics_mode_changed()
     settings:audio_mode_changed()
