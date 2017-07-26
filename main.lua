@@ -7,6 +7,7 @@
 --
 gamestate = require("hump.gamestate")
 signal = require("hump.signal")
+log = require("log")
 require("persistent_storage")
 require("common")
 require("scaling")
