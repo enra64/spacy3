@@ -9,7 +9,7 @@
 local lume = require("lume.lume")
 
 local menu = {}
-menu.horizontal_button_distance = 20
+menu.horizontal_button_distance = 15
 
 menu.hc_world = require("hc").new()
 menu.control = require("player_control")
@@ -23,20 +23,19 @@ menu.button_texture = love.graphics.newImage("img/ui/button_texture.png")
 menu.title = ""
 
 local click_sound = love.audio.newSource("sounds/button_click.ogg")
-
---- store the target menu size and position
-menu.menu_width = love.graphics.getWidth() / 2
-menu.menu_height = math.floor(2.6 * love.graphics.getHeight() / 4)
-menu.menu_x = love.graphics.getWidth() / 4
-menu.menu_y = love.graphics.getHeight() / 4
-
 local hovered_button = nil
 
+local function refresh_size_and_location()
+    --- store the target menu size and position
+    menu.menu_width = math.floor(love.graphics.getWidth() * 0.65)
+    menu.menu_height = math.floor(love.graphics.getHeight() * 0.75)
+    menu.menu_x = (love.graphics.getWidth() - menu.menu_width) / 2
+    menu.menu_y = (love.graphics.getHeight() - menu.menu_height) / 2
+end
+refresh_size_and_location()
+
 function menu:invalidate_buttons()
-    self.menu_width = love.graphics.getWidth() / 2
-    self.menu_height = 2 * love.graphics.getHeight() / 4
-    self.menu_x = love.graphics.getWidth() / 4
-    self.menu_y = love.graphics.getHeight() / 4    
+    refresh_size_and_location()
     self:add_button()
 end
 
@@ -55,7 +54,7 @@ function menu:add_button(text)
 
     for i = 1, #self.button_texts do
         local button_rect = {}
-        
+
         button_rect.width = self.menu_width
         button_rect.height = self.button_rectangle_y_scale * self.button_texture:getHeight()
         button_rect.x = self.menu_x
@@ -86,7 +85,7 @@ function menu:draw()
     love.graphics.setColor(255, 255, 255)
     love.graphics.printf(self.title,
         0,
-        self.menu_y / 2,
+        (self.menu_y - love.graphics.getFont():getHeight()) / 2,
         love.graphics.getWidth(),
         "center",
         0, 1)

@@ -181,6 +181,14 @@ function love.load(arg)
     --- enable zerobrane ide debugging
     if arg[#arg] == "-debug" then require("mobdebug").start() end
 
+    for _, argument in ipairs(arg) do
+        if argument == "-debug" then
+            require("mobdebug").start()
+        elseif argument == "--disable-log-colors" then
+            log.usecolor = false
+        end
+    end
+
     --- unshittify (technical term) random numbers
     math.randomseed(os.time())
 
