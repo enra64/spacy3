@@ -17,7 +17,7 @@ gamepad_control.new = function(joystick, store_button_name)
         button_store = "start"
     }
 
-    log.trace("new gamepad with GUID "..joystick:getGUID())
+    log.trace("new gamepad '"..joystick:getName().."' with GUID "..joystick:getGUID())
 
     -- "public" members
     ctrl.type = "gamepad"
@@ -64,9 +64,9 @@ gamepad_control.new = function(joystick, store_button_name)
 
     ctrl.gamepadpressed = function(control, joystick, button)
         local inputtype, inputindex, hatdirection = joystick:getGamepadMapping(button)
-        if not hatdirection then
-            hatdirection = "nil"
-        end
+        inputtype = inputtype or "nil"
+        inputindex = inputindex or "nil"
+        hatdirection = hatdirection or "nil"
 
         log.trace("pressed "..button.." with type "..inputtype..", index "..inputindex..", hatdir "..hatdirection.." on gamepad "..joystick:getGUID())
 
