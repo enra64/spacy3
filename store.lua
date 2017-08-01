@@ -8,6 +8,7 @@ local item_count = 0
 local credits
 local click_sound = love.audio.newSource("sounds/button_click.ogg")
 local open_sound, close_sound = love.audio.newSource("sounds/store_open.ogg"), love.audio.newSource("sounds/store_close.ogg")
+local hovered_button = nil
 
 open_sound:setVolume(0.2)
 close_sound:setVolume(0.2)
@@ -153,7 +154,11 @@ function store:draw()
         
         -- retrieve the item corresponding to this button
         local item = self.items[key]
-        
+
+        if hovered_button == item then
+            love.graphics.setColor(255, 255, 255, 255)
+        end
+
         -- draw image
         local image
         if item.has_reached_max_state then
@@ -312,6 +317,36 @@ function store:leave()
     background_music.pop()
     close_sound:play()
     signal.emit("store_closed")
+end
+
+function store:gamepadreleased(_, button)
+    local index
+    if hovered_button == nil then
+        if button == "dpdown" then
+            index = 1
+        elseif button == "dpup" then
+            index = #self.button_texts
+        end
+    else
+        if button == "dpdown" then
+            index = lume.find(self.button_texts, hovered_button) + 1
+        elseif button == "dpup" then
+            index = lume.find(self.button_texts, hovered_button) - 1
+        elseif button == "a" then
+            self:button_clicked(hovered_button)
+        end
+    end
+    if index then
+        hovered_button = self.button_texts[index % (#self.button_texts+1) + 0]
+    end
+end
+
+function menu:mousemoved(x, y)
+    local mouse_point = self.hc_world:point(x, y)
+    for button, _ in pairs(self.hc_world:collisions(mouse_point)) do
+        hovered_button = button.text
+    end
+    self.hc_world:remove(mouse_point)
 end
 
 function store:mousepressed(x, y)
