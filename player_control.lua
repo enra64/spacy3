@@ -17,15 +17,32 @@ local is_touch = require("is_touch")()
 local touch_accel_control
 
 require("common")
--- actual nes mapping: local NES_CONTROL_MAPPING = {x_axis = 1, y_axis = 2, button_a = 1, button_b = 2, button_escape = 10, button_store = 9}
 -- xbox mapping:
-local NES_CONTROL_MAPPING = { x_axis = 1, y_axis = 2, button_a = 1, button_b = 2, button_escape = 3, button_store = 4 }
 local TOUCH_CONTROL_MAPPING = { x_axis = 1, y_axis = 2, button_a = 2, button_b = 1, button_escape = 10, button_store = 9 }
 local KEYBOARD_CONTROL_MAPPINGS = {
     { up = "w", down = "s", left = "a", right = "d", button_a = "q", button_b = "space", button_escape = "escape", button_store = "e" },
     { up = "8", down = "2", left = "4", right = "6", button_a = "0", button_b = "enter", button_escape = "escape", button_store = "-" }
 }
+local JOYSTICK_CONTROL_MAPPINGS = {
+    _NES = { x_axis = 1, y_axis = 2, button_a = 1, button_b = 2, button_escape = 10, button_store = 9, store_button_name = "SELECT" },
+    _050000005e040000fd02000003090000 = { x_axis = 1, y_axis = 2, button_a = 5, button_b = 6, button_escape = 2, button_store = 1, store_button_name = "A" }
+}
 
+local function try_to_load_gamepad_mapping(_, requested_value)
+    local path = love.filesystem.getSourceBaseDirectory()
+    print(tostring(requested_value))
+    if love.filesystem.exists(path .. "/gamepad_mapping.lua") then
+        log.info("joystick with GUID " .. string.sub(requested_value, 2) .. " has been mapped using '" .. path .. "/gamepad_mapping.lua" .. "' from the directory with the spacy3.love file.")
+        return dofile(path .. "/gamepad_mapping.lua")
+    elseif love.filesystem.exists("gamepad_mapping.lua") then
+        log.info("joystick with GUID " .. string.sub(requested_value, 2) .. " has been mapped using 'gamepad_mapping.lua' contained in the .love file.")
+        return dofile("gamepad_mapping.lua")
+    else
+        log.error("no mapping for joystick found, and no gamepad_mapping.lua found either.")
+    end
+end
+
+table.set_default_function(JOYSTICK_CONTROL_MAPPINGS, try_to_load_gamepad_mapping)
 
 --- return function that returns true if control type is "type"
 local control_type_equals = function(type) return function(control) return control.type == type end end
@@ -55,14 +72,13 @@ functions.draw = function()
 end
 
 local function get_control_unit_for_joystick(joystick)
-    if joystick:isGamepad() then
+    if joystick:isGamepad() and false then
         log.debug("added gamepad")
         return gamepad_control.new(joystick)
     else
         log.debug("added joystick")
-        return joystick_control.new(joystick, NES_CONTROL_MAPPING, "SELECT")
+        return joystick_control.new(joystick, JOYSTICK_CONTROL_MAPPINGS["_" .. joystick:getGUID()])
     end
-
 end
 
 functions.joystickadded = function(joystick)

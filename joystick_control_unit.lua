@@ -4,7 +4,7 @@ local timer = require("hump.timer")
 
 local joystick_control = {}
 
-joystick_control.new = function(joystick, bindings, store_button_name)
+joystick_control.new = function(joystick, bindings)
     local enable_rumble = require("settings"):get_current_value("rumble") == "on"
     local ctrl = {}
     ctrl.joystick = joystick
@@ -27,6 +27,7 @@ joystick_control.new = function(joystick, bindings, store_button_name)
         end)
     end
 
+    local store_button_name = bindings.store_button_name
     if store_button_name then
         ctrl.store_button_help = {
             text = store_button_name.." for store",
@@ -48,7 +49,7 @@ joystick_control.new = function(joystick, bindings, store_button_name)
     end
 
     ctrl.joystickpressed = function(control, joystick, button)
-        log.trace("pressed "..button)
+        --log.trace("pressed "..button)
         if joystick == control.joystick then
             if button == control.bindings.button_a then
                 control.state.button_a_pressed = true

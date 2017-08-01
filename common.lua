@@ -24,6 +24,11 @@ function table.truncate(tbl, count)
     return tbl
 end
 
+function table.set_default_function(tbl, def_function)
+    local mt = {__index = def_function}
+    setmetatable(tbl, mt)
+end
+
 
 --- return 0 if the absolute value of val is below epsilon, and val otherwise
 function math.apply_epsilon(val, epsilon)

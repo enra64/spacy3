@@ -192,9 +192,6 @@ function love.load(arg)
     --- unshittify (technical term) random numbers
     math.randomseed(os.time())
 
-    local success = love.joystick.setGamepadMapping("050000005e040000fd02000003090000", "leftshoulder", "button", 6, nil)
-    log.debug("success mapping button 6 to leftshoulder?"..tostring(success))
-
     --- load gamepad mapping and hope it is useful
     love.joystick.loadGamepadMappings("custom_gamecontroller_db.txt")
 
