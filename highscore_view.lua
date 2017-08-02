@@ -4,14 +4,11 @@ this.is_touch = require("is_touch")()
 local font_config = require("font_config")
 require("persistent_storage")
 
-local title_font = font_config.get_font("menu_title")
-local text_font = font_config.get_font("menu")
-
 function this:draw()
-    love.graphics.setFont(title_font)
+    font_config.load_font("menu_title")
     love.graphics.printf("highscores", 0, 10, love.graphics.getWidth(), "center")
 
-    love.graphics.setFont(text_font)
+    font_config.load_font("menu")
     for _, label in ipairs(self.highscore_labels) do
         love.graphics.printf(label.text, label.x, label.y, label.width, "center")
     end

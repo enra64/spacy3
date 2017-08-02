@@ -26,14 +26,14 @@ local ui_margin = 10
 local ui_height
 local ui_width
 local ui_rhs
-local font
+local font_config = require("font_config")
 
 --- required stuff
 local weaponry = require("weapons")
 require("player_ship_upgrade_state")
 
 functions.init = function()
-    font = require("font_config").get_font("ingame")
+    local font = font_config.get_font("ingame")
 
     --- general
     ui_width = love.graphics.getWidth() - ui_margin * 2
@@ -97,6 +97,8 @@ functions.init = function()
 end
 
 functions.draw = function()
+    font_config.load_font("ingame")
+
     --- laser heat icon
     love.graphics.draw(laser_icon.texture, laser_icon.x + ui_margin, laser_icon.y + ui_margin, NO_ROTATION, laser_icon.x_scale, laser_icon.y_scale)
 
@@ -141,10 +143,6 @@ functions.draw = function()
 
     --- score
     love.graphics.print(score .. " points", ui_margin, ui_margin)
-end
-
-functions.enter = function()
-    love.graphics.setFont(font)
 end
 
 functions.update = function(score_)

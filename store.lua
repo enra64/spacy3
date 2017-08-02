@@ -117,7 +117,7 @@ function store:draw()
     love.graphics.clear()
 
     --- draw title in white
-    love.graphics.setFont(self.font_config.get_font("menu_title"))
+    self.font_config.load_font("menu_title")
     love.graphics.setColor(255, 255, 255)
     love.graphics.printf(self.title,
         0,
@@ -177,7 +177,7 @@ function store:draw()
         love.graphics.setColor(0, 0, 0)
 
         -- draw title 
-        love.graphics.setFont(self.font_config.get_font("store_title"))
+        self.font_config.load_font("store_title")
         love.graphics.printf(item.title, button.title.x, button.title.y, button.title.width, 'left')
 
         -- draw price
@@ -202,7 +202,7 @@ function store:draw()
         love.graphics.setColor(0, 0, 0)
 
         -- draw description
-        love.graphics.setFont(self.font_config.get_font("store_description"))
+        self.font_config.load_font("store_description")
         local desc_text
         if item.has_reached_max_state then
             desc_text = item.descriptions[item.state]
@@ -230,8 +230,7 @@ function store:draw()
         math.scale_from_to(self.button_texture:getHeight(), self.exit_button.height))
 
     love.graphics.setColor(0, 0, 0)
-    local font = self.font_config.get_font("store_description")
-    love.graphics.setFont(font)
+    local font = self.font_config.load_font("store_description")
 
     -- print "exit"
     love.graphics.printf("exit",
@@ -295,7 +294,7 @@ end
 
 function store:enter()
     credits = player_ship_upgrade_state.get_credits()
-    love.graphics.setFont(self.font_config.get_font("menu"))
+    self.font_config.load_font("menu")
     background_music.push("store")
     open_sound:play()
     hovered_button = "ship_hull"

@@ -175,7 +175,6 @@ function game:enter(_, chosen_gamemode)
     end
 
     enemies.enter()
-    ingame_status.enter()
     bg.enter()
 end
 

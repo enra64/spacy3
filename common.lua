@@ -1,5 +1,6 @@
 lume = require("lume.lume")
 require("random")
+local font_config = require("font_config")
 
 --- remove annoying 0 parameter in draw calls
 NO_ROTATION = 0
@@ -109,6 +110,33 @@ function table.each_if(t, fn, condition, ...)
         for _, v in iter(t) do if condition(v) then fn(v, ...) end end
     end
     return t
+end
+
+
+--- for the given text, max width and maximum height, return a reducing scale if necessary
+function string.get_wrapping_scale(text, wraplimit, max_height)
+    local _, wrapped_lines = love.graphics.getFont():getWrap(text, wraplimit)
+    local resulting_length = #wrapped_lines * love.graphics.getFont():getHeight()
+    if resulting_length > max_height then
+        return math.scale_from_to(resulting_length, max_height)
+    end
+    return 1
+end
+
+--- this function estimates a fitting print size for fonts
+function love.graphics.printf_fitting(text, xpos, ypos, max_width, max_height, alignment)
+    local required_factor = string.get_wrapping_scale(text, max_width, max_height)
+
+    if required_factor < 1 then
+        required_factor = required_factor * 1.5
+    end
+
+    local old_font, old_font_size = font_config.get_current_font()
+    local modified_font = font_config.get_font_by_size(math.floor(old_font_size * required_factor))
+
+    love.graphics.setFont(modified_font)
+    love.graphics.printf(text, xpos, ypos, max_width, alignment)
+    love.graphics.setFont(old_font)
 end
 
 -- Convert from CSV string to table (converts a single line of a CSV file)

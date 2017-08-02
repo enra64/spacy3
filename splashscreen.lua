@@ -16,9 +16,8 @@ function splashscreen:draw()
     love.graphics.clear()
     
     -- configure font
-    local current_font = font_config.get_font("splash_sub_text")
+    local current_font = font_config.load_font("splash_sub_text")
     local sub_font_height = current_font:getHeight()
-    love.graphics.setFont(current_font)
     love.graphics.setColor(255, 255, 255, self.opacity)
          
     -- draw pretext
@@ -39,10 +38,9 @@ function splashscreen:draw()
 
 
     -- load large font
-    current_font = font_config.get_font("splash_main_text")
+    current_font = font_config.load_font("splash_main_text")
     local main_font_height = current_font:getHeight()
-    love.graphics.setFont(current_font)
-    
+
     -- draw main text, large
     love.graphics.printf(
         "SUSANNE",

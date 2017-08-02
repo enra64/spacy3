@@ -1,6 +1,10 @@
 scaling = {}
 
-scaling.gamemode = "endless game"  -- one of "endless game" or "asteroid rush"
+function table.multeach(tbl, factor)
+    return lume.map(tbl, function(val) return val * factor end)
+end
+
+scaling.gamemode = "endless game" -- one of "endless game" or "asteroid rush"
 
 local labyrinth_override_factors = {
     ship_scale = 0.6,
@@ -18,18 +22,18 @@ local vga = {
     ship_fragment_scale = 0.5,
     planet_scale = .3,
     drop_scale = .15,
-    fonts_ingame = love.graphics.newFont("spacy3font.otf", 35),
-    fonts_menu_title = love.graphics.newFont("spacy3font.otf", 45),
-    fonts_menu = love.graphics.newFont("spacy3font.otf", 30),
-    fonts_store_description = love.graphics.newFont("spacy3font.otf", 17),
-    fonts_store_title = love.graphics.newFont("spacy3font.otf", 22),
-    fonts_splash_main_text = love.graphics.newFont("spacy3font.otf", 70),
-    fonts_splash_sub_text = love.graphics.newFont("spacy3font.otf", 40),
+    fonts_ingame = 35,
+    fonts_menu_title = 45,
+    fonts_menu = 30,
+    fonts_store_description = 17,
+    fonts_store_title = 22,
+    fonts_splash_main_text = 70,
+    fonts_splash_sub_text = 40,
     speed_player_ship_upgrade_0 = 300,
     speed_player_ship_upgrade_1 = 350,
     speed_player_ship_upgrade_2 = 400,
-    enemy_simple_speed = table.multeach({200, 250, 300, 325, 350, 375, 500}, 0.7),
-    asteroid_speed = table.multeach({100, 120, 150, 180, 220, 250, 300}, 0.7)
+    enemy_simple_speed = table.multeach({ 200, 250, 300, 325, 350, 375, 500 }, 0.7),
+    asteroid_speed = table.multeach({ 100, 120, 150, 180, 220, 250, 300 }, 0.7)
 }
 
 local thirteen_sixtysix = {
@@ -41,18 +45,18 @@ local thirteen_sixtysix = {
     ship_fragment_scale = 1,
     planet_scale = .45,
     drop_scale = .3,
-    fonts_ingame = love.graphics.newFont("spacy3font.otf", 40),
-    fonts_menu_title = love.graphics.newFont("spacy3font.otf", 60),
-    fonts_menu = love.graphics.newFont("spacy3font.otf", 40),
-    fonts_store_description = love.graphics.newFont("spacy3font.otf", 25),
-    fonts_store_title = love.graphics.newFont("spacy3font.otf", 50),
-    fonts_splash_main_text = love.graphics.newFont("spacy3font.otf", 120),
-    fonts_splash_sub_text = love.graphics.newFont("spacy3font.otf", 60),
+    fonts_ingame = 40,
+    fonts_menu_title = 60,
+    fonts_menu = 40,
+    fonts_store_description = 25,
+    fonts_store_title = 50,
+    fonts_splash_main_text = 120,
+    fonts_splash_sub_text = 60,
     speed_player_ship_upgrade_0 = 400,
     speed_player_ship_upgrade_1 = 450,
     speed_player_ship_upgrade_2 = 500,
-    enemy_simple_speed = table.multeach({200, 250, 300, 325, 350, 375, 500}, 1),
-    asteroid_speed = table.multeach({100, 120, 150, 180, 220, 250, 300}, 1)
+    enemy_simple_speed = table.multeach({ 200, 250, 300, 325, 350, 375, 500 }, 1),
+    asteroid_speed = table.multeach({ 100, 120, 150, 180, 220, 250, 300 }, 1)
 }
 
 local fhd = {
@@ -64,18 +68,18 @@ local fhd = {
     ship_fragment_scale = 1.3,
     planet_scale = .65,
     drop_scale = .3,
-    fonts_ingame = love.graphics.newFont("spacy3font.otf", 60),
-    fonts_menu_title = love.graphics.newFont("spacy3font.otf", 90),
-    fonts_menu = love.graphics.newFont("spacy3font.otf", 60),
-    fonts_store_description = love.graphics.newFont("spacy3font.otf", 50),
-    fonts_store_title = love.graphics.newFont("spacy3font.otf", 70),
-    fonts_splash_main_text = love.graphics.newFont("spacy3font.otf", 200),
-    fonts_splash_sub_text = love.graphics.newFont("spacy3font.otf", 60),
+    fonts_ingame = 60,
+    fonts_menu_title = 90,
+    fonts_menu = 60,
+    fonts_store_description = 50,
+    fonts_store_title = 70,
+    fonts_splash_main_text = 200,
+    fonts_splash_sub_text = 60,
     speed_player_ship_upgrade_0 = 600,
     speed_player_ship_upgrade_1 = 650,
     speed_player_ship_upgrade_2 = 700,
-    enemy_simple_speed = table.multeach({200, 250, 300, 325, 350, 375, 500}, 1.2),
-    asteroid_speed = table.multeach({100, 120, 150, 180, 220, 250, 300}, 1.2)
+    enemy_simple_speed = table.multeach({ 200, 250, 300, 325, 350, 375, 500 }, 1.2),
+    asteroid_speed = table.multeach({ 100, 120, 150, 180, 220, 250, 300 }, 1.2)
 }
 
 local wqhd = {
@@ -87,18 +91,18 @@ local wqhd = {
     ship_fragment_scale = 1,
     planet_scale = .8,
     drop_scale = .3,
-    fonts_ingame = love.graphics.newFont("spacy3font.otf", 40),
-    fonts_menu_title = love.graphics.newFont("spacy3font.otf", 120),
-    fonts_menu = love.graphics.newFont("spacy3font.otf", 80),
-    fonts_store_description = love.graphics.newFont("spacy3font.otf", 40),
-    fonts_store_title = love.graphics.newFont("spacy3font.otf", 50),
-    fonts_splash_main_text = love.graphics.newFont("spacy3font.otf", 150),
-    fonts_splash_sub_text = love.graphics.newFont("spacy3font.otf", 100),
+    fonts_ingame = 40,
+    fonts_menu_title = 120,
+    fonts_menu = 80,
+    fonts_store_description = 40,
+    fonts_store_title = 50,
+    fonts_splash_main_text = 150,
+    fonts_splash_sub_text = 100,
     speed_player_ship_upgrade_0 = 500,
     speed_player_ship_upgrade_1 = 550,
     speed_player_ship_upgrade_2 = 600,
-    enemy_simple_speed = table.multeach({200, 250, 300, 325, 350, 375, 500}, 1.5),
-    asteroid_speed = table.multeach({100, 120, 150, 180, 220, 250, 300}, 1.5)
+    enemy_simple_speed = table.multeach({ 200, 250, 300, 325, 350, 375, 500 }, 1.5),
+    asteroid_speed = table.multeach({ 100, 120, 150, 180, 220, 250, 300 }, 1.5)
 }
 
 local uhd = {
@@ -110,18 +114,18 @@ local uhd = {
     ship_fragment_scale = 1.4,
     planet_scale = 1,
     drop_scale = .3,
-    fonts_ingame = love.graphics.newFont("spacy3font.otf", 40),
-    fonts_menu_title = love.graphics.newFont("spacy3font.otf", 200),
-    fonts_menu = love.graphics.newFont("spacy3font.otf", 120),
-    fonts_store_description = love.graphics.newFont("spacy3font.otf", 40),
-    fonts_store_title = love.graphics.newFont("spacy3font.otf", 60),
-    fonts_splash_main_text = love.graphics.newFont("spacy3font.otf", 250),
-    fonts_splash_sub_text = love.graphics.newFont("spacy3font.otf", 150),
+    fonts_ingame = 40,
+    fonts_menu_title = 200,
+    fonts_menu = 120,
+    fonts_store_description = 40,
+    fonts_store_title = 60,
+    fonts_splash_main_text = 250,
+    fonts_splash_sub_text = 150,
     speed_player_ship_upgrade_0 = 600,
     speed_player_ship_upgrade_1 = 650,
     speed_player_ship_upgrade_2 = 700,
-    enemy_simple_speed = table.multeach({200, 250, 300, 325, 350, 375, 500}, 1.7),
-    asteroid_speed = table.multeach({100, 120, 150, 180, 220, 250, 300}, 1.7)
+    enemy_simple_speed = table.multeach({ 200, 250, 300, 325, 350, 375, 500 }, 1.7),
+    asteroid_speed = table.multeach({ 100, 120, 150, 180, 220, 250, 300 }, 1.7)
 }
 
 scaling.get = function(value)
@@ -136,7 +140,7 @@ scaling.get = function(value)
             end
         end
     end
-    
+
     local res = love.graphics.getWidth()
     if res >= 3840 then
         table = uhd
@@ -149,17 +153,17 @@ scaling.get = function(value)
     else
         table = vga
     end
-    
+
     if table[value] ~= nil then
         if gamemode_override_factor then
             return table[value] * gamemode_override_factor
         end
         return table[value]
     else
-        print("unknown scaling value requested!: "..value)
+        print("unknown scaling value requested!: " .. value)
     end
 end
 
 function scaling.get_enemy_speed(enemy_type, current_level)
-    return scaling.get("enemy_"..enemy_type.."_speed")[current_level]
+    return scaling.get("enemy_" .. enemy_type .. "_speed")[current_level]
 end

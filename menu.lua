@@ -32,6 +32,7 @@ local function refresh_size_and_location()
     menu.menu_x = (love.graphics.getWidth() - menu.menu_width) / 2
     menu.menu_y = (love.graphics.getHeight() - menu.menu_height) / 2
 end
+
 refresh_size_and_location()
 
 function menu:invalidate_buttons()
@@ -43,7 +44,7 @@ function menu:add_button(text)
     if text ~= nil then
         table.insert(self.button_texts, text)
     end
-    
+
     --- re-calculate all button rectangles
     self.button_rectangles = {}
     self.button_rectangle_x_scale = self.menu_width / self.button_texture:getWidth()
@@ -59,10 +60,10 @@ function menu:add_button(text)
         button_rect.height = self.button_rectangle_y_scale * self.button_texture:getHeight()
         button_rect.x = self.menu_x
         button_rect.y = self.menu_y + ((i - 1) * (button_rect.height + self.horizontal_button_distance)) + button_rect.height / 5
-        
+
         button_rect.collider = self.hc_world:rectangle(button_rect.x, button_rect.y, button_rect.width, button_rect.height)
         button_rect.collider.text = self.button_texts[i]
-                
+
         table.insert(self.button_rectangles, button_rect)
     end
 end
@@ -80,17 +81,17 @@ function menu:enter()
 end
 
 function menu:draw()
-    love.graphics.setFont(self.font_config.get_font("menu_title"))
+    self.font_config.load_font("menu_title")
     --- draw title in white
     love.graphics.setColor(255, 255, 255)
-    love.graphics.printf(self.title,
+    love.graphics.printf_fitting(self.title,
         0,
         (self.menu_y - love.graphics.getFont():getHeight()) / 2,
         love.graphics.getWidth(),
-        "center",
-        0, 1)
+        self.menu_y,
+        "center")
 
-    love.graphics.setFont(self.font_config.get_font("menu"))
+    self.font_config.load_font("menu")
     --- draw buttons
     for i, button_rect in ipairs(self.button_rectangles) do
         love.graphics.setColor(255, 255, 255, 200)
@@ -137,7 +138,7 @@ function menu:gamepadreleased(_, button)
         end
     end
     if index then
-        hovered_button = self.button_texts[index % (#self.button_texts+1) + 0]
+        hovered_button = self.button_texts[index % (#self.button_texts + 1) + 0]
     end
 end
 
@@ -150,7 +151,7 @@ function menu:mousemoved(x, y)
 end
 
 function menu:mousepressed(x, y)
-    local mouse_point = self.hc_world:point(x, y) 
+    local mouse_point = self.hc_world:point(x, y)
     for button, _ in pairs(self.hc_world:collisions(mouse_point)) do
         self:button_clicked(button.text)
     end
