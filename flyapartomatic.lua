@@ -56,7 +56,7 @@ flyapartomatic.spawn = function(list_of_texture_paths, x, y, speed, scale)
         part.y = y
         part.opacity = 255
         part.rotation = math.rad(math.random(360))
-        part.rotation_speed = math.rad(math.random(3, 7))
+        part.rotation_speed = math.random(-10, 10) / 1.8
         part.x_scale = .25 * scale
         part.y_scale = .25 * scale
         part.width = part.texture:getWidth() * part.x_scale
@@ -95,7 +95,7 @@ end
 
 flyapartomatic.update = function(dt)
     for _, part in ipairs(parts) do
-        part.rotation = part.rotation + part.rotation_speed
+        part.rotation = part.rotation + part.rotation_speed * dt
     end
 end
 

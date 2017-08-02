@@ -9,10 +9,9 @@ local spawn_timer
 local asteroid_storage
 local asteroid_base_scale
 
-local function update(asteroid, dx)
-    local dx_abs = dx * asteroid.speed
+local function update(asteroid, dt)
+    local dx_abs = dt * asteroid.speed
     asteroid.x = asteroid.x + dx_abs
-
 
     local new_y = asteroid.y_intersection + asteroid.x * asteroid.gradient
 
@@ -20,8 +19,8 @@ local function update(asteroid, dx)
     asteroid.y = new_y
     asteroid.shape:move(dx_abs, dy)
 
-    asteroid.rotation = asteroid.rotation + asteroid.rotation_speed
-    asteroid.shape:rotate(asteroid.rotation_speed)
+    asteroid.shape:rotate(asteroid.rotation_speed * dt)
+    asteroid.rotation = asteroid.rotation + asteroid.rotation_speed * dt
 end
 
 local function get_asteroid()
@@ -57,8 +56,8 @@ local function get_asteroid()
     --- calculate y axis intersection given our position and the random gradient
     new.y_intersection = new.y - new.gradient * new.x
 
-    new.rotation_speed = math.random(7, 7 + new.speed / 80) / 100
-    new.rotation = 0--math.random(2 * math.pi)
+    new.rotation_speed = math.random(7, 7 + new.speed / 80) / 1.8
+    new.rotation = 0
 
     --- collision shape
     new.scale = asteroid_base_scale + math.random(-asteroid_base_scale * 25, asteroid_base_scale * 25) / 100

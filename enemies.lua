@@ -18,7 +18,7 @@ require("scaling")
 
 functions.enable_enemy_spawning = true
 
-
+local SHIP_FRAGMENT_SCALE = scaling.get("ship_fragment_scale")
 
 local function create_enemy()
     local new_enemy = {}
@@ -127,8 +127,8 @@ functions.remove_colliding_enemies = function(shape, on_kill)
             },
                 enemy.x,
                 enemy.y,
-                1,
-                1.3)
+                1.6,
+                SHIP_FRAGMENT_SCALE)
 
             on_kill(enemy)
         end
