@@ -16,14 +16,26 @@ function dofile(file)
     return love.filesystem.load(file)()
 end
 
-function containsPolygon(self, other)
-    -- for each vertex of the other polygon, check if it is contained in self
-    for _, foreign_vertex in ipairs(other.vertices) do
-        if not self:contains(foreign_vertex.x, foreign_vertex.y) then
-            return false
+function bbox_width(shape)
+    local x1, _, x2, _ = shape:bbox()
+    return x2 - x1
+end
+
+function bbox_height(shape)
+    local _, y1, _, y2 = shape:bbox()
+    return y2 - y1
+end
+
+function polygon_contains(self, other)
+    -- for convex polygons we can just check if all points are contained
+    --if self._polygon:isConvex() and other._polygon:isConvex() then
+        for _, foreign_vertex in ipairs(other._polygon.vertices) do
+            if not self:contains(foreign_vertex.x, foreign_vertex.y) then
+                return false
+            end
         end
-    end
-    return true
+        return true
+    --end
 end
 
 function table.truncate(tbl, count)
@@ -78,7 +90,7 @@ function table.reach(t, fn, ...)
 end
 
 function table.multeach(tbl, factor)
-    return lume.map(tbl, function(key) return key * factor end)
+    return lume.map(tbl, function(val) return val * factor end)
 end
 
 function table.subrange(t, first, last)

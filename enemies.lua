@@ -41,7 +41,32 @@ local function create_enemy()
     while not position_found do
         new_enemy.x = math.random(love.graphics.getWidth(), love.graphics.getWidth() + 100)
         new_enemy.y = math.random(new_enemy.height, love.graphics.getHeight() - 2 * new_enemy.height)
-        new_enemy.shape = hc.rectangle(new_enemy.x, new_enemy.y, new_enemy.width * new_enemy.scale, new_enemy.height * new_enemy.scale)
+
+        --return self:polygon(
+        -- -- x,
+        -- -- y,
+
+        -- -- x+w,
+        -- -- y,
+
+        -- -- x+w,
+        -- -- y+h,
+
+        -- -- x,
+        -- -- y+h)
+        new_enemy.shape = hc.polygon(
+            new_enemy.x,
+            new_enemy.y,
+
+            new_enemy.x + new_enemy.width * new_enemy.scale,
+            new_enemy.y,
+
+            new_enemy.x + new_enemy.width * new_enemy.scale,
+            new_enemy.y + new_enemy.height * new_enemy.scale,
+
+            new_enemy.x,
+            new_enemy.y + new_enemy.height * new_enemy.scale
+        )
         new_enemy.shape.object_type = "enemy"
 
         position_found = true
@@ -63,7 +88,12 @@ local function create_simple_enemies()
     end
 end
 
-functions.update = function(dt)
+local function remove_enemy(enemy_shape, enemy_index)
+    hc.remove(enemy_shape)
+    table.remove(simple_enemies, enemy_index)
+end
+
+functions.update = function(dt, station)
     if functions.enable_enemy_spawning then
         create_simple_enemies()
     end
@@ -74,9 +104,13 @@ functions.update = function(dt)
         enemy.x = enemy.x - (dt * enemy_speed)
         enemy.shape:move(-dt * enemy_speed, 0)
 
+        -- if this enemy is hidden by the station, remove it
+        if station:contains_polygon(enemy.shape) then
+            remove_enemy(enemy.shape, index)
+        end
+
         if enemy.x + enemy.width < 0 then
-            hc.remove(enemy.shape)
-            table.remove(simple_enemies, index)
+            remove_enemy(enemy.shape, index)
         end
     end
 end

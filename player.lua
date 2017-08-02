@@ -107,7 +107,6 @@ functions.update = function(dt, station)
             function() player.engine_switch_tweener = nil end
         )
     end
-    
     player.previous_moving = is_moving
 
     --- adjust thruster sound volume
