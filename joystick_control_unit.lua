@@ -30,7 +30,7 @@ joystick_control.new = function(joystick, bindings)
     local store_button_name = bindings.store_button_name
     if store_button_name then
         ctrl.store_button_help = {
-            text = store_button_name.." for store",
+            text = "press " .. store_button_name.." for store",
             y = love.graphics.getHeight() - love.graphics.getFont():getHeight()
         }
     end

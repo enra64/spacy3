@@ -40,7 +40,7 @@ gamepad_control.new = function(joystick, store_button_name)
         -- use uuid to find name
 
         ctrl.store_button_help = {
-            text = store_button_name.." for store",
+            text = "press " .. store_button_name.." for store",
             y = love.graphics.getHeight() - love.graphics.getFont():getHeight()
         }
     end

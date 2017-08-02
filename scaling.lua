@@ -10,8 +10,8 @@ local labyrinth_override_factors = {
 }
 
 local vga = {
-    ship_scale = 0.15,
-    enemy_simple_scale = .7,
+    ship_scale = 0.20,
+    enemy_simple_scale = .8,
     explosion_base_scale = 80,
     asteroid_base_scale = .4,
     asteroid_fragment_scale = 2,

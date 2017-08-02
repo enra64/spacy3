@@ -8,7 +8,7 @@ keyboard_control.new = function(bindings)
     ctrl.type = "keyboard"
 
     ctrl.store_button_help = {
-        text = bindings.button_store.." for store",
+        text = "press " .. bindings.button_store.." for store",
         y = love.graphics.getHeight() - love.graphics.getFont():getHeight()
     }
 
