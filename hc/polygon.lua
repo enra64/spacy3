@@ -392,6 +392,16 @@ function Polygon:splitConvex()
 	return convex
 end
 
+function Polygon:containsPolygon(other)
+	-- for each vertex of the other polygon, check if it is contained in self
+	for _, foreign_vertex in ipairs(other.vertices) do
+		if not self:contains(foreign_vertex.x, foreign_vertex.y) then
+			return false
+		end
+	end
+	return true
+end
+
 function Polygon:contains(x,y)
 	-- test if an edge cuts the ray
 	local function cut_ray(p,q)
