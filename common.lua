@@ -16,6 +16,16 @@ function dofile(file)
     return love.filesystem.load(file)()
 end
 
+function containsPolygon(self, other)
+    -- for each vertex of the other polygon, check if it is contained in self
+    for _, foreign_vertex in ipairs(other.vertices) do
+        if not self:contains(foreign_vertex.x, foreign_vertex.y) then
+            return false
+        end
+    end
+    return true
+end
+
 function table.truncate(tbl, count)
     --- reduce number of items in tbl to count
     for i=1,#tbl - count do
