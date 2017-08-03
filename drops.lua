@@ -61,15 +61,6 @@ drops.update = function()
     end
 end
 
-local function get_index_of_shape(shape)
-  for i, drop in ipairs(drops.drop_list) do
-      if drop.shape == shape then
-          return i
-      end
-  end
-  return 0
-end
-
 drops.remove_colliding_drops = function(shape)
   for i, drop in ipairs(drops.drop_list) do
       if shape:collidesWith(drop.shape) then

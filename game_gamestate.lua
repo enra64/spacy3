@@ -88,7 +88,16 @@ local function on_asteroid_kill(asteroid, asteroid_type)
     explosions.create_explosion(asteroid.x, asteroid.y)
     
     --- let the asteroid drop something
-    drops.make_drop("asteroid_drop", asteroid.x, asteroid.y)
+    local drop_probability
+    if mode == "asteroid rush" then
+        drop_probability = 0.1
+    else
+        drop_probability = 0.8
+    end
+
+    if love.math.random() < drop_probability then
+        drops.make_drop("asteroid_drop", asteroid.x, asteroid.y)
+    end
 end
 
 function current_level()
