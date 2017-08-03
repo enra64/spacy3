@@ -93,7 +93,9 @@ local function start(asteroid_storage_reference, asteroid_scale)
 end
 
 local function stop()
-    timer.cancel(spawn_timer)
+    if spawn_timer then
+        timer.cancel(spawn_timer)
+    end
 end
 
 local function get_score()
