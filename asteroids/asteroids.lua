@@ -169,6 +169,7 @@ end
 asteroids.resume = function() end
 
 asteroids.leave = function()
+    random_asteroids.stop()
     labyrinth_asteroids.stop()
     table.reach(asteroid_storage, "on_destroyed")
 end

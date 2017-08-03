@@ -83,7 +83,7 @@ end
 
 local function on_asteroid_timer()
     table.insert(asteroid_storage, get_asteroid())
-    timer.after(get_next_asteroid_delay(), on_asteroid_timer)
+    spawn_timer = timer.after(get_next_asteroid_delay(), on_asteroid_timer)
 end
 
 local function start(asteroid_storage_reference, asteroid_scale)
