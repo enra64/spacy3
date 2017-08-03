@@ -48,7 +48,7 @@ local function shoot_missile(x, y)
     new_missile.texture = missile_texture
 
     --- store scaling factor
-    new_missile.scale = .6
+    new_missile.scale = scaling.get("missile_scale")
 
     --- store width and height
     local width, height = new_missile.texture:getDimensions()
@@ -126,7 +126,12 @@ local function shoot_laser(x, y)
 end
 functions.shoot_laser = shoot_laser
 
-functions.update = function(dt, on_kill, on_asteroid_kill)
+functions.update = function(dt, on_kill, on_asteroid_kill, game_mode)
+    --- reduce laser cooldown times for labyrinth mode
+    if game_mode == "asteroid rush" then
+        laser_cooling_speed = laser_cooling_speed * 1.5
+    end
+
     --- reduce laser overheat
     laser_overheat = math.clamp(laser_overheat - dt * laser_cooling_speed, 0, 1)
 

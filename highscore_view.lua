@@ -2,13 +2,14 @@ local this = {}
 
 this.is_touch = require("is_touch")()
 local font_config = require("font_config")
+local title_font, text_font
 require("persistent_storage")
 
 function this:draw()
-    font_config.load_font("menu_title")
+    title_font = font_config.load_font("menu_title")
     love.graphics.printf("highscores", 0, 10, love.graphics.getWidth(), "center")
 
-    font_config.load_font("menu")
+    text_font = font_config.load_font("menu")
     for _, label in ipairs(self.highscore_labels) do
         love.graphics.printf(label.text, label.x, label.y, label.width, "center")
     end
@@ -33,7 +34,10 @@ function this:init()
     self.highscore_labels = {}
     local list_y = 70
     local highscores = persistent_storage.get("highscores", {})
-    
+
+    title_font = font_config.get_font("menu_title")
+    text_font = font_config.get_font("menu")
+
     local position = 1
     for i, score in spairs(highscores, function(t,a,b) return t[b][2] < t[a][2] end) do
         local new = {}

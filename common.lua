@@ -30,25 +30,25 @@ end
 function polygon_contains(self, other)
     -- for convex polygons we can just check if all points are contained
     --if self._polygon:isConvex() and other._polygon:isConvex() then
-        for _, foreign_vertex in ipairs(other._polygon.vertices) do
-            if not self:contains(foreign_vertex.x, foreign_vertex.y) then
-                return false
-            end
+    for _, foreign_vertex in ipairs(other._polygon.vertices) do
+        if not self:contains(foreign_vertex.x, foreign_vertex.y) then
+            return false
         end
-        return true
+    end
+    return true
     --end
 end
 
 function table.truncate(tbl, count)
     --- reduce number of items in tbl to count
-    for i=1,#tbl - count do
+    for i = 1, #tbl - count do
         table.remove(tbl, #tbl)
     end
     return tbl
 end
 
 function table.set_default_function(tbl, def_function)
-    local mt = {__index = def_function}
+    local mt = { __index = def_function }
     setmetatable(tbl, mt)
 end
 
@@ -96,7 +96,7 @@ end
 
 function table.subrange(t, first, last)
     local sub = {}
-    for i=first,last do
+    for i = first, last do
         sub[#sub + 1] = t[i]
     end
     return sub
@@ -139,16 +139,32 @@ function love.graphics.printf_fitting(text, xpos, ypos, max_width, max_height, a
     love.graphics.setFont(old_font)
 end
 
+--- return a biased random value
+--- min: minimum returned value, defaults to 1
+--- max: maximum returned value, required
+--- bias_toward_low_values: (in range (0, inf)) the higher this value is, the more probable it is that a low value will
+--- be returned
+function math.random_biased(min, max, bias_toward_low_values)
+    -- imitate an overload for elapsing "min"
+    if not bias_toward_low_values then
+        bias_toward_low_values = max
+        max = min
+        min = 1
+    end
+
+    return math.floor(min + (max - min) * math.random() ^ bias_toward_low_values)
+end
+
 -- Convert from CSV string to table (converts a single line of a CSV file)
 -- from http://lua-users.org/wiki/CsvUtils
 function read_csv(path)
     local s, _ = love.filesystem.read(path)
-    s = s .. ','        -- ending comma
-    local t = {}        -- table to collect fields
+    s = s .. ',' -- ending comma
+    local t = {} -- table to collect fields
     local fieldstart = 1
     repeat
         local nexti = string.find(s, ',', fieldstart)
-        table.insert(t, tonumber(string.sub(s, fieldstart, nexti-1)))
+        table.insert(t, tonumber(string.sub(s, fieldstart, nexti - 1)))
         fieldstart = nexti + 1
     until fieldstart > string.len(s)
     return t
@@ -159,12 +175,12 @@ function spairs(t, order)
     --- ordered iteration through a table
     -- collect the keys
     local keys = {}
-    for k in pairs(t) do keys[#keys+1] = k end
+    for k in pairs(t) do keys[#keys + 1] = k end
 
     -- if order function given, sort by it by passing the table and keys a, b,
     -- otherwise just sort the keys 
     if order then
-        table.sort(keys, function(a,b) return order(t, a, b) end)
+        table.sort(keys, function(a, b) return order(t, a, b) end)
     else
         table.sort(keys)
     end
@@ -180,36 +196,37 @@ function spairs(t, order)
 end
 
 -- https://coronalabs.com/blog/2014/09/02/tutorial-printing-table-contents/
-function print_table( t )  
-    local print_r_cache={}
-    local function sub_print_r(t,indent)
+function print_table(t)
+    local print_r_cache = {}
+    local function sub_print_r(t, indent)
         if (print_r_cache[tostring(t)]) then
-            print(indent.."*"..tostring(t))
+            print(indent .. "*" .. tostring(t))
         else
-            print_r_cache[tostring(t)]=true
-            if (type(t)=="table") then
-                for pos,val in pairs(t) do
-                    if (type(val)=="table") then
-                        print(indent.."["..pos.."] => "..tostring(val).." {")
-                        sub_print_r(val,indent..string.rep(" ",string.len(pos)+8))
-                        print(indent..string.rep(" ",string.len(pos)+6).."}")
-                    elseif (type(val)=="string") then
-                        print(indent.."["..pos..'] => "'..val..'"')
+            print_r_cache[tostring(t)] = true
+            if (type(t) == "table") then
+                for pos, val in pairs(t) do
+                    if (type(val) == "table") then
+                        print(indent .. "[" .. pos .. "] => " .. tostring(val) .. " {")
+                        sub_print_r(val, indent .. string.rep(" ", string.len(pos) + 8))
+                        print(indent .. string.rep(" ", string.len(pos) + 6) .. "}")
+                    elseif (type(val) == "string") then
+                        print(indent .. "[" .. pos .. '] => "' .. val .. '"')
                     else
-                        print(indent.."["..pos.."] => "..tostring(val))
+                        print(indent .. "[" .. pos .. "] => " .. tostring(val))
                     end
                 end
             else
-                print(indent..tostring(t))
+                print(indent .. tostring(t))
             end
         end
     end
-    if (type(t)=="table") then
-        print(tostring(t).." {")
-        sub_print_r(t,"  ")
+
+    if (type(t) == "table") then
+        print(tostring(t) .. " {")
+        sub_print_r(t, "  ")
         print("}")
     else
-        sub_print_r(t,"  ")
+        sub_print_r(t, "  ")
     end
     print()
 end
@@ -222,13 +239,13 @@ end
 
 --http://stackoverflow.com/a/7615129
 function string.split(inputstr, sep)
-        assert(sep)
-        local t={} ; i=1
-        for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
-                t[i] = str
-                i = i + 1
-        end
-        return t
+    assert(sep)
+    local t = {}; i = 1
+    for str in string.gmatch(inputstr, "([^" .. sep .. "]+)") do
+        t[i] = str
+        i = i + 1
+    end
+    return t
 end
 
 function math.clamp(val, lower, upper)

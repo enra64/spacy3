@@ -15,7 +15,7 @@ local ellers
 local ASTEROID_HEIGHT, ASTEROID_WIDTH
 local COLUMN_SPAWN_MARGIN
 local ASTEROIDS_PER_VERTICAL_BORDER, ASTEROIDS_PER_HORIZONTAL_BORDER = 8, 14
-local LABYRINTH_CELLS_PER_COLUMN = 5 -- ellers height
+local LABYRINTH_CELLS_PER_COLUMN = scaling.get("labyrinth_cells_per_column") -- ellers height
 local CELL_HEIGHT, CELL_WIDTH
 local DEBUG_SPAWN_ALL = false
 local column_fill_check_timer, start_time, time_score_divisor

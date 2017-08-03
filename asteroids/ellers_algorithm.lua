@@ -115,8 +115,8 @@ local function create_horizontal_corridors(sets)
     local next_column_cells = {}
     local next_column_sets = {}
     --print("sets before horizontal corridors")print_table(sets)
-    for set_index, set in pairs(sets) do
-        local connection_count = math.random(#set - 1)
+    for _, set in pairs(sets) do
+        local connection_count = math.random_biased(#set - 1, 1.05)
         local shuffled = random.shuffle(set)
         local horizontal_connections = table.subrange(shuffled, 1, connection_count)
 
