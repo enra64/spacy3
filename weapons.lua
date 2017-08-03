@@ -94,7 +94,7 @@ local function shoot_laser(x, y)
     new_laser.texture = laser_texture
 
     --- store scaling factor
-    new_laser.scale = .6
+    new_laser.scale = scaling.get("laser_scale")
 
     --- store width and height
     local width, height = new_laser.texture:getDimensions()
