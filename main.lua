@@ -135,7 +135,7 @@ local function push_game_mode_menu()
     --- configure main menu
     mode_menu:set_title("select game mode")
     mode_menu:add_button("endless game")
-    mode_menu:add_button("asteroid rush")
+    --mode_menu:add_button("asteroid rush")
     mode_menu:add_button("back")
 
     --- set main menu callback
