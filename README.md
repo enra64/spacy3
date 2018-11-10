@@ -2,7 +2,7 @@
 Spacy3 is my third attempt to write a small but playable game set in space. The previous games failed due to lack of interest or failing to limit the scope and complexity of the game.
 
 # Gameplay
-[<img alt="Gameplay gif" src="https://www.youtube.com/watch?v=vkXFAOwZs1E&feature=youtu.be">](readmeAssets/output_optimized_lfr.gif)
+<a href="https://www.youtube.com/watch?v=vkXFAOwZs1E&feature=youtu.be">![Gameplay gif](readmeAssets/output_optimized_lfr.gif)]</a>
 
 # How to play
 Currently, [love2d](https://love2d.org/#download) must be installed to play the game.
