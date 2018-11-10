@@ -66,7 +66,7 @@ function store:create_buttons()
 
         -- create description rectangle
         local desc_rect = {}
-        desc_rect.width = button_rect.width * 0.8 - image_rect.width
+        desc_rect.width = button_rect.width * 0.9 - image_rect.width
         desc_rect.height = 0.75 * image_rect.height
         desc_rect.x = image_rect.x + image_rect.width + image_rect.height * 0.05
         desc_rect.y = image_rect.y + 0.25 * image_rect.height
@@ -254,7 +254,7 @@ function store:init()
             descriptions = {
                 "you should not see this",
                 "The friendly, if somewhat confused, little green mechanic on the station promises you that mounting a cooling fan on your laser assembly will significantly increase the rate with which it can produce deadly bolts of light.",
-                "Since neither you nor the mechanic can explain how exactly a fan helps dissipate heat in a vacuum, you develop a mounting system for a can of compressed air in your laser bay. If your assumptions are correct, this should provide another boost to your weapons capabilities"
+                "Since neither you nor the mechanic can explain how exactly a fan helps dissipate heat in a vacuum, you develop a mounting system for a can of compressed air in your laser bay. If your assumptions are correct, this should provide another boost to your weapons capabilities."
             },
             images = {
                 love.graphics.newImage("img/cooling_fan.png"),
@@ -269,7 +269,7 @@ function store:init()
             descriptions = {
                 "if you see this, the store is experiencing a bug.",
                 "This triangular hull confiscated from smugglers some time ago should be at least a bit more maneuverable than your old cargo hauler.",
-                "A shiny piece of metal, this ship was once a top of the line yacht, but now is only a bit more maneuverable than the smuggler ship with its haphazardous diy upgrades."
+                "A shiny piece of metal, this ship was once a top of the line yacht, but now is only a bit more maneuverable than the smuggler ship with its haphazardous DIY upgrades."
             },
             images = {
                 love.graphics.newImage("img/player_ships/upgrade_0/main.png"),
