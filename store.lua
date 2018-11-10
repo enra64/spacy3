@@ -7,8 +7,8 @@ local vertical_margin = 20
 local item_count = 0
 local hovered_button
 local credits
-local click_sound = love.audio.newSource("sounds/button_click.ogg")
-local open_sound, close_sound = love.audio.newSource("sounds/store_open.ogg"), love.audio.newSource("sounds/store_close.ogg")
+local click_sound = love.audio.newSource("sounds/button_click.ogg", "static")
+local open_sound, close_sound = love.audio.newSource("sounds/store_open.ogg", "static"), love.audio.newSource("sounds/store_close.ogg", "static")
 
 open_sound:setVolume(0.2)
 close_sound:setVolume(0.2)
@@ -66,7 +66,7 @@ function store:create_buttons()
 
         -- create description rectangle
         local desc_rect = {}
-        desc_rect.width = button_rect.width - 100 - image_rect.width
+        desc_rect.width = button_rect.width * 0.8 - image_rect.width
         desc_rect.height = 0.75 * image_rect.height
         desc_rect.x = image_rect.x + image_rect.width + image_rect.height * 0.05
         desc_rect.y = image_rect.y + 0.25 * image_rect.height
@@ -82,9 +82,9 @@ function store:create_buttons()
 
         -- create price text rectangle
         local price_rect = {}
-        price_rect.x = title_rect.x + title_rect.width
+        price_rect.x = image_rect.x + image_rect.width
         price_rect.y = title_rect.y
-        price_rect.width = desc_rect.width * 0.3
+        price_rect.width = desc_rect.width
         price_rect.height = title_rect.height
         self.buttons[key].price = price_rect
 
@@ -193,7 +193,7 @@ function store:draw()
         end
 
         -- draw price
-        love.graphics.printf(price_text,
+        love.graphics.printf("$" .. price_text,
             button.price.x,
             button.price.y,
             button.price.width,
@@ -253,7 +253,7 @@ function store:init()
             title = "Heat diffuser",
             descriptions = {
                 "you should not see this",
-                "The friendly, if somewhat confused little green mechanic on the station promises you that mounting a cooling fan on your laser assembly will significantly increase the rate with which it can produce deadly bolts of light.",
+                "The friendly, if somewhat confused, little green mechanic on the station promises you that mounting a cooling fan on your laser assembly will significantly increase the rate with which it can produce deadly bolts of light.",
                 "Since neither you nor the mechanic can explain how exactly a fan helps dissipate heat in a vacuum, you develop a mounting system for a can of compressed air in your laser bay. If your assumptions are correct, this should provide another boost to your weapons capabilities"
             },
             images = {

@@ -28,7 +28,7 @@ local THRUSTER_MAX_VOLUME = 0.7
 local last_ship_hull_state = 1
 local ship_life
 
-local drop_collect_sound = love.audio.newSource("sounds/drop_collect.ogg")
+local drop_collect_sound = love.audio.newSource("sounds/drop_collect.ogg", "static")
 drop_collect_sound:setVolume(2)
 
 local function move_player(dx, dy)
@@ -270,7 +270,7 @@ functions.load = function()
     create_ship_hull()
 
     --- player audio file
-    player.thruster_sound = love.audio.newSource("sounds/thrusters2.ogg")
+    player.thruster_sound = love.audio.newSource("sounds/thrusters2.ogg", "static")
     player.thruster_sound:setLooping(true)
     
     -- handle being backgrounded

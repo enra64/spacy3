@@ -9,11 +9,11 @@ local current_timer
 local DEBUG = false
 
 local track_objects = {
-    through_space = love.audio.newSource("tracks/through_space.ogg"),
-    crystal_space = love.audio.newSource("tracks/crystal_space.ogg"),
-    i_wouldnt = love.audio.newSource("tracks/i_wouldnt.mp3"),
-    the_rush = love.audio.newSource("tracks/the_rush.mp3"),
-    nebula = love.audio.newSource("tracks/nebula.ogg")
+    through_space = love.audio.newSource("tracks/through_space.ogg", "stream"),
+    crystal_space = love.audio.newSource("tracks/crystal_space.ogg", "stream"),
+    i_wouldnt = love.audio.newSource("tracks/i_wouldnt.mp3", "stream"),
+    the_rush = love.audio.newSource("tracks/the_rush.mp3", "stream"),
+    nebula = love.audio.newSource("tracks/nebula.ogg", "stream")
 }
 
 local track_volumes = {
@@ -67,7 +67,7 @@ local function get_track_object(category)
         end,
         play = function(tbl)
             if DEBUG then print("start "..tbl.track_id) end
-            tbl.track:rewind()
+            tbl.track:stop()
             tbl.track:play()
         end,
         -- abort play-next-song timer, stop playing track

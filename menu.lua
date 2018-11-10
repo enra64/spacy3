@@ -22,15 +22,15 @@ menu.button_texture = love.graphics.newImage("img/ui/button_texture.png")
 --- store possible title
 menu.title = ""
 
-local click_sound = love.audio.newSource("sounds/button_click.ogg")
+local click_sound = love.audio.newSource("sounds/button_click.ogg", "stream")
 local hovered_button = nil
 
 local function refresh_size_and_location()
     --- store the target menu size and position
     menu.menu_width = math.floor(love.graphics.getWidth() * 0.65)
-    menu.menu_height = math.floor(love.graphics.getHeight() * 0.75)
+    menu.menu_height = math.floor(love.graphics.getHeight() * 0.65)
     menu.menu_x = (love.graphics.getWidth() - menu.menu_width) / 2
-    menu.menu_y = (love.graphics.getHeight() - menu.menu_height) / 2
+    menu.menu_y = (love.graphics.getHeight() - menu.menu_height) * 0.75
 end
 
 refresh_size_and_location()

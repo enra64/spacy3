@@ -3,7 +3,7 @@ local font_config = require("font_config")
 
 local splashscreen = {}
 
-local click_sound = love.audio.newSource("sounds/button_click.ogg")
+local click_sound = love.audio.newSource("sounds/button_click.ogg", "stream")
 
 
 

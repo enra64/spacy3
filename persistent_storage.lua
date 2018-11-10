@@ -4,7 +4,8 @@ local binser = require("binser.binser")
 local file_name = "storage.ser"
 
 local function load_storage()
-    if not love.filesystem.isFile(file_name) then
+    file_info = love.filesystem.getInfo(file_name)
+    if file_info == nil or not file_info["type"] == "file" then
         persistent_storage.storage = {}
     else
         local des = love.filesystem.read(file_name)
